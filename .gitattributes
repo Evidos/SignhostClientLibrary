@@ -1,0 +1,36 @@
+* text=auto
+
+*.cs text diff=csharp
+*.cshtml text diff=html
+*.html text diff=html
+*.asax text diff=html
+*.js text
+*.tt text
+
+*.sql text
+
+*.targets text
+*.config text
+*.Config text
+*.pubxml text
+*.edmx text
+*.resx text
+
+*.ncrunchproject text
+*.ncrunchsolution text
+
+# Custom for Visual Studio
+*.sln text eol=crlf merge=union
+*.csproj merge=union
+*.vbproj merge=union
+*.fsproj merge=union
+*.dbproj merge=union
+
+# Graphics
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
