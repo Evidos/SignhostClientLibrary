@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Activity.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Receiver.cs" />
     <Compile Include="Models\Signer.cs" />

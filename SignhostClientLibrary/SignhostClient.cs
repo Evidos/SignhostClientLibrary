@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using RestSharp;
 using SignhostApiClientLibrary.Models;
+using SignhostClientLibrary.Models;
 
 namespace SignhostApiClientLibrary
 {
@@ -96,7 +97,12 @@ namespace SignhostApiClientLibrary
             restRequest.AddJsonBody(transaction);
             var restResponse = _restClient.Execute<Transaction>(restRequest);
 
-            if (restResponse.StatusCode != HttpStatusCode.OK)
+            if(restResponse.StatusCode == HttpStatusCode.BadRequest || restResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                var error = SimpleJson.DeserializeObject<Error>(restResponse.Content);
+                throw new Exception(error.Message);
+            }
+            else if (restResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new Exception(restResponse.ErrorMessage);
             }
