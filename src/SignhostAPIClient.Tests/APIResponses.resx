@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddTransaction" xml:space="preserve">
+    <value>{
+  "Id": "c487be92-0255-40c7-bd7d-20805a65e7d9",
+  "Status": 20,
+  "File": {
+    "Id": "d4bba0df-f9e5-44c8-89db-f2bb46632d7b",
+    "Name": "contract.pdf"
+  },
+  "Seal": true,
+  "Signers": [
+    {
+      "Id": "a2932c07-ca93-4011-96f5-a77d2cd1ec32",
+      "Expires": null,
+      "Email": "user@example.com",
+      "Mobile": "+31612345678",
+      "Iban": null,
+      "BSN": null,
+      "RequireScribbleName": false,
+      "RequireScribble": true,
+      "RequireEmailVerification": true,
+      "RequireSmsVerification": true,
+      "RequireIdealVerification": false,
+      "RequireDigidVerification": false,
+      "RequireKennisnetVerification": false,
+      "RequireSurfnetVerification": false,
+      "SendSignRequest": true,
+      "SendSignConfirmation": null,
+      "SignRequestMessage": "Hello, could you please sign this document? Best regards, John Doe",
+      "DaysToRemind": 15,
+      "Language": "en-US",
+      "ScribbleName": "John Doe",
+      "ScribbleNameFixed": false,
+      "Reference": "Client #123",
+      "ReturnUrl": "http://signhost.com",
+      "Activities": [
+        {
+          "Id": "0b47eb5c-e800-4fe3-9795-09d380dff1f9",
+          "Code": 103,
+          "Activity": "Opened",
+          "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+        },
+        {
+          "Id": "761f8678-116c-4e86-a47a-c8312681d285",
+          "Code": 203,
+          "Activity": "Signed",
+          "CreatedDateTime": "2016-03-17T21:13:55.1349315+01:00"
+        }
+      ],
+      "RejectReason": null,
+      "SignUrl": "http://ui.signhost.com/sign/93dc596f-ab81-4d31-87aa-50352c4c237e",
+      "SignedDateTime": null,
+      "RejectDateTime": null,
+      "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "Context": null
+    }
+  ],
+  "Receivers": [
+    {
+      "Id": "2fe3dddf-4b50-49d1-a3d2-45b7d175fb97",
+      "Name": "John Doe",
+      "Email": "user@example.com",
+      "Language": "en-US",
+      "Message": "Hello, please find enclosed the digital signed document. Best regards, John Doe",
+      "Reference": null,
+      "Activities": null,
+      "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "Context": null
+    }
+  ],
+  "Reference": "Contract #123",
+  "PostbackUrl": "http://example.com/postback.php",
+  "SignRequestMode": 2,
+  "DaysToExpire": 30,
+  "SendEmailNotifications": true,
+  "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+  "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+  "CanceledDateTime": null,
+  "Context": null
+}</value>
+  </data>
+  <data name="DeleteTransaction" xml:space="preserve">
+    <value>{
+  "Id": "496bec4d-4ac7-428f-894a-b3e9bade725d",
+  "Status": 20,
+  "File": {
+    "Id": "3149bf06-d01e-4f0d-9aa1-77e100e19772",
+    "Name": "contract.pdf"
+  },
+  "Seal": true,
+  "Signers": [
+    {
+      "Id": "4813e178-68a4-4105-b007-5ce9a3630867",
+      "Expires": null,
+      "Email": "user@example.com",
+      "Mobile": "+31612345678",
+      "Iban": null,
+      "BSN": null,
+      "RequireScribbleName": false,
+      "RequireScribble": true,
+      "RequireEmailVerification": true,
+      "RequireSmsVerification": true,
+      "RequireIdealVerification": false,
+      "RequireDigidVerification": false,
+      "RequireKennisnetVerification": false,
+      "RequireSurfnetVerification": false,
+      "SendSignRequest": true,
+      "SendSignConfirmation": null,
+      "SignRequestMessage": "Hello, could you please sign this document? Best regards, John Doe",
+      "DaysToRemind": 15,
+      "Language": "en-US",
+      "ScribbleName": "John Doe",
+      "ScribbleNameFixed": false,
+      "Reference": "Client #123",
+      "ReturnUrl": "http://signhost.com",
+      "Activities": [
+        {
+          "Id": "866183ae-0a3c-4441-a589-6fe3e1a0f1a1",
+          "Code": 103,
+          "Activity": "Opened",
+          "CreatedDateTime": "2016-03-31T21:11:42.0267461+02:00"
+        },
+        {
+          "Id": "9b7c4de9-6b8d-4d22-9b88-b7d2d0f084b9",
+          "Code": 203,
+          "Activity": "Signed",
+          "CreatedDateTime": "2016-03-31T21:16:42.0267461+02:00"
+        }
+      ],
+      "RejectReason": null,
+      "SignUrl": "http://ui.signhost.com/sign/2eeaa5b9-9d4d-4418-b79f-4a33810e7147",
+      "SignedDateTime": null,
+      "RejectDateTime": null,
+      "CreatedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+      "ModifiedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+      "Context": null
+    }
+  ],
+  "Receivers": [
+    {
+      "Id": "af07aaec-b612-4f7c-bb1b-c32603c9c6a2",
+      "Name": "John Doe",
+      "Email": "user@example.com",
+      "Language": "en-US",
+      "Message": "Hello, please find enclosed the digital signed document. Best regards, John Doe",
+      "Reference": null,
+      "Activities": null,
+      "CreatedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+      "ModifiedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+      "Context": null
+    }
+  ],
+  "Reference": "Contract #123",
+  "PostbackUrl": "http://example.com/postback.php",
+  "SignRequestMode": 2,
+  "DaysToExpire": 30,
+  "SendEmailNotifications": true,
+  "CreatedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+  "ModifiedDateTime": "2016-03-31T21:11:42.0267461+02:00",
+  "CanceledDateTime": null,
+  "Context": null
+}</value>
+  </data>
+  <data name="GetTransaction" xml:space="preserve">
+    <value>{
+  "Id": "c487be92-0255-40c7-bd7d-20805a65e7d9",
+  "Status": 20,
+  "File": {
+    "Id": "d4bba0df-f9e5-44c8-89db-f2bb46632d7b",
+    "Name": "contract.pdf"
+  },
+  "Seal": true,
+  "Signers": [
+    {
+      "Id": "a2932c07-ca93-4011-96f5-a77d2cd1ec32",
+      "Expires": null,
+      "Email": "user@example.com",
+      "Mobile": "+31612345678",
+      "Iban": null,
+      "BSN": null,
+      "RequireScribbleName": false,
+      "RequireScribble": true,
+      "RequireEmailVerification": true,
+      "RequireSmsVerification": true,
+      "RequireIdealVerification": false,
+      "RequireDigidVerification": false,
+      "RequireKennisnetVerification": false,
+      "RequireSurfnetVerification": false,
+      "SendSignRequest": true,
+      "SendSignConfirmation": null,
+      "SignRequestMessage": "Hello, could you please sign this document? Best regards, John Doe",
+      "DaysToRemind": 15,
+      "Language": "en-US",
+      "ScribbleName": "John Doe",
+      "ScribbleNameFixed": false,
+      "Reference": "Client #123",
+      "ReturnUrl": "http://signhost.com",
+      "Activities": [
+        {
+          "Id": "0b47eb5c-e800-4fe3-9795-09d380dff1f9",
+          "Code": 103,
+          "Activity": "Opened",
+          "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+        },
+        {
+          "Id": "761f8678-116c-4e86-a47a-c8312681d285",
+          "Code": 203,
+          "Activity": "Signed",
+          "CreatedDateTime": "2016-03-17T21:13:55.1349315+01:00"
+        }
+      ],
+      "RejectReason": null,
+      "SignUrl": "http://ui.signhost.com/sign/93dc596f-ab81-4d31-87aa-50352c4c237e",
+      "SignedDateTime": null,
+      "RejectDateTime": null,
+      "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "Context": null
+    }
+  ],
+  "Receivers": [
+    {
+      "Id": "2fe3dddf-4b50-49d1-a3d2-45b7d175fb97",
+      "Name": "John Doe",
+      "Email": "user@example.com",
+      "Language": "en-US",
+      "Message": "Hello, please find enclosed the digital signed document. Best regards, John Doe",
+      "Reference": null,
+      "Activities": null,
+      "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+      "Context": null
+    }
+  ],
+  "Reference": "Contract #123",
+  "PostbackUrl": "http://example.com/postback.php",
+  "SignRequestMode": 2,
+  "DaysToExpire": 30,
+  "SendEmailNotifications": true,
+  "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+  "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+  "CanceledDateTime": null,
+  "Context": null
+}</value>
+  </data>
+</root>

@@ -3,9 +3,9 @@ platform: Any CPU
 configuration: Release
 
 before_build:
-- cmd: nuget restore src\SignhostClientLibrary.sln
+- cmd: nuget restore "src\Signhost API Client.sln"
 
 build:
   parallel: true
-  project: src\SignhostClientLibrary.sln
+  project: src\Signhost API Client.sln
   publish_nuget: true

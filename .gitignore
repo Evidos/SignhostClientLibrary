@@ -27,6 +27,9 @@ bld/
 
 browse.VC.db
 
+# OSX
+.DS_Store
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

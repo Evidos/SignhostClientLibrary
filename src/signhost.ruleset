@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Signhost rules" Description="Signhost rules" ToolsVersion="14.0">  
+ <Include Path="BasicDesignGuidelineRules.ruleset" Action="Default" />
+ <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+ </Rules>
+ <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">  
+ </Rules>
+ <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+   <Rule Id="SA1027" Action="None" /><!-- Tabs must not be used -->
+   <Rule Id="SA1633" Action="None" /><!-- FileMustHaveHeader -->
+   <Rule Id="SA1652" Action="None" /><!-- Enable XML documentation output -->
+   <Rule Id="SA1101" Action="None" /><!-- Prefix local calls with this -->
+   <Rule Id="SA1500" Action="None" /><!-- Curly brackets for multiline statements must not share line -->
+  </Rules>
+</RuleSet>
