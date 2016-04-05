@@ -1,11 +1,26 @@
-platform: Any CPU
+version: 2.0.0.{build}
 
 configuration: Release
 
+assembly_info:
+  patch: true
+  file: src\SignhostAPIClient\Properties\AssemblyInfo.cs
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+
 before_build:
-- cmd: nuget restore src\SignhostClientLibrary.sln
+- cmd: nuget restore "src\SignhostAPIClient.sln
 
 build:
   parallel: true
-  project: src\SignhostClientLibrary.sln
+  project: src\SignhostAPIClient.sln
   publish_nuget: true
+  include_nuget_references: true
+
+nuget:
+  project_feed: true
+  disable_publish_on_pr: false
+
+artifacts:
+  - path: '**\SignhostAPIClient*.nupkg'
+    name: Nuget
