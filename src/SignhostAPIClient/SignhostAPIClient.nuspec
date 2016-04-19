@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>$id$</id>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>First release.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>sign signing digital signature pdf</tags>
   </metadata>
 </package>

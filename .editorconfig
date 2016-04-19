@@ -1,0 +1,12 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = tab
+
+[*.{cs,js}]
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.csproj]
+indent_style = space
