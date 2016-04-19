@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Signhost.APIClient</RootNamespace>
-    <AssemblyName>SignhostAPIClient</AssemblyName>
+    <AssemblyName>SignhostClientLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeAnalysisRuleSet>..\signhost.ruleset</CodeAnalysisRuleSet>
