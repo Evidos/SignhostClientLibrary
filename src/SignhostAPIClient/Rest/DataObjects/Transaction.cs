@@ -22,6 +22,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public int DaysToExpire { get; set; }
 
+		public int DaysToRemind { get; set; }
+
 		public bool SendEmailNotifications { get; set; }
 
 		public File File { get; set; }
