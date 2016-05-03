@@ -37,6 +37,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public bool? SendSignConfirmation { get; set; }
 
+		[Obsolete("Use transaction.DaysToRemind instead")]
 		public int DaysToRemind { get; set; }
 
 		public string Language { get; set; }

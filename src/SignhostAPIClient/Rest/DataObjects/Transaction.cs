@@ -20,6 +20,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public int SignRequestMode { get; set; }
 
+		public int DaysToRemind { get; set; }
+
 		public int DaysToExpire { get; set; }
 
 		public bool SendEmailNotifications { get; set; }
