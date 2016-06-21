@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
@@ -24,6 +25,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public bool SendEmailNotifications { get; set; }
 
+		[Obsolete("Does not produce usable values")]
 		public File File { get; set; }
 
 		public dynamic Context { get; set; }
