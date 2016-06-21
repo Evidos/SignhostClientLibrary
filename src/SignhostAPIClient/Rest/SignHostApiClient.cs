@@ -21,8 +21,10 @@ namespace Signhost.APIClient.Rest
 		}
 
 		public SignHostApiClient(string appName, string appKey, string authkey, string apiUrl = "https://api.singhost.com/api/")
+			: this(new SignHostApiClientSettings(appName, appKey, authkey) {
+				Endpoint = apiUrl
+			})
 		{
-			new SignHostApiClient($"{appName} {appKey}", authkey, apiUrl);
 		}
 
 		private string ApplicationHeader
