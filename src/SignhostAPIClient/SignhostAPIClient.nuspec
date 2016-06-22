@@ -9,7 +9,9 @@
     <projectUrl>https://github.com/Evidos/SignhostClientLibrary</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>
+* 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
+* 2.0.0 - First release using new multidoc API.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>sign signing digital signature pdf</tags>
   </metadata>
