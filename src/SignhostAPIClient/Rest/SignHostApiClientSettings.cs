@@ -9,6 +9,8 @@ namespace Signhost.APIClient.Rest
 	public class SignHostApiClientSettings
 		: ISignHostApiClientSettings
 	{
+		public const string DefaultEndpoint = "https://api.signhost.com/api/";
+
 		public SignHostApiClientSettings(string appkey, string apikey)
 		{
 			APPKey = appkey;
@@ -23,6 +25,6 @@ namespace Signhost.APIClient.Rest
 
 		public string APPKey { get; private set; }
 
-		public string Endpoint { get; set; } = "https://api.signhost.com/api/";
+		public string Endpoint { get; set; } = DefaultEndpoint;
 	}
 }

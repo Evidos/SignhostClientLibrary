@@ -20,7 +20,7 @@ namespace Signhost.APIClient.Rest
 			});
 		}
 
-		public SignHostApiClient(string appName, string appKey, string authkey, string apiUrl = "https://api.singhost.com/api/")
+		public SignHostApiClient(string appName, string appKey, string authkey, string apiUrl = SignHostApiClientSettings.DefaultEndpoint)
 			: this(new SignHostApiClientSettings(appName, appKey, authkey) {
 				Endpoint = apiUrl
 			})
