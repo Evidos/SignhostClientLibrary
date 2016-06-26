@@ -1,6 +1,7 @@
 # Signhost client library
 [![join gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Evidos/signhost-api)
 [![Build status](https://ci.appveyor.com/api/projects/status/696lddgivr6kkhsd/branch/master?svg=true)](https://ci.appveyor.com/project/MrJoe/signhostclientlibrary-xcr5f/branch/master)
+[![Nuget package](https://img.shields.io/nuget/v/SignhostClientLibrary.svg)](https://www.nuget.org/Packages/SignhostClientLibrary)
 
 This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
 You will need a valid APPKey and APIKey.
