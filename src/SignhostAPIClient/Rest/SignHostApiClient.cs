@@ -89,6 +89,31 @@ namespace Signhost.APIClient.Rest
 		}
 
 		/// <summary>
+		/// Adds meta data for a file to an existing transaction by providing a
+		/// file location and a transaction id.
+		/// </summary>
+		/// <param name="fileMeta">Meta data for the file</param>
+		/// <param name="transactionId">A valid transaction Id of an existing
+		/// transaction</param>
+		/// <param name="fileId">An Id for the file. Should be the same
+		/// as the fileId in the <see cref="AddOrReplaceFileToTansaction"/>.</param>
+		/// <returns>A task</returns>
+		/// <remarks>Make sure to call this method before
+		/// <see cref="AddOrReplaceFileToTansaction"/>.</remarks>
+		public Task AddOrReplaceFileMetaToTransaction(FileMeta fileMeta, string transactionId, string fileId)
+		{
+			return settings.Endpoint
+				.AppendPathSegments("transaction", transactionId)
+				.AppendPathSegments("file", fileId)
+				.WithHeaders(new
+				{
+					Application = ApplicationHeader,
+					Authorization = AuthorizationHeader
+				})
+				.PutJsonAsync(fileMeta);
+		}
+
+		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
 		/// and a transaction id.
 		/// </summary>
