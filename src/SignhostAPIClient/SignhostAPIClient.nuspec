@@ -10,6 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+* 2.2.1 - Improved errorhandling
 * 2.2.0 - Add fillable PDFs api call
 * 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
 * 2.0.0 - First release using new multidoc API.</releaseNotes>

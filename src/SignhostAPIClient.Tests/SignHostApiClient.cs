@@ -154,6 +154,20 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
+		public void when_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
+		{
+			using (HttpTest httpTest = new HttpTest())
+			{
+				httpTest.RespondWithJson(502, new { message = "Bad Gateway" });
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
+				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>();
+			}
+		}
+
+		[Fact]
 		public void when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
