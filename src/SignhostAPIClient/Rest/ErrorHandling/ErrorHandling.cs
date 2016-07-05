@@ -8,30 +8,41 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 	{
 		public static void HandleError(HttpCall call)
 		{
-			string responseJson = call.Response.Content.ReadAsStringAsync().Result;
-			var error = JsonConvert.DeserializeAnonymousType(responseJson, new { Message = string.Empty });
+			string errorMessage = GetErrorMessage(call);
 
 			switch (call.HttpStatus) {
 				case HttpStatusCode.Unauthorized:
 					call.Exception = new System.UnauthorizedAccessException(
-						error.Message, call.Exception);
+						errorMessage, call.Exception);
 					break;
 				case HttpStatusCode.BadRequest:
 					call.Exception = new BadRequestException(
-						error.Message, call.Exception);
+						errorMessage, call.Exception);
 					break;
 				case HttpStatusCode.NotFound:
 					call.Exception = new NotFoundException(
-						error.Message, call.Exception);
+						errorMessage, call.Exception);
 					break;
 				case HttpStatusCode.InternalServerError:
 					call.Exception = new InternalServerErrorException(
-						error.Message, call.Exception, call.Response.Headers.RetryAfter);
+						errorMessage, call.Exception, call.Response.Headers.RetryAfter);
 					break;
 				default:
 					call.Exception = new SignhostRestApiClientException(
-						error.Message, call.Exception);
+						errorMessage, call.Exception);
 					break;
+			}
+		}
+
+		private static string GetErrorMessage(HttpCall call)
+		{
+			string responseJson = call?.Response?.Content?.ReadAsStringAsync()?.Result;
+			if (responseJson != null) {
+				var error = JsonConvert.DeserializeAnonymousType(responseJson, new { Message = string.Empty });
+				return error.Message;
+			}
+			else {
+				return "Unknown Signhost Error";
 			}
 		}
 	}

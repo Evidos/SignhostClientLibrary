@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
 	[Serializable]
+	[Obsolete("Unused will be removed")]
 	public class SignhostException
 		: SignhostRestApiClientException
 	{
