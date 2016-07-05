@@ -24,3 +24,7 @@ nuget:
 artifacts:
   - path: '**\SignhostAPIClient*.nupkg'
     name: Nuget
+
+notifications:
+  - provider: Webhook
+    url: https://webhooks.gitter.im/e/69c5136a745342743ec4
