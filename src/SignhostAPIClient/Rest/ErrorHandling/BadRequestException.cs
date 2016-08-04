@@ -3,8 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
-	[Serializable]
-	public class BadRequestException
+	public partial class BadRequestException
 		: SignhostRestApiClientException
 	{
 		public BadRequestException()
@@ -21,11 +20,6 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			: base(message, innerException)
 		{
 			HelpLink = "https://api.signhost.com/Help";
-		}
-
-		protected BadRequestException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
 		}
 	}
 }

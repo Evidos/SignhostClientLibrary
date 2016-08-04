@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
-	[Serializable]
-	public class BadAuthorizationException
+	public partial class BadAuthorizationException
 		: SignhostRestApiClientException
 	{
 		public BadAuthorizationException()
@@ -24,11 +23,6 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 
 		public BadAuthorizationException(string message, Exception innerException)
 			: base(message, innerException)
-		{
-		}
-
-		protected BadAuthorizationException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
 		{
 		}
 	}

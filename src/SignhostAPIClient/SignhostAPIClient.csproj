@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SERIALIZABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\signhost.ruleset</CodeAnalysisRuleSet>
@@ -57,13 +57,31 @@
   <ItemGroup>
     <Compile Include="Rest\DataObjects\FileMeta.cs" />
     <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
+    <Compile Include="Rest\ErrorHandling\BadAuthorizationEception.Serialization.cs">
+      <DependentUpon>BadAuthorizationException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\BadAuthorizationException.cs" />
     <Compile Include="Rest\ErrorHandling\BadRequestException.cs" />
+    <Compile Include="Rest\ErrorHandling\BadRequestException.Serialization.cs">
+      <DependentUpon>BadRequestException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\ErrorHandling.cs" />
     <Compile Include="Rest\ErrorHandling\InternalServerErrorException.cs" />
+    <Compile Include="Rest\ErrorHandling\InternalServerErrorException.Serialization.cs">
+      <DependentUpon>InternalServerErrorException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\NotFoundException.cs" />
+    <Compile Include="Rest\ErrorHandling\NotFoundException.Serialization.cs">
+      <DependentUpon>NotFoundException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\SignhostException.cs" />
+    <Compile Include="Rest\ErrorHandling\SignhostException.Serialization.cs">
+      <DependentUpon>SignhostException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.cs" />
+    <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.Serialization.cs">
+      <DependentUpon>SignhostRestApiClientException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ISignhostApiClientSettings.cs" />
     <Compile Include="Rest\SignHostApiClient.cs" />
     <Compile Include="Rest\ConfigureHTTPClientExtensions.cs" />
