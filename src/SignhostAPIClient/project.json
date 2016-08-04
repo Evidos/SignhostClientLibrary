@@ -1,0 +1,33 @@
+﻿{
+	"version": "2.3.0",
+	"packOptions": {
+		"projectUrl": "https://github.com/Evidos/SignhostClientLibrary",
+		"owners": [ "Evidos" ],
+		"summary": "A .NET library for the signhost.com api.",
+		"releaseNotes": "* 2.3.0 - .NET Core 1.0.0 support. Target .NET Platform Standard 1.4\n* 2.2.1 - Improved errorhandling\n* 2.2.0 - Add fillable PDFs api call\n* 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5\n* 2.0.0 - First release using new multidoc API."
+	},
+
+	"dependencies": {
+		"Newtonsoft.Json": "9.0.1",
+		"Flurl": "2.2.0",
+		"Flurl.Http": "1.0.1",
+		"StyleCop.Analyzers": "1.0.0",
+		"System.Net.Http": "4.1.0"
+	},
+
+	"frameworks": {
+		".NETFramework,Version=v4.5": {
+			"dependencies": { "System.Net.Http": "4.1.0" }
+		},
+		"netstandard1.4": {
+			"dependencies": {
+				"System.Globalization.Calendars": "4.0.1",
+				"System.IO.FileSystem": "4.0.1",
+				"System.Linq": "4.1.0",
+				"System.Reflection.TypeExtensions": "4.1.0",
+				"System.Runtime.InteropServices": "4.1.0",
+				"System.Text.Encoding.CodePages": "4.0.1"
+			}
+		}
+	}
+}

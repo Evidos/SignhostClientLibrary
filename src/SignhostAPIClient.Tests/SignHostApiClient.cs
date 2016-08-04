@@ -6,6 +6,7 @@ using Flurl.Http.Testing;
 using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
 using FluentAssertions;
+using Signhost.APIClient.Tests;
 
 namespace Signhost.APIClient.Rest.Tests
 {
@@ -19,7 +20,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public async Task when_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.GetTransaction, 200);
+				httpTest.RespondWith(Resource.GetTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -108,7 +109,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public async Task when_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.AddTransaction, 200);
+				httpTest.RespondWith(Resource.AddTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -171,7 +172,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public void when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.DeleteTransaction, 200);
+				httpTest.RespondWith(Resource.DeleteTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
