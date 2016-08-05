@@ -10,6 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+* 2.3.0 - .NET Core 1.0.0 support. Target .NET Platform Standard 1.4
 * 2.2.1 - Improved errorhandling
 * 2.2.0 - Add fillable PDFs api call
 * 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
