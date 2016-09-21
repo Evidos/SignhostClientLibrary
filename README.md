@@ -30,3 +30,7 @@ await client.AddOrReplaceFileToTansaction("PathOtherFile", transaction.Id, "Gene
 await client.StartTransaction(transaction.Id);
 
 ```
+
+Get it on NuGet:
+
+`PM> Install-Package SignhostClientLibrary`
