@@ -8,7 +8,7 @@ You will need a valid APPKey and APIKey.
 You can request a APPKey for signhost at [ondertekenen.nl](https://www.ondertekenen.nl/api-proefversie/).
 
 ```c#
-var client = new SignHostApiClient("AppName appkey", "apikey");
+var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey"));
 
 var transaction = await client.CreateTransaction(new Transaction
 {
