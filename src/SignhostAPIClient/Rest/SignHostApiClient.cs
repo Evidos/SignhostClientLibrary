@@ -173,7 +173,7 @@ namespace Signhost.APIClient.Rest
 					Application = ApplicationHeader,
 					Authorization = AuthorizationHeader
 				})
-				.PutAsync();
+				.PutAsync(null);
 		}
 
 		/// <summary>

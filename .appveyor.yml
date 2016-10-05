@@ -8,14 +8,34 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
 
-before_build:
-- cmd: nuget restore "src\SignhostAPIClient.sln
+# before_build:
+# - cmd: nuget restore "src\SignhostAPIClient.sln
 
-build:
-  parallel: true
-  project: src\SignhostAPIClient.sln
-  publish_nuget: true
-  include_nuget_references: true
+# build:
+#   parallel: true
+#   project: src\SignhostAPIClient.sln
+#   publish_nuget: true
+#   include_nuget_references: true
+
+init:
+- ps: $Env:BUILD = $Env:APPVEYOR_BUILD_NUMBER
+
+before_build:
+- ps: >-
+    $versionReplacement = '"version": "' + $Env:APPVEYOR_BUILD_VERSION + '"';
+    (Get-Content src\SignhostAPIClient\project.json) | 
+    Foreach-Object { $_ -replace '"version": "\d+\.\d+\.\d+\"', $versionReplacement.ToString() } | 
+    Set-Content src\SignhostAPIClient\project.json
+- appveyor-retry dotnet restore -v Minimal
+
+build_script:
+- dotnet build "src\SignhostAPIClient"
+
+after_build:
+- dotnet pack "src\SignhostAPIClient" -o artifacts
+
+test_script:
+- dotnet test "src\SignhostAPIClient.Tests"
 
 nuget:
   project_feed: true

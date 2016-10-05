@@ -3,9 +3,8 @@ using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
-	[Serializable]
 	[Obsolete("Unused will be removed")]
-	public class SignhostException
+	public partial class SignhostException
 		: SignhostRestApiClientException
 	{
 		public SignhostException()
@@ -22,11 +21,6 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			: base(message, innerException)
 		{
 			HelpLink = "https://api.signhost.com/Help";
-		}
-
-		protected SignhostException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
 		}
 	}
 }

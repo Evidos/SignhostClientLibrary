@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
-	[Serializable]
-	public class InternalServerErrorException
+	public partial class InternalServerErrorException
 		: SignhostRestApiClientException
 	{
 		public InternalServerErrorException()
@@ -33,11 +31,6 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 					RetryAfter = DateTime.Now + retryAfter.Delta;
 				}
 			}
-		}
-
-		protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
 		}
 
 		private DateTimeOffset? RetryAfter { get; set; }

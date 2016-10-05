@@ -6,6 +6,7 @@ using Flurl.Http.Testing;
 using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
 using FluentAssertions;
+using Signhost.APIClient.Tests;
 
 namespace Signhost.APIClient.Rest.Tests
 {
@@ -19,7 +20,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public async Task when_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, APIResponses.GetTransaction);
+				httpTest.RespondWith(Resource.GetTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -37,7 +38,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest()) {
 
-				httpTest.RespondWithJson(401, new { message = "unauthorized" });
+				httpTest.RespondWithJson(new { message = "unauthorized" }, 401);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -51,7 +52,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(400, new { message = "Bad Request" });
+				httpTest.RespondWithJson(new { message = "Bad Request" }, 400);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -65,7 +66,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(404, new { message = "Not Found" });
+				httpTest.RespondWithJson(new { message = "Not Found" }, 404);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -79,7 +80,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(418, new { message = "418 I'm a teapot" });
+				httpTest.RespondWithJson(new { message = "418 I'm a teapot" }, 418);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -95,7 +96,7 @@ namespace Signhost.APIClient.Rest.Tests
 			using (HttpTest httpTest = new HttpTest())
 			{
 
-				httpTest.RespondWithJson(500, new { message = "Internal Server Error" });
+				httpTest.RespondWithJson(new { message = "Internal Server Error" }, 500);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -108,7 +109,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public async Task when_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, APIResponses.AddTransaction);
+				httpTest.RespondWith(Resource.AddTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -133,7 +134,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(400, new { message = "Bad Request" });
+				httpTest.RespondWithJson(new { message = "Bad Request" }, 400);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -158,7 +159,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			using (HttpTest httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(502, new { message = "Bad Gateway" });
+				httpTest.RespondWithJson(new { message = "Bad Gateway" }, 502);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -171,7 +172,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public void when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, APIResponses.DeleteTransaction);
+				httpTest.RespondWith(Resource.DeleteTransaction, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -187,7 +188,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public async Task when_AddOrReplaceFileToTransaction_is_called_then_we_should_have_called_the_file_put_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, string.Empty);
+				httpTest.RespondWith(string.Empty, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -207,7 +208,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public void when_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, string.Empty);
+				httpTest.RespondWith(string.Empty, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -223,7 +224,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public void when_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, string.Empty);
+				httpTest.RespondWith(string.Empty, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
@@ -239,7 +240,7 @@ namespace Signhost.APIClient.Rest.Tests
 		public void when_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(200, string.Empty);
+				httpTest.RespondWith(string.Empty, 200);
 
 				var signhostApiClient = new SignHostApiClient(settings);
 

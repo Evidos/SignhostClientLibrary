@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SERIALIZABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\signhost.ruleset</CodeAnalysisRuleSet>
@@ -33,18 +33,6 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Flurl, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.1.0.10\lib\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+MonoTouch10\Flurl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Flurl.Http, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.0.7.0\lib\net45\Flurl.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,13 +45,31 @@
   <ItemGroup>
     <Compile Include="Rest\DataObjects\FileMeta.cs" />
     <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
+    <Compile Include="Rest\ErrorHandling\BadAuthorizationEception.Serialization.cs">
+      <DependentUpon>BadAuthorizationException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\BadAuthorizationException.cs" />
     <Compile Include="Rest\ErrorHandling\BadRequestException.cs" />
+    <Compile Include="Rest\ErrorHandling\BadRequestException.Serialization.cs">
+      <DependentUpon>BadRequestException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\ErrorHandling.cs" />
     <Compile Include="Rest\ErrorHandling\InternalServerErrorException.cs" />
+    <Compile Include="Rest\ErrorHandling\InternalServerErrorException.Serialization.cs">
+      <DependentUpon>InternalServerErrorException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\NotFoundException.cs" />
+    <Compile Include="Rest\ErrorHandling\NotFoundException.Serialization.cs">
+      <DependentUpon>NotFoundException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\SignhostException.cs" />
+    <Compile Include="Rest\ErrorHandling\SignhostException.Serialization.cs">
+      <DependentUpon>SignhostException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.cs" />
+    <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.Serialization.cs">
+      <DependentUpon>SignhostRestApiClientException.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rest\ISignhostApiClientSettings.cs" />
     <Compile Include="Rest\SignHostApiClient.cs" />
     <Compile Include="Rest\ConfigureHTTPClientExtensions.cs" />
@@ -78,12 +84,7 @@
     <None Include="..\signhost.ruleset" />
     <AdditionalFiles Include="..\stylecop.json" />
     <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <None Include="project.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
