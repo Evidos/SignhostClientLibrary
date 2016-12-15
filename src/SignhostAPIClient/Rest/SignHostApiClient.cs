@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -40,6 +41,10 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A transaction object</returns>
 		public Task<Transaction> CreateTransaction(Transaction transaction)
 		{
+			if (transaction == null) {
+				throw new ArgumentNullException(nameof(transaction));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegment("transaction")
 				.WithHeaders(new
@@ -59,6 +64,14 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A transaction object</returns>
 		public Task<Transaction> GetTransaction(string transactionId)
 		{
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.WithHeaders(new
@@ -78,6 +91,14 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A Task</returns>
 		public Task DeleteTransaction(string transactionId)
 		{
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.WithHeaders(new
@@ -102,6 +123,30 @@ namespace Signhost.APIClient.Rest
 		/// <see cref="AddOrReplaceFileToTansaction"/>.</remarks>
 		public Task AddOrReplaceFileMetaToTransaction(FileMeta fileMeta, string transactionId, string fileId)
 		{
+			if (fileMeta == null) {
+				throw new ArgumentNullException("fileMeta");
+			}
+
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
+			if (fileId == null) {
+				throw new ArgumentNullException(nameof(fileId));
+			}
+
+			if (string.IsNullOrWhiteSpace(fileId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
+			}
+
+			if (!ValidPathSegment(fileId)) {
+				throw new ArgumentException("Contains invalid character.", nameof(fileId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
@@ -125,6 +170,30 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A Task</returns>
 		public Task AddOrReplaceFileToTansaction(Stream fileStream, string transactionId, string fileId)
 		{
+			if (fileStream == null) {
+				throw new ArgumentNullException(nameof(fileStream));
+			}
+
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
+			if (fileId == null) {
+				throw new ArgumentNullException(nameof(fileId));
+			}
+
+			if (string.IsNullOrWhiteSpace(fileId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
+			}
+
+			if (!ValidPathSegment(fileId)) {
+				throw new ArgumentException("Contains invalid character.", nameof(fileId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
@@ -148,6 +217,10 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A Task</returns>
 		public async Task AddOrReplaceFileToTansaction(string filePath, string transactionId, string fileId)
 		{
+			if (filePath == null) {
+				throw new ArgumentNullException(nameof(filePath));
+			}
+
 			using (Stream fileStream = System.IO.File.Open(
 					filePath,
 					FileMode.Open,
@@ -166,6 +239,14 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A Task</returns>
 		public Task StartTransaction(string transactionId)
 		{
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId, "start")
 				.WithHeaders(new
@@ -184,6 +265,14 @@ namespace Signhost.APIClient.Rest
 		/// <returns>Returns a stream containing the receipt data</returns>
 		public Task<Stream> GetReceipt(string transactionId)
 		{
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("file", "receipt", transactionId)
 				.WithHeaders(new
@@ -204,6 +293,26 @@ namespace Signhost.APIClient.Rest
 		/// <returns>Returns a stream containing the signed document data</returns>
 		public Task<Stream> GetDocument(string transactionId, string fileId)
 		{
+			if (transactionId == null) {
+				throw new ArgumentNullException(nameof(transactionId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			}
+
+			if (fileId == null) {
+				throw new ArgumentNullException(nameof(fileId));
+			}
+
+			if (string.IsNullOrWhiteSpace(transactionId)) {
+				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
+			}
+
+			if (!ValidPathSegment(fileId)) {
+				throw new ArgumentException("Contains invalid character.", nameof(fileId));
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
@@ -214,6 +323,19 @@ namespace Signhost.APIClient.Rest
 				})
 				.GetAsync()
 				.ReceiveStream();
+		}
+
+		/// <summary>
+		/// Flurl does some weird things when preparing the path segment making
+		/// it impossible to encode / as %2F as Flurl removes the encoding.
+		/// This method checks these unfortunate characters and returns false
+		/// if such a character is found.
+		/// </summary>
+		/// <param name="segment"></param>
+		/// <returns>True when the path segment is valid.</returns>
+		private bool ValidPathSegment(string segment)
+		{
+			return segment.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1;
 		}
 	}
 }
