@@ -18,7 +18,8 @@ var transaction = await client.CreateTransaction(new Transaction
 		{
 			Email = "john.doe@example.com",
 			ScribbleName = "John Doe",
-			SignRequestMessage = "Could you please sign this document?"
+			SignRequestMessage = "Could you please sign this document?",
+			SendSignRequest = true
 		}
 	}
 });
