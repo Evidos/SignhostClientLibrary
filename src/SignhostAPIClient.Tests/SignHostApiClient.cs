@@ -193,7 +193,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 				using (Stream file = System.IO.File.Create("unittestdocument.pdf"))
 				{
-					await signhostApiClient.AddOrReplaceFileToTansaction(file, "transaction Id", "file Id");
+					await signhostApiClient.AddOrReplaceFileToTransaction(file, "transaction Id", "file Id");
 				}
 
 				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
