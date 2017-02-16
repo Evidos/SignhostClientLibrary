@@ -55,8 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rest\DataObjects\Field.cs" />
     <Compile Include="Rest\DataObjects\FileMeta.cs" />
     <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
+    <Compile Include="Rest\DataObjects\Location.cs" />
     <Compile Include="Rest\ErrorHandling\BadAuthorizationException.cs" />
     <Compile Include="Rest\ErrorHandling\BadRequestException.cs" />
     <Compile Include="Rest\ErrorHandling\ErrorHandling.cs" />

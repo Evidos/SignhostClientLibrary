@@ -84,6 +84,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>APIResponses.resx</DependentUpon>
     </Compile>
+    <Compile Include="RequestBodies.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RequestBodies.resx</DependentUpon>
+    </Compile>
     <Compile Include="SignHostApiClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,6 +107,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>APIResponses.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CustomToolNamespace>Signhost.APIClient.Rest.Tests</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RequestBodies.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RequestBodies.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Signhost.APIClient.Rest.Tests</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>

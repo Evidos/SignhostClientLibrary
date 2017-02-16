@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
@@ -15,5 +11,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public string Description { get; set; }
 
 		public IDictionary<string, FileSignerMeta> Signers { get; set; }
+
+		public IDictionary<string, IDictionary<string, Field>> FormSets { get; set; }
 	}
 }
