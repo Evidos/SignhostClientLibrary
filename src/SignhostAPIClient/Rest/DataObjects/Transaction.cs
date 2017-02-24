@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
 	public class Transaction
 	{
+		public Transaction()
+		{
+		}
+
+		[JsonConstructor]
+		private Transaction(IReadOnlyDictionary<string, FileEntry> files)
+		{
+			Files = files;
+		}
+
 		public string Id { get; set; }
+
+		public IReadOnlyDictionary<string, FileEntry> Files { get; private set; }
 
 		public int Status { get; set; }
 

@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
 	public class Signer
 	{
+		public Signer()
+		{
+		}
+
+		[JsonConstructor]
+		private Signer(IReadOnlyList<IVerification> verifications)
+		{
+			Verifications = verifications;
+		}
+
+		public string Id { get; set; }
+
 		public DateTime? Expires { get; set; }
 
 		public string Email { get; set; }
@@ -13,6 +26,10 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string Mobile { get; set; }
 
+		public IReadOnlyList<IVerification> Verifications { get; private set; }
+			= new List<IVerification>().AsReadOnly();
+
+		[Obsolete("Iban  is obsolete, switch to Verification object")]
 		public string Iban { get; set; }
 
 		public string BSN { get; set; }
@@ -21,10 +38,12 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public bool RequireScribbleName { get; set; }
 
+		[Obsolete("No longer supported")]
 		public bool RequireEmailVerification { get; set; }
 
 		public bool RequireSmsVerification { get; set; }
 
+		[Obsolete("RequireIdealVerification is obsolete, switch to Verification object")]
 		public bool RequireIdealVerification { get; set; }
 
 		public bool RequireDigidVerification { get; set; }
