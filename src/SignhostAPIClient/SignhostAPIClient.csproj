@@ -62,8 +62,6 @@
     <Compile Include="Rest\DataObjects\Activity.cs" />
     <Compile Include="Rest\DataObjects\FileEntry.cs" />
     <Compile Include="Rest\DataObjects\FileLink.cs" />
-    <Compile Include="Rest\DataObjects\FileMeta.cs" />
-    <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
     <Compile Include="Rest\DataObjects\Ideal.cs" />
     <Compile Include="Rest\DataObjects\Idin.cs" />
     <Compile Include="Rest\DataObjects\IVerification.cs" />

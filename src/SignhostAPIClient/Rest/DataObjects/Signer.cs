@@ -29,7 +29,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public IReadOnlyList<IVerification> Verifications { get; private set; }
 			= new List<IVerification>().AsReadOnly();
 
-		[Obsolete("Iban  is obsolete, switch to Verification object")]
+		[Obsolete("Iban is obsolete, switch to Verification object")]
 		public string Iban { get; set; }
 
 		public string BSN { get; set; }
