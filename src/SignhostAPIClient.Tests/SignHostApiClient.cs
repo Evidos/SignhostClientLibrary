@@ -6,6 +6,7 @@ using Flurl.Http.Testing;
 using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
 using FluentAssertions;
+using System.Collections.Generic;
 
 namespace Signhost.APIClient.Rest.Tests
 {
@@ -14,6 +15,49 @@ namespace Signhost.APIClient.Rest.Tests
 		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
 				"AppKey",
 				"AuthKey");
+
+		[Fact]
+		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				var fileSignerMeta = new FileSignerMeta
+				{
+					FormSets = new string[] { "SampleFormSet" }
+				};
+
+				var field = new Field
+				{
+					Type = "Check",
+					Value = "I agree",
+					Location = new Location
+					{
+						Search = "test"
+					}
+				};
+
+				FileMeta fileMeta = new FileMeta
+				{
+					Signers = new Dictionary<string, FileSignerMeta>
+					{
+						{ "someSignerId", fileSignerMeta }
+					},
+					FormSets = new Dictionary<string, IDictionary<string, Field>>
+					{
+						{ "SampleFormSet", new Dictionary<string, Field>
+							{
+								{ "SampleCheck", field }
+							}
+						}
+					}
+				};
+
+				await signhostApiClient.AddOrReplaceFileMetaToTransaction(fileMeta, "transactionId", "fileId");
+
+				httpTest.CallLog[0].RequestBody.Should().Contain(RequestBodies.AddOrReplaceFileMetaToTransaction);
+			}
+		}
 
 		[Fact]
 		public async Task when_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
