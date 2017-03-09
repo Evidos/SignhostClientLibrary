@@ -59,6 +59,13 @@
     <Compile Include="Rest\DataObjects\FileMeta.cs" />
     <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
     <Compile Include="Rest\DataObjects\Location.cs" />
+    <Compile Include="Rest\DataObjects\Activity.cs" />
+    <Compile Include="Rest\DataObjects\FileEntry.cs" />
+    <Compile Include="Rest\DataObjects\FileLink.cs" />
+    <Compile Include="Rest\DataObjects\Ideal.cs" />
+    <Compile Include="Rest\DataObjects\Idin.cs" />
+    <Compile Include="Rest\DataObjects\IVerification.cs" />
+    <Compile Include="Rest\DataObjects\UnknownVerification.cs" />
     <Compile Include="Rest\ErrorHandling\BadAuthorizationException.cs" />
     <Compile Include="Rest\ErrorHandling\BadRequestException.cs" />
     <Compile Include="Rest\ErrorHandling\ErrorHandling.cs" />
@@ -67,6 +74,8 @@
     <Compile Include="Rest\ErrorHandling\SignhostException.cs" />
     <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.cs" />
     <Compile Include="Rest\ISignhostApiClientSettings.cs" />
+    <Compile Include="Rest\JsonConverters\JsonBaseConverter.cs" />
+    <Compile Include="Rest\JsonConverters\JsonVerificationConverter.cs" />
     <Compile Include="Rest\SignHostApiClient.cs" />
     <Compile Include="Rest\ConfigureHTTPClientExtensions.cs" />
     <Compile Include="Rest\DataObjects\File.cs" />

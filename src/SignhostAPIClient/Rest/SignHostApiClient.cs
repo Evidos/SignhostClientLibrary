@@ -339,7 +339,7 @@ namespace Signhost.APIClient.Rest
 		/// This method checks these unfortunate characters and returns false
 		/// if such a character is found.
 		/// </summary>
-		/// <param name="segment"></param>
+		/// <param name="segment">A URL segment</param>
 		/// <returns>True when the path segment is valid.</returns>
 		private bool ValidPathSegment(string segment)
 		{
