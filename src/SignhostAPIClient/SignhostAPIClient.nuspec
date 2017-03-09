@@ -10,6 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+* 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation
 * 2.2.1 - Improved errorhandling
 * 2.2.0 - Add fillable PDFs api call
