@@ -39,7 +39,7 @@ namespace Signhost.APIClient.Rest.Tests {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Tests.APIResponses", typeof(APIResponses).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Rest.Tests.APIResponses", typeof(APIResponses).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
