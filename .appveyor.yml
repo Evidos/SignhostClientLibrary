@@ -21,11 +21,11 @@ before_build:
   - cmd: nuget restore "src\SignhostAPIClient.sln
 
 build_script:
-  - ps: Write-Output Hi $env:github_auth_token
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { MSBuild.SonarQube.Runner.exe begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Evidos/SignhostClientLibrary" /d:"sonar.github.oauth=$env:github_auth_token" }
   - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { MSBuild.SonarQube.Runner.exe begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" }
   - msbuild "src\SignhostAPIClient.sln"
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER -or -not $env:github_auth_token) { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
+  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
 
 build:
   parallel: true
