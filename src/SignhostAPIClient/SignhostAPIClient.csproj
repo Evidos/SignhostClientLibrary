@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
@@ -36,9 +38,9 @@
     <PackageReference Include="Flurl" Version="2.3.0" />
     <PackageReference Include="Flurl.Http" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Label=".NET 4.5 Package References">
+  <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>

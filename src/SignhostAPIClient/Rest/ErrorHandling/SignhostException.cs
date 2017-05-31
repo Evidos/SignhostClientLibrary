@@ -24,9 +24,11 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			HelpLink = "https://api.signhost.com/Help";
 		}
 
+#if SERIALIZABLE
 		protected SignhostException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}
+#endif
 	}
 }

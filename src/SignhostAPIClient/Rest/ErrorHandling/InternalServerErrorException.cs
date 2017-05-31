@@ -35,10 +35,12 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			}
 		}
 
+#if SERIALIZABLE
 		protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}
+#endif
 
 		private DateTimeOffset? RetryAfter { get; set; }
 	}
