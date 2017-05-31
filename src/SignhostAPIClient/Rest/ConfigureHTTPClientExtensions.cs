@@ -8,7 +8,7 @@ namespace Signhost.APIClient.Rest
 {
 	public static class ConfigureHttpClientExtensions
 	{
-		public static FlurlClient WithSignhostAuth(
+		public static IFlurlClient WithSignhostAuth(
 			this Url client,
 			string applicationKey,
 			string apiKey)
@@ -25,7 +25,7 @@ namespace Signhost.APIClient.Rest
 			return new FlurlClient(url, false).PutStreamAsync(fileStream, contentType);
 		}
 
-		public static Task<HttpResponseMessage> PutStreamAsync(this FlurlClient client, Stream fileStream, string contentType)
+		public static Task<HttpResponseMessage> PutStreamAsync(this IFlurlClient client, Stream fileStream, string contentType)
 		{
 			StreamContent content = new StreamContent(fileStream);
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);

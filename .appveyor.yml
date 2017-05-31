@@ -1,5 +1,6 @@
 environment:
   SH_VERSION_SUFFIX: 'preview'
+
   github_auth_token:
     secure: qOQatfN0omwlCj5Td82fK9Z3ZKQom0Nv3/x6OH98iB+L9mfOf26bH3q+PnQ7y7g7
 

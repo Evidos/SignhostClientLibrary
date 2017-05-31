@@ -12,25 +12,20 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 
 			switch (call.HttpStatus) {
 				case HttpStatusCode.Unauthorized:
-					call.Exception = new System.UnauthorizedAccessException(
+					throw new System.UnauthorizedAccessException(
 						errorMessage, call.Exception);
-					break;
 				case HttpStatusCode.BadRequest:
-					call.Exception = new BadRequestException(
+					throw new BadRequestException(
 						errorMessage, call.Exception);
-					break;
 				case HttpStatusCode.NotFound:
-					call.Exception = new NotFoundException(
+					throw new NotFoundException(
 						errorMessage, call.Exception);
-					break;
 				case HttpStatusCode.InternalServerError:
-					call.Exception = new InternalServerErrorException(
+					throw new InternalServerErrorException(
 						errorMessage, call.Exception, call.Response.Headers.RetryAfter);
-					break;
 				default:
-					call.Exception = new SignhostRestApiClientException(
+					throw new SignhostRestApiClientException(
 						errorMessage, call.Exception);
-					break;
 			}
 		}
 

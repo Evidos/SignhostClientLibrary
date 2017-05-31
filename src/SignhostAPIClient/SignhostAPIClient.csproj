@@ -15,7 +15,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageId>SignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
-    <PackageReleaseNotes>* 2.3.0 - Added support for custom forms creation over the API
+    <PackageReleaseNotes>
+* 3.0.0 - Bumped verifications support and added .net core target
+* 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation
 * 2.2.1 - Improved errorhandling
 * 2.2.0 - Add fillable PDFs api call
@@ -31,10 +33,10 @@
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
   <ItemGroup Label="Package References">
-    <PackageReference Include="Flurl" Version="1.0.10" />
-    <PackageReference Include="Flurl.Http" Version="0.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" />
+    <PackageReference Include="Flurl" Version="2.3.0" />
+    <PackageReference Include="Flurl.Http" Version="1.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References">
     <Reference Include="System.Net" />
