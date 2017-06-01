@@ -9,7 +9,7 @@ You will need a valid APPKey and APIKey.
 You can request a APPKey for signhost at [ondertekenen.nl](https://www.ondertekenen.nl/api-proefversie/).
 
 ```c#
-var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey"));
+var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey or usertoken"));
 
 var transaction = await client.CreateTransaction(new Transaction
 {
@@ -18,9 +18,17 @@ var transaction = await client.CreateTransaction(new Transaction
 		new Signer
 		{
 			Email = "john.doe@example.com",
-			ScribbleName = "John Doe",
 			SignRequestMessage = "Could you please sign this document?",
-			SendSignRequest = true
+			SendSignRequest = true,
+			Verifications = new List<IVerification> {
+				new PhoneNumberVerification {
+					Number = "+3161234567890"
+				},
+				new ScribbleVerification {
+					ScribbleName = "John Doe",
+					RequireHandsignature = true,
+				},
+			}
 		}
 	}
 });

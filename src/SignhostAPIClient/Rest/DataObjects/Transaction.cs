@@ -20,7 +20,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public IReadOnlyDictionary<string, FileEntry> Files { get; private set; }
 
-		public int Status { get; set; }
+		public TransactionStatus Status { get; set; }
 
 		public bool Seal { get; set; }
 
@@ -37,9 +37,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public int DaysToExpire { get; set; }
 
 		public bool SendEmailNotifications { get; set; }
-
-		[Obsolete("Does not produce usable values")]
-		public File File { get; set; }
 
 		public dynamic Context { get; set; }
 	}

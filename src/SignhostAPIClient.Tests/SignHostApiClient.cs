@@ -294,5 +294,53 @@ namespace Signhost.APIClient.Rest.Tests
 					.Times(1);
 			}
 		}
+
+		[Fact]
+		public async Task When_a_transaction_json_is_returned_it_is_deserialized_correctly()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(RequestBodies.TransactionSingleSignerJson, 200);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				var result = await signhostApiClient.CreateTransaction(new Transaction
+				{
+					Signers = new List<Signer>{
+						new Signer
+						{
+							Verifications = new List<IVerification>
+							{
+								new PhoneNumberVerification
+								{
+									Number = "31615087075"
+								}
+							}
+						}
+					}
+				});
+
+				result.Id.Should().Be("50262c3f-9744-45bf-a4c6-8a3whatever");
+				result.Status.Should().Be(TransactionStatus.WaitingForDocument);
+				result.Signers.Should().HaveCount(1);
+				result.Receivers.Should().HaveCount(0);
+				result.Reference.Should().Be("Contract #123");
+				result.SignRequestMode.Should().Be(2);
+				result.DaysToExpire.Should().Be(14);
+				result.Signers[0].Id.Should().Be("Signer1");
+				result.Signers[0].Email.Should().Be("test1@example.com");
+				result.Signers[0].Verifications.Should().HaveCount(1);
+				result.Signers[0].Verifications[0].Should().BeOfType<PhoneNumberVerification>()
+					.And.Subject.ShouldBeEquivalentTo(new PhoneNumberVerification {
+					Number = "+31615123456"
+				});
+				result.Signers[0].Activities.Should().HaveCount(3);
+				result.Signers[0].Activities[0].ShouldBeEquivalentTo(new Activity
+				{
+					Id = "Activity1",
+					Code = ActivityType.Opened,
+					CreatedDateTime = DateTimeOffset.Parse("2017-05-31T22:15:17.6409005+02:00")
+				});
+			}
+		}
 	}
 }

@@ -158,10 +158,6 @@ namespace Signhost.APIClient.Rest
 				.PutJsonAsync(fileMeta);
 		}
 
-		[Obsolete("Deprecated, use AddOrReplaceFileToTransaction instead")]
-		public Task AddOrReplaceFileToTansaction(Stream fileStream, string transactionId, string fileId)
-			=> AddOrReplaceFileToTransaction(fileStream, transactionId, fileId);
-
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
 		/// and a transaction id.
@@ -208,10 +204,6 @@ namespace Signhost.APIClient.Rest
 				})
 				.PutStreamAsync(fileStream, "application/pdf");
 		}
-
-		[Obsolete("Deprecated, use AddOrReplaceFileToTransaction instead")]
-		public Task AddOrReplaceFileToTansaction(string filePath, string transactionId, string fileId)
-			=> AddOrReplaceFileToTransaction(filePath, transactionId, fileId);
 
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location

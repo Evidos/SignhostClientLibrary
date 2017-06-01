@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
-	public class Idin
+	public class IdinVerification
 		: IVerification
 	{
 		public string Type { get; } = "iDIN";
@@ -14,5 +15,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public string AccountHolderAddress2 { get; set; }
 
 		public DateTime AccountHolderDateOfBirth { get; set; }
+
+		public IDictionary<string, string> Attributes { get; set; }
 	}
 }

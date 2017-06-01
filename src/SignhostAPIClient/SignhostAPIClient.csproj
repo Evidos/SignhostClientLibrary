@@ -31,6 +31,9 @@
     <InformationalVersion>$(VersionPrefix)</InformationalVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Signhost.APIClient</RootNamespace>
+  </PropertyGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
@@ -39,6 +42,7 @@
     <PackageReference Include="Flurl.Http" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net" />
