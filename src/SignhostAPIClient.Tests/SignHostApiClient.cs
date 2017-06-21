@@ -223,6 +223,28 @@ namespace Signhost.APIClient.Rest.Tests
 
 				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*")
 					.WithVerb(HttpMethod.Delete)
+					.WithContentType("application/json")
+					.WithRequestBody(string.Empty)
+					.Times(1);
+			}
+		}
+
+		[Fact]
+		public void when_a_DeleteTransaction_with_notification_is_called_then_we_should_have_called_the_transaction_delete_once()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(APIResponses.DeleteTransaction, 200);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				signhostApiClient.DeleteTransaction(
+					"transaction Id",
+					new DeleteTransactionOptions { SendNotifications = true });
+
+				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*")
+					.WithVerb(HttpMethod.Delete)
+					.WithContentType("application/json")
+					.WithRequestJson(new DeleteTransactionOptions { SendNotifications = true })
 					.Times(1);
 			}
 		}

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Flurl.Http.Configuration;
 using Signhost.APIClient.Rest.DataObjects;
 
 namespace Signhost.APIClient.Rest
@@ -86,8 +87,9 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
+		/// <param name="options">Optional <see cref="DeleteTransactionOptions"/>.</param>
 		/// <returns>A Task</returns>
-		public Task DeleteTransaction(string transactionId)
+		public Task DeleteTransaction(string transactionId, DeleteTransactionOptions options = null)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -97,6 +99,10 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
+			if (options == null) {
+				options = new DeleteTransactionOptions();
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.WithHeaders(new
@@ -104,7 +110,7 @@ namespace Signhost.APIClient.Rest
 					Application = ApplicationHeader,
 					Authorization = AuthorizationHeader
 				})
-				.DeleteAsync();
+				.SendJsonAsync(System.Net.Http.HttpMethod.Delete, options).ReceiveString();
 		}
 
 		/// <summary>
