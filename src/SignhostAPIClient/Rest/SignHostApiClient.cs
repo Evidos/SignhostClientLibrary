@@ -11,6 +11,11 @@ namespace Signhost.APIClient.Rest
 	{
 		private readonly ISignHostApiClientSettings settings;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
+		/// Set your usertoken and APPKey by creating a <see cref="SignHostApiClientSettings"/>.
+		/// </summary>
+		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
 		public SignHostApiClient(ISignHostApiClientSettings settings)
 		{
 			this.settings = settings;
@@ -19,13 +24,6 @@ namespace Signhost.APIClient.Rest
 			{
 				c.OnError = ErrorHandling.ErrorHandling.HandleError;
 			});
-		}
-
-		public SignHostApiClient(string appName, string appKey, string authkey, string apiUrl = SignHostApiClientSettings.DefaultEndpoint)
-			: this(new SignHostApiClientSettings(appName, appKey, authkey) {
-				Endpoint = apiUrl
-			})
-		{
 		}
 
 		private string ApplicationHeader
