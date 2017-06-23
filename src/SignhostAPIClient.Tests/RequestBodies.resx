@@ -124,6 +124,7 @@
     <value>{
   "Id": "50262c3f-9744-45bf-a4c6-8a3whatever",
   "Status": 5,
+  "CanceledDateTime": "2017-01-01 15:00",
   "Files": {},
   "Seal": false,
   "Signers": [

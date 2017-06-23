@@ -342,6 +342,7 @@ namespace Signhost.APIClient.Rest.Tests
 				});
 
 				result.Id.Should().Be("50262c3f-9744-45bf-a4c6-8a3whatever");
+				result.CancelledDateTime.Should().HaveYear(2017);
 				result.Status.Should().Be(TransactionStatus.WaitingForDocument);
 				result.Signers.Should().HaveCount(1);
 				result.Receivers.Should().HaveCount(0);

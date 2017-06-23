@@ -73,6 +73,7 @@ namespace Signhost.APIClient.Rest.Tests {
         ///   Looks up a localized string similar to {
         ///  &quot;Id&quot;: &quot;50262c3f-9744-45bf-a4c6-8a3whatever&quot;,
         ///  &quot;Status&quot;: 5,
+        ///  &quot;CanceledDateTime&quot;: &quot;2017-01-01 15:00&quot;,
         ///  &quot;Files&quot;: {},
         ///  &quot;Seal&quot;: false,
         ///  &quot;Signers&quot;: [
@@ -90,9 +91,7 @@ namespace Signhost.APIClient.Rest.Tests {
         ///      &quot;Language&quot;: &quot;nl-NL&quot;,
         ///      &quot;Activities&quot;: [
         ///        {
-        ///          &quot;Id&quot;: &quot;Activity1&quot;,
-        ///          &quot;Code&quot;: 103,
-        ///  [rest of string was truncated]&quot;;.
+        ///          &quot;I [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TransactionSingleSignerJson {
             get {
