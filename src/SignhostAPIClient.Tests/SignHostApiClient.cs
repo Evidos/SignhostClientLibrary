@@ -257,6 +257,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 				var signhostApiClient = new SignHostApiClient(settings);
 
+				// Create a 0 sized file
 				using (Stream file = System.IO.File.Create("unittestdocument.pdf"))
 				{
 					await signhostApiClient.AddOrReplaceFileToTransaction(file, "transaction Id", "file Id");
@@ -265,7 +266,84 @@ namespace Signhost.APIClient.Rest.Tests
 				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
 					.WithVerb(HttpMethod.Put)
 					.WithContentType("application/pdf")
+					.With(call =>
+						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
+						digestValues.Should().OnlyContain(v => v == "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=") != null)
 					.Times(1);
+			}
+		}
+
+		[Fact]
+		public async Task when_AddOrReplaceFileToTransaction_is_called_default_digest_is_sha256()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(string.Empty, 200);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				await signhostApiClient.AddOrReplaceFileToTransaction(new MemoryStream(), "transaction Id", "file Id");
+
+				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
+					.With(call =>
+						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
+						digestValues.Should().OnlyContain(v => v == "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=") != null)
+					;
+			}
+		}
+
+		[Fact]
+		public async Task when_AddOrReplaceFileToTransaction_with_sha512_is_called_default_digest_is_sha512()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(string.Empty, 200);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				await signhostApiClient.AddOrReplaceFileToTransaction(
+					new MemoryStream(),
+					"transaction Id",
+					"file Id",
+					new FileUploadOptions{
+					DigestOptions = new FileDigestOptions
+					{
+						DigestHashAlgorithm = "SHA-512"
+					}
+				});
+
+				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
+					.With(call =>
+						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
+						digestValues.Should().OnlyContain(v => v == "SHA-512=z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg==") != null)
+					;
+			}
+		}
+
+		[Fact]
+		public async Task when_AddOrReplaceFileToTransaction_with_digest_value_is_used_as_is()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(string.Empty, 200);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				await signhostApiClient.AddOrReplaceFileToTransaction(
+					new MemoryStream(),
+					"transaction Id",
+					"file Id",
+					new FileUploadOptions
+					{
+						DigestOptions = new FileDigestOptions
+						{
+							DigestHashAlgorithm = "SHA-1",
+							DigestHashValue = new byte[] { 0x00, 0x01, 0x02 }
+						}
+					});
+
+				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
+					.With(call =>
+						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
+						digestValues.Should().OnlyContain(v => v == "SHA-1=AAEC") != null)
+					;
 			}
 		}
 

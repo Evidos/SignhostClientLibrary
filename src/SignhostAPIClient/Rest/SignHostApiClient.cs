@@ -171,8 +171,13 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A Id for the file. Using the file name is recommended.
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
+		/// <param name="uploadOptions"><see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public Task AddOrReplaceFileToTransaction(Stream fileStream, string transactionId, string fileId)
+		public Task AddOrReplaceFileToTransaction(
+			Stream fileStream,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions)
 		{
 			if (fileStream == null) {
 				throw new ArgumentNullException(nameof(fileStream));
@@ -198,6 +203,10 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Contains invalid character.", nameof(fileId));
 			}
 
+			if (uploadOptions == null) {
+				uploadOptions = new FileUploadOptions();
+			}
+
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
@@ -206,7 +215,21 @@ namespace Signhost.APIClient.Rest
 					Application = ApplicationHeader,
 					Authorization = AuthorizationHeader
 				})
+				.WithDigest(fileStream, uploadOptions.DigestOptions)
 				.PutStreamAsync(fileStream, "application/pdf");
+		}
+
+		/// <inheritdoc cref="AddOrReplaceFileToTransaction(Stream, string, string, FileUploadOptions)" />
+		public Task AddOrReplaceFileToTransaction(
+			Stream fileStream,
+			string transactionId,
+			string fileId)
+		{
+			return AddOrReplaceFileToTransaction(
+				fileStream,
+				transactionId,
+				fileId,
+				null);
 		}
 
 		/// <summary>
@@ -218,8 +241,13 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A Id for the file. Using the file name is recommended.
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
+		/// <param name="uploadOptions">Optional <see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public async Task AddOrReplaceFileToTransaction(string filePath, string transactionId, string fileId)
+		public async Task AddOrReplaceFileToTransaction(
+			string filePath,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions)
 		{
 			if (filePath == null) {
 				throw new ArgumentNullException(nameof(filePath));
@@ -231,8 +259,26 @@ namespace Signhost.APIClient.Rest
 					FileAccess.Read,
 					FileShare.Delete | FileShare.Read))
 			{
-				await AddOrReplaceFileToTransaction(fileStream, transactionId, fileId).ConfigureAwait(false);
+				await AddOrReplaceFileToTransaction(
+						fileStream,
+						transactionId,
+						fileId,
+						uploadOptions)
+					.ConfigureAwait(false);
 			}
+		}
+
+		/// <inheritdoc cref="AddOrReplaceFileToTransaction(string, string, string, FileUploadOptions)" />
+		public Task AddOrReplaceFileToTransaction(
+			string filePath,
+			string transactionId,
+			string fileId)
+		{
+			return AddOrReplaceFileToTransaction(
+				filePath,
+				transactionId,
+				fileId,
+				null);
 		}
 
 		/// <summary>

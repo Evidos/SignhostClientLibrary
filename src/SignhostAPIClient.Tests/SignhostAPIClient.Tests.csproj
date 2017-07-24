@@ -30,25 +30,11 @@
     <RootNamespace>Signhost.APIClient.Rest.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="APIResponses.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>APIResponses.resx</DependentUpon>
-    </Compile>
-    <Compile Update="RequestBodies.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RequestBodies.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Update="APIResponses.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>APIResponses.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="RequestBodies.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RequestBodies.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
