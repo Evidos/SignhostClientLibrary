@@ -149,6 +149,32 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
+		public void When_GetTransaction_is_called_on_gone_transaction_we_shoud_get_a_GoneException()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(APIResponses.GetTransaction, 410);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
+				getTransaction.ShouldThrow<ErrorHandling.GoneException<Transaction>>();
+			}
+		}
+
+		[Fact]
+		public void When_GetTransaction_is_called_and_gone_is_expected_we_should_get_a_transaction()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(APIResponses.GetTransaction, 410);
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransactionResponse("transaction Id");
+				getTransaction.ShouldNotThrow();
+			}
+		}
+
+		[Fact]
 		public async Task when_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
 		{
 			using (HttpTest httpTest = new HttpTest()) {

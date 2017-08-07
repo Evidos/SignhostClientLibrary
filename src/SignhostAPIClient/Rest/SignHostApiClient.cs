@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Flurl.Http.Configuration;
+using Newtonsoft.Json;
 using Signhost.APIClient.Rest.DataObjects;
 
 namespace Signhost.APIClient.Rest
@@ -60,8 +61,8 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
-		/// <returns>A transaction object</returns>
-		public Task<Transaction> GetTransaction(string transactionId)
+		/// <returns>A <see cref="ApiResponse{Transaction}"/> object.
+		public async Task<ApiResponse<Transaction>> GetTransactionResponse(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -71,15 +72,37 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			return settings.Endpoint
+			var responseMessage = await settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
-				.WithHeaders(new
-				{
+				.WithHeaders(new {
 					Application = ApplicationHeader,
 					Authorization = AuthorizationHeader
 				})
+				.AllowHttpStatus("410")
 				.GetAsync()
-				.ReceiveJson<Transaction>();
+				.ConfigureAwait(false);
+
+			var transaction = JsonConvert.DeserializeObject<Transaction>(
+					await responseMessage.Content.ReadAsStringAsync()
+						.ConfigureAwait(false));
+
+			return new ApiResponse<Transaction>(responseMessage, transaction);
+		}
+
+		/// <summary>
+		/// Gets an exisiting transaction by providing a transaction id.
+		/// </summary>
+		/// <param name="transactionId">A valid transaction id for an existing
+		/// transaction</param>
+		/// <returns>A <see cref="Transaction"/> object.</returns>
+		public async Task<Transaction> GetTransaction(string transactionId)
+		{
+			var response = await GetTransactionResponse(transactionId)
+				.ConfigureAwait(false);
+
+			response.EnsureAvailableStatusCode();
+
+			return response.Value;
 		}
 
 		/// <summary>
