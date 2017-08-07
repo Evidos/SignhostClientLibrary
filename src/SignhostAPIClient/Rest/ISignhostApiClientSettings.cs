@@ -22,5 +22,9 @@ namespace Signhost.APIClient.Rest
 		/// Gets the signhost API endpoint.
 		/// </summary>
 		string Endpoint { get; }
+
+		Action<AddHeaders> AddHeader { get; }
 	}
+
+	public delegate void AddHeaders(string name, string value);
 }

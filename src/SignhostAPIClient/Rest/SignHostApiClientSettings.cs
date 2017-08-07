@@ -22,5 +22,7 @@ namespace Signhost.APIClient.Rest
 		public string APPKey { get; private set; }
 
 		public string Endpoint { get; set; } = DefaultEndpoint;
+
+		public Action<AddHeaders> AddHeader { get; set; }
 	}
 }

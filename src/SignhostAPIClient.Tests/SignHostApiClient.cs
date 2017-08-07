@@ -199,6 +199,26 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
+		public async Task when_a_CreateTransaction_is_called_we_can_add_custom_http_headers()
+		{
+			using (HttpTest httpTest = new HttpTest()) {
+				httpTest.RespondWith(APIResponses.AddTransaction, 200);
+
+				settings.AddHeader = (AddHeaders a) => a("X-Forwarded-For", "localhost");
+
+				var signhostApiClient = new SignHostApiClient(settings);
+
+				Transaction testTransaction = new Transaction();
+
+				var result = await signhostApiClient.CreateTransaction(testTransaction);
+
+				httpTest
+					.ShouldHaveCalled($"{settings.Endpoint}transaction")
+					.With(call => call.Request.Headers.Contains("X-Forwarded-For"));
+			}
+		}
+
+		[Fact]
 		public async Task when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
 		{
 			using (HttpTest httpTest = new HttpTest())

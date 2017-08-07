@@ -24,6 +24,7 @@ namespace Signhost.APIClient.Rest
 
 			FlurlHttp.Configure(c =>
 			{
+				c.BeforeCall = call => settings.AddHeader?.Invoke(call.Request.Headers.Add);
 				c.OnError = ErrorHandling.ErrorHandling.HandleError;
 			});
 		}
