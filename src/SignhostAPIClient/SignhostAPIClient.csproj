@@ -28,11 +28,9 @@
     </PackageReleaseNotes>
     <Company>Evidos</Company>
     <Description>A .NET library for the signhost.com api.</Description>
-    <InformationalVersion>$(VersionPrefix)</InformationalVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace>Signhost.APIClient</RootNamespace>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
   </PropertyGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />

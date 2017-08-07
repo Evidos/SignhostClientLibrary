@@ -214,7 +214,8 @@ namespace Signhost.APIClient.Rest.Tests
 
 				httpTest
 					.ShouldHaveCalled($"{settings.Endpoint}transaction")
-					.With(call => call.Request.Headers.Contains("X-Forwarded-For"));
+					.With(call => call.Request.Headers.Contains("X-Forwarded-For"))
+					.With(call => call.Request.Headers.UserAgent.ToString().Contains("SignhostClientLibrary"));
 			}
 		}
 

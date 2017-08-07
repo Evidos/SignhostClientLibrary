@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -10,8 +11,15 @@ using Signhost.APIClient.Rest.DataObjects;
 namespace Signhost.APIClient.Rest
 {
 	public class SignHostApiClient
+		: IDisposable
 	{
+		private static readonly string Version = typeof(SignHostApiClient)
+			.GetTypeInfo()
+			.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
+			.Version;
+
 		private readonly ISignHostApiClientSettings settings;
+		private readonly FlurlClient client;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
@@ -21,11 +29,15 @@ namespace Signhost.APIClient.Rest
 		public SignHostApiClient(ISignHostApiClientSettings settings)
 		{
 			this.settings = settings;
-
-			FlurlHttp.Configure(c =>
-			{
-				c.BeforeCall = call => settings.AddHeader?.Invoke(call.Request.Headers.Add);
-				c.OnError = ErrorHandling.ErrorHandling.HandleError;
+			this.client = new FlurlClient(new FlurlHttpSettings {
+				BeforeCall = call => {
+					settings.AddHeader?.Invoke(call.Request.Headers.Add);
+					call.Request.Headers.UserAgent.Add(
+						new System.Net.Http.Headers.ProductInfoHeaderValue(
+							"SignhostClientLibrary",
+							Version));
+				},
+				OnError = ErrorHandling.ErrorHandling.HandleError,
 			});
 		}
 
@@ -48,6 +60,7 @@ namespace Signhost.APIClient.Rest
 
 			return settings.Endpoint
 				.AppendPathSegment("transaction")
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -75,6 +88,7 @@ namespace Signhost.APIClient.Rest
 
 			var responseMessage = await settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
+				.WithClient(client)
 				.WithHeaders(new {
 					Application = ApplicationHeader,
 					Authorization = AuthorizationHeader
@@ -129,6 +143,7 @@ namespace Signhost.APIClient.Rest
 
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -178,6 +193,7 @@ namespace Signhost.APIClient.Rest
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -234,6 +250,7 @@ namespace Signhost.APIClient.Rest
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -323,6 +340,7 @@ namespace Signhost.APIClient.Rest
 
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId, "start")
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -349,6 +367,7 @@ namespace Signhost.APIClient.Rest
 
 			return settings.Endpoint
 				.AppendPathSegments("file", "receipt", transactionId)
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -390,6 +409,7 @@ namespace Signhost.APIClient.Rest
 			return settings.Endpoint
 				.AppendPathSegments("transaction", transactionId)
 				.AppendPathSegments("file", fileId)
+				.WithClient(client)
 				.WithHeaders(new
 				{
 					Application = ApplicationHeader,
@@ -397,6 +417,23 @@ namespace Signhost.APIClient.Rest
 				})
 				.GetAsync()
 				.ReceiveStream();
+		}
+
+		/// <inheritdoc/>
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Disposes the instance.
+		/// </summary>
+		/// <param name="disposing">Is <see cref="Dispose"/> callled.</param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing) {
+				client?.Dispose();
+			}
 		}
 
 		/// <summary>
