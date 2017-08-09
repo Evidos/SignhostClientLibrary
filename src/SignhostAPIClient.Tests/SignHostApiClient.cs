@@ -2,11 +2,12 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.IO;
-using Flurl.Http.Testing;
 using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
 using FluentAssertions;
 using System.Collections.Generic;
+using RichardSzalay.MockHttp;
+using System.Net;
 
 namespace Signhost.APIClient.Rest.Tests
 {
@@ -14,13 +15,21 @@ namespace Signhost.APIClient.Rest.Tests
 	{
 		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
 				"AppKey",
-				"AuthKey");
+				"AuthKey") {
+			Endpoint = "http://localhost/api/"
+		};
 
 		[Fact]
 		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				var signhostApiClient = new SignHostApiClient(settings);
+			var mockHttp = new MockHttpMessageHandler();
+
+			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/transactionId/file/fileId")
+				.WithContent(RequestBodies.AddOrReplaceFileMetaToTransaction)
+				.Respond(HttpStatusCode.OK);
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				var fileSignerMeta = new FileSignerMeta
 				{
@@ -54,133 +63,173 @@ namespace Signhost.APIClient.Rest.Tests
 				};
 
 				await signhostApiClient.AddOrReplaceFileMetaToTransaction(fileMeta, "transactionId", "fileId");
-
-				httpTest.CallLog[0].RequestBody.Should().Contain(RequestBodies.AddOrReplaceFileMetaToTransaction);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.GetTransaction, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.GetTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				var result = await signhostApiClient.GetTransaction("transaction Id");
 				result.Id.Should().Be("c487be92-0255-40c7-bd7d-20805a65e7d9");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*")
-					.WithVerb(HttpMethod.Get)
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetTransaction_is_called_and_the_authorization_is_bad_then_we_should_get_a_BadAuthorizationException()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.Unauthorized, new StringContent("{'message': 'unauthorized' }"));
 
-				httpTest.RespondWithJson(new { message = "unauthorized" }, 401);
+			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings);
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
 				getTransaction.ShouldThrow<UnauthorizedAccessException>();
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetTransaction_is_called_and_request_is_bad_then_we_should_get_a_BadRequestException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(new { message = "Bad Request" }, 400);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.BadRequest, new StringContent("{ 'message': 'Bad Request' }"));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
 				getTransaction.ShouldThrow<ErrorHandling.BadRequestException>();
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(new { message = "Not Found" }, 404);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.NotFound, new StringContent("{ 'Message': 'Not Found' }"));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.NotFoundException>();
+				getTransaction.ShouldThrow<ErrorHandling.NotFoundException>()
+					.WithMessage("Not Found");
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetTransaction_is_called_and_unkownerror_like_418_occures_then_we_should_get_a_SignhostException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(new { message = "418 I'm a teapot" }, 418);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond((HttpStatusCode)418, new StringContent("{ 'message': '418 I\\'m a teapot' }"));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
 				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>()
 					.WithMessage("*418*");
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetTransaction_is_called_and_there_is_an_InternalServerError_then_we_should_get_a_InternalServerErrorException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.InternalServerError, new StringContent("{ 'message': 'Internal Server Error' }"));
 
-				httpTest.RespondWithJson(new { message = "Internal Server Error" }, 500);
+			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings);
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
 				getTransaction.ShouldThrow<ErrorHandling.InternalServerErrorException>();
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void When_GetTransaction_is_called_on_gone_transaction_we_shoud_get_a_GoneException()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.GetTransaction, 410);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.Gone, new StringContent(APIResponses.GetTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
 				getTransaction.ShouldThrow<ErrorHandling.GoneException<Transaction>>();
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void When_GetTransaction_is_called_and_gone_is_expected_we_should_get_a_transaction()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.GetTransaction, 410);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.Gone, new StringContent(APIResponses.GetTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionResponse("transaction Id");
 				getTransaction.ShouldNotThrow();
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.AddTransaction, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
+				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.AddTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Signer testSigner = new Signer();
 				testSigner.Email = "firstname.lastname@gmail.com";
@@ -190,43 +239,45 @@ namespace Signhost.APIClient.Rest.Tests
 
 				var result = await signhostApiClient.CreateTransaction(testTransaction);
 				result.Id.Should().Be("c487be92-0255-40c7-bd7d-20805a65e7d9");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction")
-					.WithVerb(HttpMethod.Post)
-					.WithContentType("application/json")
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_a_CreateTransaction_is_called_we_can_add_custom_http_headers()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.AddTransaction, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
+				.WithHeaders("X-Forwarded-For", "localhost")
+				.With(matcher => matcher.Headers.UserAgent.ToString().Contains("SignhostClientLibrary"))
+				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.AddTransaction));
 
+			using (var httpClient = mockHttp.ToHttpClient()) {
 				settings.AddHeader = (AddHeaders a) => a("X-Forwarded-For", "localhost");
 
-				var signhostApiClient = new SignHostApiClient(settings);
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Transaction testTransaction = new Transaction();
 
 				var result = await signhostApiClient.CreateTransaction(testTransaction);
-
-				httpTest
-					.ShouldHaveCalled($"{settings.Endpoint}transaction")
-					.With(call => call.Request.Headers.Contains("X-Forwarded-For"))
-					.With(call => call.Request.Headers.UserAgent.ToString().Contains("SignhostClientLibrary"));
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public async Task when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
+		public void when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(new { message = "Bad Request" }, 400);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
+				.WithHeaders("Content-Type", "application/json")
+				.Respond(HttpStatusCode.BadRequest, new StringContent(" { 'message': 'Bad Request' }"));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Signer testSigner = new Signer();
 				testSigner.Email = "firstname.lastnamegmail.com";
@@ -236,115 +287,120 @@ namespace Signhost.APIClient.Rest.Tests
 
 				Func<Task> getTransaction = () => signhostApiClient.CreateTransaction(testTransaction);
 				getTransaction.ShouldThrow<ErrorHandling.BadRequestException>();
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction")
-					.WithVerb(HttpMethod.Post)
-					.WithContentType("application/json")
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
 		{
-			using (HttpTest httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(new { message = "Bad Gateway" }, 502);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.BadGateway, new StringContent(" { 'Message': 'Bad Gateway' }"));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransaction("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>();
+				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>()
+					.WithMessage("Bad Gateway");
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
+		public async Task when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.DeleteTransaction, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Delete, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.DeleteTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
-				signhostApiClient.DeleteTransaction("transaction Id");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*")
-					.WithVerb(HttpMethod.Delete)
-					.WithContentType("application/json")
-					.WithRequestBody(string.Empty)
-					.Times(1);
+				await signhostApiClient.DeleteTransaction("transaction Id");
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_a_DeleteTransaction_with_notification_is_called_then_we_should_have_called_the_transaction_delete_once()
+		public async Task when_a_DeleteTransaction_with_notification_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(APIResponses.DeleteTransaction, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Delete, "http://localhost/api/transaction/transaction Id")
+				.WithHeaders("Content-Type", "application/json")
+				//.With(matcher => matcher.Content.ToString().Contains("'SendNotifications': true"))
+				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.DeleteTransaction));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
-				signhostApiClient.DeleteTransaction(
+				await signhostApiClient.DeleteTransaction(
 					"transaction Id",
 					new DeleteTransactionOptions { SendNotifications = true });
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*")
-					.WithVerb(HttpMethod.Delete)
-					.WithContentType("application/json")
-					.WithRequestJson(new DeleteTransactionOptions { SendNotifications = true })
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_AddOrReplaceFileToTransaction_is_called_then_we_should_have_called_the_file_put_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Put, "http://localhost/api/transaction/transaction Id/file/file Id")
+				.WithHeaders("Content-Type", "application/pdf")
+				.WithHeaders("Digest", "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
+				.Respond(HttpStatusCode.OK);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				// Create a 0 sized file
 				using (Stream file = System.IO.File.Create("unittestdocument.pdf"))
 				{
 					await signhostApiClient.AddOrReplaceFileToTransaction(file, "transaction Id", "file Id");
 				}
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
-					.WithVerb(HttpMethod.Put)
-					.WithContentType("application/pdf")
-					.With(call =>
-						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
-						digestValues.Should().OnlyContain(v => v == "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=") != null)
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_AddOrReplaceFileToTransaction_is_called_default_digest_is_sha256()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Put, "http://localhost/api/transaction/transaction Id/file/file Id")
+				.WithHeaders("Digest", "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
+				.Respond(HttpStatusCode.OK);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransaction(new MemoryStream(), "transaction Id", "file Id");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
-					.With(call =>
-						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
-						digestValues.Should().OnlyContain(v => v == "SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=") != null)
-					;
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_AddOrReplaceFileToTransaction_with_sha512_is_called_default_digest_is_sha512()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Put, "http://localhost/api/transaction/transaction Id/file/file Id")
+				.WithHeaders("Digest", "SHA-512=z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg==")
+				.Respond(HttpStatusCode.OK);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransaction(
 					new MemoryStream(),
@@ -356,22 +412,22 @@ namespace Signhost.APIClient.Rest.Tests
 						DigestHashAlgorithm = "SHA-512"
 					}
 				});
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
-					.With(call =>
-						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
-						digestValues.Should().OnlyContain(v => v == "SHA-512=z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg==") != null)
-					;
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task when_AddOrReplaceFileToTransaction_with_digest_value_is_used_as_is()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Put, "http://localhost/api/transaction/transaction Id/file/file Id")
+				.WithHeaders("Digest", "SHA-1=AAEC")
+				.Respond(HttpStatusCode.OK);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransaction(
 					new MemoryStream(),
@@ -385,70 +441,71 @@ namespace Signhost.APIClient.Rest.Tests
 							DigestHashValue = new byte[] { 0x00, 0x01, 0x02 }
 						}
 					});
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
-					.With(call =>
-						call.Request.Headers.TryGetValues("Digest", out var digestValues) &&
-						digestValues.Should().OnlyContain(v => v == "SHA-1=AAEC") != null)
-					;
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect("http://localhost/api/transaction/transaction Id/start")
+				.Respond(HttpStatusCode.NoContent);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				signhostApiClient.StartTransaction("transaction Id");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/start")
-					.WithVerb(HttpMethod.Put)
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect("http://localhost/api/file/receipt/transaction ID")
+				.Respond(HttpStatusCode.OK);
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				var receipt = signhostApiClient.GetReceipt("transaction ID");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}file/receipt/*")
-					.WithVerb(HttpMethod.Get)
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public void when_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(string.Empty, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Get, "http://localhost/api/transaction/*/file/file Id")
+				.Respond(HttpStatusCode.OK, new StringContent(string.Empty));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				var document = signhostApiClient.GetDocument("transaction Id", "file Id");
-
-				httpTest.ShouldHaveCalled($"{settings.Endpoint}transaction/*/file/*")
-					.WithVerb(HttpMethod.Get)
-					.Times(1);
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
 		public async Task When_a_transaction_json_is_returned_it_is_deserialized_correctly()
 		{
-			using (HttpTest httpTest = new HttpTest()) {
-				httpTest.RespondWith(RequestBodies.TransactionSingleSignerJson, 200);
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction")
+				.Respond(HttpStatusCode.OK, new StringContent(RequestBodies.TransactionSingleSignerJson));
 
-				var signhostApiClient = new SignHostApiClient(settings);
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				var result = await signhostApiClient.CreateTransaction(new Transaction
 				{
@@ -489,6 +546,50 @@ namespace Signhost.APIClient.Rest.Tests
 					CreatedDateTime = DateTimeOffset.Parse("2017-05-31T22:15:17.6409005+02:00")
 				});
 			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Fact]
+		public async Task When_a_complete_transaction_flow_is_created_headers_are_not_set_multiple_times()
+		{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction")
+				.WithHeaders("Application", "APPKey AppKey")
+				.WithHeaders("Authorization", "APIKey AuthKey")
+				.WithHeaders("X-Custom", "test")
+				.Respond(new StringContent(RequestBodies.TransactionSingleSignerJson));
+			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
+				.WithHeaders("Application", "APPKey AppKey")
+				.WithHeaders("Authorization", "APIKey AuthKey")
+				.WithHeaders("X-Custom", "test")
+				.Respond(HttpStatusCode.Accepted, new StringContent(RequestBodies.AddOrReplaceFileMetaToTransaction));
+			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
+				.WithHeaders("Application", "APPKey AppKey")
+				.WithHeaders("Authorization", "APIKey AuthKey")
+				.WithHeaders("X-Custom", "test")
+				.Respond(HttpStatusCode.Created);
+			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/start")
+				.WithHeaders("Application", "APPKey AppKey")
+				.WithHeaders("Authorization", "APIKey AuthKey")
+				.WithHeaders("X-Custom", "test")
+				.Respond(HttpStatusCode.NoContent);
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				settings.AddHeader = add => add("X-Custom", "test");
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				var result = await signhostApiClient.CreateTransaction(new Transaction());
+				await signhostApiClient.AddOrReplaceFileMetaToTransaction(new FileMeta(), result.Id, "somefileid");
+				using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
+					await signhostApiClient.AddOrReplaceFileToTransaction(file, result.Id, "somefileid");
+				}
+				await signhostApiClient.StartTransaction(result.Id);
+			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+			mockHttp.VerifyNoOutstandingRequest();
 		}
 	}
 }

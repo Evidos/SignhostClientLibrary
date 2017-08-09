@@ -1,38 +1,39 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
-using Flurl.Http;
 
 namespace Signhost.APIClient.Rest
 {
 	/// <summary>
-	/// <see cref="IFlurlClient"/> digest extensions.
+	/// <see cref="StreamContent"/> digest extensions.
 	/// </summary>
-	public static class FlurlDigestOptionsExtensions
+	public static class StreamContentDigestOptionsExtensions
 	{
 		/// <summary>
 		/// Digest extension method on the <see cref="IFlurlClient"/>.
 		/// </summary>
-		/// <param name="client"><see cref="IFlurlClient"/></param>
+		/// <param name="content"><see cref="StreamContent"/></param>
 		/// <param name="fileStream"><see cref="Stream"/> of the filestream.
 		/// No digest is calculated if the stream is not <see cref="Stream.CanSeek"/>.</param>
 		/// <param name="options"><see cref="FileDigestOptions"/> digest options to use.</param>
 		/// <returns><see cref="IFlurlClient"/>.</returns>
-		public static IFlurlClient WithDigest(
-			this IFlurlClient client,
+		public static StreamContent WithDigest(
+			this StreamContent content,
 			Stream fileStream,
 			FileDigestOptions options)
 		{
 			if (!options.UseFileDigesting || options.DigestHashAlgorithm == null) {
-				return client;
+				return content;
 			}
 
 			SetHashValue(fileStream, options);
 
 			string base64Digest = Convert.ToBase64String(options.DigestHashValue);
 
-			return client
-				.WithHeader("Digest", $"{options.DigestHashAlgorithm}={base64Digest}");
+			content.Headers.Add("Digest", $"{options.DigestHashAlgorithm}={base64Digest}");
+
+			return content;
 		}
 
 		private static void SetHashValue(Stream fileStream, FileDigestOptions options)

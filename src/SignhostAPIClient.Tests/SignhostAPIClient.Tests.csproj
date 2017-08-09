@@ -9,9 +9,8 @@
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="FluentAssertions" Version="4.2.2" />
-    <PackageReference Include="Flurl" Version="2.3.0" />
-    <PackageReference Include="Flurl.Http" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="RichardSzalay.MockHttp" Version="1.5.*" />
     <PackageReference Include="xunit" Version="2.1.0" />
     <PackageReference Include="xunit.abstractions" Version="2.0.0" />
     <PackageReference Include="xunit.assert" Version="2.1.0" />

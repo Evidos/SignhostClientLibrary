@@ -4,6 +4,7 @@
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
+    <RootNamespace>Signhost.APIClient</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
@@ -36,8 +37,6 @@
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
   <ItemGroup Label="Package References">
-    <PackageReference Include="Flurl" Version="2.3.0" />
-    <PackageReference Include="Flurl.Http" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />

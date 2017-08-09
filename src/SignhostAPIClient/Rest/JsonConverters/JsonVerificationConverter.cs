@@ -33,7 +33,7 @@ namespace Signhost.APIClient.Rest.JsonConverters
 
 		private static IReadOnlyDictionary<string, TypeInfo> CreateVerificationTypeMap()
 		{
-			return typeof(JsonVerificationConverter).GetTypeInfo().Assembly.GetTypes()
+			return typeof(JsonVerificationConverter).GetTypeInfo().Assembly.ExportedTypes
 				.Select(t => t.GetTypeInfo())
 				.Where(t => typeof(IVerification).GetTypeInfo().IsAssignableFrom(t))
 				.Where(t => !t.IsInterface && !t.IsAbstract)
