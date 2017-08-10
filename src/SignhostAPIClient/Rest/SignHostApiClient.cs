@@ -59,6 +59,16 @@ namespace Signhost.APIClient.Rest
 			=> $"APIKey {settings.APIKey}";
 
 		/// <summary>
+		/// Globally register an additional verification type.
+		/// </summary>
+		/// <typeparam name="T"><see cref="IVerification"/> to </typeparam>
+		public static void RegisterVerification<T>()
+			where T : IVerification
+		{
+			JsonConverters.JsonVerificationConverter.RegisterVerification<T>();
+		}
+
+		/// <summary>
 		/// Creates a new transaction.
 		/// </summary>
 		/// <param name="transaction">A transaction model</param>

@@ -363,4 +363,71 @@
   "Context": null
 }</value>
   </data>
+  <data name="GetTransactionCustomVerificationType" xml:space="preserve">
+    <value>{
+	"Id": "c487be92-0255-40c7-bd7d-20805a65e7d9",
+	"Status": 20,
+	"Seal": true,
+	"Signers": [
+		{
+			"Id": "a2932c07-ca93-4011-96f5-a77d2cd1ec32",
+			"Expires": null,
+			"Email": "user@example.com",
+			"Mobile": "+31612345678",
+			"Iban": null,
+			"BSN": null,
+			"SendSignRequest": true,
+			"SendSignConfirmation": null,
+			"SignRequestMessage": "Hello, could you please sign this document? Best regards, John Doe",
+			"DaysToRemind": 15,
+			"Language": "en-US",
+			"Reference": "Client #123",
+			"ReturnUrl": "http://signhost.com",
+			"Verifications": [
+				{
+					"Type": "CustomVerificationType"
+				},
+				{
+					"Type": "PhoneNumber",
+					"Number": "123"
+				}
+			],
+			"Activities": [
+				{
+					"Id": "0b47eb5c-e800-4fe3-9795-09d380dff1f9",
+					"Code": 103,
+					"Activity": "Opened",
+					"CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+				},
+				{
+					"Id": "761f8678-116c-4e86-a47a-c8312681d285",
+					"Code": 203,
+					"Activity": "Signed",
+					"CreatedDateTime": "2016-03-17T21:13:55.1349315+01:00"
+				}
+			],
+			"SignUrl": "http://ui.signhost.com/sign/93dc596f-ab81-4d31-87aa-50352c4c237e",
+			"CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+			"ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+		}
+	],
+	"Receivers": [
+		{
+			"Id": "2fe3dddf-4b50-49d1-a3d2-45b7d175fb97",
+			"Name": "John Doe",
+			"Email": "user@example.com",
+			"Language": "en-US",
+			"Message": "Hello, please find enclosed the digital signed document. Best regards, John Doe",
+			"CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+			"ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+		}
+	],
+	"Reference": "Contract #123",
+	"SignRequestMode": 2,
+	"DaysToExpire": 30,
+	"SendEmailNotifications": true,
+	"CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+	"ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+}</value>
+  </data>
 </root>

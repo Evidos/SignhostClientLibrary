@@ -11,7 +11,7 @@ namespace Signhost.APIClient.Rest.JsonConverters
 	internal class JsonVerificationConverter
 		: JsonBaseConverter<IVerification>
 	{
-		private static readonly IReadOnlyDictionary<string, TypeInfo> VerificationTypes =
+		private static readonly IDictionary<string, TypeInfo> VerificationTypes =
 			CreateVerificationTypeMap();
 
 		public override bool CanWrite
@@ -19,6 +19,19 @@ namespace Signhost.APIClient.Rest.JsonConverters
 
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 			=> new NotImplementedException();
+
+		/// <summary>
+		/// Adds an additional verification type to the <see cref="VerificationTypes"/>
+		/// map.
+		/// </summary>
+		/// <typeparam name="T"><see cref="IVerification"/></typeparam>
+		internal static void RegisterVerification<T>()
+			where T : IVerification
+		{
+			var verification = (IVerification)Activator.CreateInstance(typeof(T));
+
+			VerificationTypes[verification.Type] = typeof(T).GetTypeInfo();
+		}
 
 		protected override IVerification Create(Type objectType, JObject jsonObject)
 		{
@@ -31,7 +44,7 @@ namespace Signhost.APIClient.Rest.JsonConverters
 			return new UnknownVerification();
 		}
 
-		private static IReadOnlyDictionary<string, TypeInfo> CreateVerificationTypeMap()
+		private static IDictionary<string, TypeInfo> CreateVerificationTypeMap()
 		{
 			return typeof(JsonVerificationConverter).GetTypeInfo().Assembly.ExportedTypes
 				.Select(t => t.GetTypeInfo())

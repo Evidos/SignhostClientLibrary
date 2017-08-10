@@ -591,5 +591,32 @@ namespace Signhost.APIClient.Rest.Tests
 			mockHttp.VerifyNoOutstandingExpectation();
 			mockHttp.VerifyNoOutstandingRequest();
 		}
+
+		[Fact]
+		public async Task When_a_custom_verificationtype_is_provided_it_is_deserialized_correctly()
+		{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/c487be92-0255-40c7-bd7d-20805a65e7d9")
+				.Respond(new StringContent(APIResponses.GetTransactionCustomVerificationType));
+
+			SignHostApiClient.RegisterVerification<CustomVerification>();
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				var result = await signhostApiClient.GetTransaction("c487be92-0255-40c7-bd7d-20805a65e7d9");
+
+				result.Signers[0].Verifications.Should().HaveCount(2);
+				result.Signers[0].Verifications[0].Should().BeOfType<CustomVerification>();
+				result.Signers[0].Verifications[1].Should().BeOfType<PhoneNumberVerification>().Which.Number.Should().Be("123");
+			}
+		}
+
+		public class CustomVerification
+			: IVerification
+		{
+			public string Type => "CustomVerificationType";
+		}
 	}
 }
