@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.IO;
@@ -363,8 +363,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				// Create a 0 sized file
-				using (Stream file = System.IO.File.Create("unittestdocument.pdf"))
-				{
+				using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
 					await signhostApiClient.AddOrReplaceFileToTransaction(file, "transaction Id", "file Id");
 				}
 			}
@@ -447,7 +446,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
+		public async Task when_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect("http://localhost/api/transaction/transaction Id/start")
@@ -457,14 +456,14 @@ namespace Signhost.APIClient.Rest.Tests
 
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
-				signhostApiClient.StartTransaction("transaction Id");
+				await signhostApiClient.StartTransaction("transaction Id");
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
+		public async Task when_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect("http://localhost/api/file/receipt/transaction ID")
@@ -473,14 +472,14 @@ namespace Signhost.APIClient.Rest.Tests
 			using (var httpClient = mockHttp.ToHttpClient()) {
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
-				var receipt = signhostApiClient.GetReceipt("transaction ID");
+				var receipt = await signhostApiClient.GetReceipt("transaction ID");
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
+		public async Task when_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, "http://localhost/api/transaction/*/file/file Id")
@@ -490,7 +489,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
-				var document = signhostApiClient.GetDocument("transaction Id", "file Id");
+				var document = await signhostApiClient.GetDocument("transaction Id", "file Id");
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
