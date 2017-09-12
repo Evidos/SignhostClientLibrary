@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,7 +36,7 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		/// <exception cref="SignhostRestApiClientException">
 		/// An other unknown API error occured.
 		/// </exception>
-		public static async Task<HttpResponseMessage> EnsureSignhostSuccessStatusCode(
+		public static async Task<HttpResponseMessage> EnsureSignhostSuccessStatusCodeAsync(
 			this Task<HttpResponseMessage> responseTask,
 			params HttpStatusCode[] expectedStatusCodes)
 		{

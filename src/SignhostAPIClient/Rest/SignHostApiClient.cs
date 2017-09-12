@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -73,17 +73,17 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="transaction">A transaction model</param>
 		/// <returns>A transaction object</returns>
-		public async Task<Transaction> CreateTransaction(Transaction transaction)
+		public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
 		{
 			if (transaction == null) {
 				throw new ArgumentNullException(nameof(transaction));
 			}
 
 			var result = await client.PostAsync("transaction", JsonContent.From(transaction))
-				.EnsureSignhostSuccessStatusCode()
+				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 
-			return await result.Content.FromJson<Transaction>()
+			return await result.Content.FromJsonAsync<Transaction>()
 				.ConfigureAwait(false);
 		}
 
@@ -93,7 +93,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
 		/// <returns>A <see cref="ApiResponse{Transaction}"/> object.
-		public async Task<ApiResponse<Transaction>> GetTransactionResponse(string transactionId)
+		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -104,9 +104,9 @@ namespace Signhost.APIClient.Rest
 			}
 
 			var result = await client.GetAsync("transaction".JoinPaths(transactionId))
-				.EnsureSignhostSuccessStatusCode(HttpStatusCode.Gone)
+				.EnsureSignhostSuccessStatusCodeAsync(HttpStatusCode.Gone)
 				.ConfigureAwait(false);
-			var transaction = await result.Content.FromJson<Transaction>()
+			var transaction = await result.Content.FromJsonAsync<Transaction>()
 				.ConfigureAwait(false);
 
 			return new ApiResponse<Transaction>(result, transaction);
@@ -118,9 +118,9 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction id for an existing
 		/// transaction</param>
 		/// <returns>A <see cref="Transaction"/> object.</returns>
-		public async Task<Transaction> GetTransaction(string transactionId)
+		public async Task<Transaction> GetTransactionAsync(string transactionId)
 		{
-			var response = await GetTransactionResponse(transactionId)
+			var response = await GetTransactionResponseAsync(transactionId)
 				.ConfigureAwait(false);
 
 			response.EnsureAvailableStatusCode();
@@ -135,7 +135,7 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="options">Optional <see cref="DeleteTransactionOptions"/>.</param>
 		/// <returns>A Task</returns>
-		public async Task DeleteTransaction(string transactionId, DeleteTransactionOptions options = null)
+		public async Task DeleteTransactionAsync(string transactionId, DeleteTransactionOptions options = null)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -152,7 +152,7 @@ namespace Signhost.APIClient.Rest
 			var request = new HttpRequestMessage(HttpMethod.Delete, "transaction".JoinPaths(transactionId));
 			request.Content = JsonContent.From(options);
 			var result = await client.SendAsync(request)
-				.EnsureSignhostSuccessStatusCode()
+				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
@@ -168,7 +168,7 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A task</returns>
 		/// <remarks>Make sure to call this method before
 		/// <see cref="AddOrReplaceFileToTransaction"/>.</remarks>
-		public async Task AddOrReplaceFileMetaToTransaction(FileMeta fileMeta, string transactionId, string fileId)
+		public async Task AddOrReplaceFileMetaToTransactionAsync(FileMeta fileMeta, string transactionId, string fileId)
 		{
 			if (fileMeta == null) {
 				throw new ArgumentNullException("fileMeta");
@@ -193,7 +193,7 @@ namespace Signhost.APIClient.Rest
 			var result = await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
 					JsonContent.From(fileMeta))
-				.EnsureSignhostSuccessStatusCode()
+				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
@@ -208,7 +208,7 @@ namespace Signhost.APIClient.Rest
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
 		/// <param name="uploadOptions"><see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public async Task AddOrReplaceFileToTransaction(
+		public async Task AddOrReplaceFileToTransactionAsync(
 			Stream fileStream,
 			string transactionId,
 			string fileId,
@@ -245,17 +245,17 @@ namespace Signhost.APIClient.Rest
 			var result = await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
 					content)
-				.EnsureSignhostSuccessStatusCode()
+				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
-		/// <inheritdoc cref="AddOrReplaceFileToTransaction(Stream, string, string, FileUploadOptions)" />
+		/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(Stream, string, string, FileUploadOptions)" />
 		public Task AddOrReplaceFileToTransaction(
 			Stream fileStream,
 			string transactionId,
 			string fileId)
 		{
-			return AddOrReplaceFileToTransaction(
+			return AddOrReplaceFileToTransactionAsync(
 				fileStream,
 				transactionId,
 				fileId,
@@ -273,7 +273,7 @@ namespace Signhost.APIClient.Rest
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
 		/// <param name="uploadOptions">Optional <see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public async Task AddOrReplaceFileToTransaction(
+		public async Task AddOrReplaceFileToTransactionAsync(
 			string filePath,
 			string transactionId,
 			string fileId,
@@ -289,7 +289,7 @@ namespace Signhost.APIClient.Rest
 					FileAccess.Read,
 					FileShare.Delete | FileShare.Read))
 			{
-				await AddOrReplaceFileToTransaction(
+				await AddOrReplaceFileToTransactionAsync(
 						fileStream,
 						transactionId,
 						fileId,
@@ -298,13 +298,13 @@ namespace Signhost.APIClient.Rest
 			}
 		}
 
-		/// <inheritdoc cref="AddOrReplaceFileToTransaction(string, string, string, FileUploadOptions)" />
+		/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(string, string, string, FileUploadOptions)" />
 		public Task AddOrReplaceFileToTransaction(
 			string filePath,
 			string transactionId,
 			string fileId)
 		{
-			return AddOrReplaceFileToTransaction(
+			return AddOrReplaceFileToTransactionAsync(
 				filePath,
 				transactionId,
 				fileId,
@@ -317,7 +317,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
 		/// <returns>A Task</returns>
-		public async Task StartTransaction(string transactionId)
+		public async Task StartTransactionAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -330,7 +330,7 @@ namespace Signhost.APIClient.Rest
 			var result = await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "start"),
 					null)
-				.EnsureSignhostSuccessStatusCode()
+				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
@@ -340,7 +340,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an finnished
 		/// transaction</param>
 		/// <returns>Returns a stream containing the receipt data</returns>
-		public async Task<Stream> GetReceipt(string transactionId)
+		public async Task<Stream> GetReceiptAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -364,7 +364,7 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A valid file Id of a signed document</param>
 		/// <returns>Returns a stream containing the signed document data</returns>
-		public async Task<Stream> GetDocument(string transactionId, string fileId)
+		public async Task<Stream> GetDocumentAsync(string transactionId, string fileId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));

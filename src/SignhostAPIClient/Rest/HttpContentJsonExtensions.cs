@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -16,7 +16,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="httpContent"><see cref="HttpContent"/> to read.</param>
 		/// <returns>A deserialized value of <see cref="T"/>
 		/// or default(T) if no content is available.</returns>
-		internal static async Task<T> FromJson<T>(this HttpContent httpContent)
+		internal static async Task<T> FromJsonAsync<T>(this HttpContent httpContent)
 		{
 			if (httpContent == null) {
 				return default(T);

@@ -11,7 +11,7 @@ You can request a APPKey for signhost at [ondertekenen.nl](https://www.onderteke
 ```c#
 var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey or usertoken"));
 
-var transaction = await client.CreateTransaction(new Transaction
+var transaction = await client.CreateTransactionAsync(new Transaction
 {
 	Signers = new List<Signer>
 	{
@@ -33,11 +33,11 @@ var transaction = await client.CreateTransaction(new Transaction
 	}
 });
 
-await client.AddOrReplaceFileToTransaction("PathToFile",    transaction.Id, "First document");
-await client.AddOrReplaceFileToTransaction("PathOtherFile", transaction.Id, "General agreement");
+await client.AddOrReplaceFileToTransactionAsync("PathToFile",    transaction.Id, "First document");
+await client.AddOrReplaceFileToTransactionAsync("PathOtherFile", transaction.Id, "General agreement");
 
 /* When everything is setup we can start the transaction flow */
-await client.StartTransaction(transaction.Id);
+await client.StartTransactionAsync(transaction.Id);
 
 ```
 
