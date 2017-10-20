@@ -606,9 +606,12 @@ namespace Signhost.APIClient.Rest.Tests
 
 				var result = await signhostApiClient.GetTransactionAsync("c487be92-0255-40c7-bd7d-20805a65e7d9");
 
-				result.Signers[0].Verifications.Should().HaveCount(2);
+				result.Signers[0].Verifications.Should().HaveCount(3);
 				result.Signers[0].Verifications[0].Should().BeOfType<CustomVerification>();
-				result.Signers[0].Verifications[1].Should().BeOfType<PhoneNumberVerification>().Which.Number.Should().Be("123");
+				result.Signers[0].Verifications[1].Should().BeOfType<IPAddressVerification>()
+					.Which.IPAddress.Should().Be("127.0.0.33");
+				result.Signers[0].Verifications[2].Should().BeOfType<PhoneNumberVerification>()
+					.Which.Number.Should().Be("123");
 			}
 		}
 

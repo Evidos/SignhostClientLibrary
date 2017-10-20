@@ -388,6 +388,10 @@
 					"Type": "CustomVerificationType"
 				},
 				{
+					"Type": "IPAddress",
+					"IPAddress": "127.0.0.33"
+				},
+				{
 					"Type": "PhoneNumber",
 					"Number": "123"
 				}
