@@ -39,7 +39,7 @@ namespace Signhost.APIClient.Rest.Tests {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Tests.APIResponses", typeof(APIResponses).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Rest.Tests.APIResponses", typeof(APIResponses).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -141,6 +141,33 @@ namespace Signhost.APIClient.Rest.Tests {
         internal static string GetTransaction {
             get {
                 return ResourceManager.GetString("GetTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///	&quot;Id&quot;: &quot;c487be92-0255-40c7-bd7d-20805a65e7d9&quot;,
+        ///	&quot;Status&quot;: 20,
+        ///	&quot;Seal&quot;: true,
+        ///	&quot;Signers&quot;: [
+        ///		{
+        ///			&quot;Id&quot;: &quot;a2932c07-ca93-4011-96f5-a77d2cd1ec32&quot;,
+        ///			&quot;Expires&quot;: null,
+        ///			&quot;Email&quot;: &quot;user@example.com&quot;,
+        ///			&quot;Mobile&quot;: &quot;+31612345678&quot;,
+        ///			&quot;Iban&quot;: null,
+        ///			&quot;BSN&quot;: null,
+        ///			&quot;SendSignRequest&quot;: true,
+        ///			&quot;SendSignConfirmation&quot;: null,
+        ///			&quot;SignRequestMessage&quot;: &quot;Hello, could you please sign this document? Best regards, John Doe&quot;,
+        ///			&quot;DaysToRemind&quot;: 15,
+        ///			&quot;Language&quot;: &quot;en-US&quot;,
+        ///			&quot;Reference&quot;: &quot;Client #123&quot;,
+        ///			&quot;ReturnUrl&quot;: &quot;h [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetTransactionCustomVerificationType {
+            get {
+                return ResourceManager.GetString("GetTransactionCustomVerificationType", resourceCulture);
             }
         }
     }

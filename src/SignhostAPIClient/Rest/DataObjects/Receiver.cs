@@ -1,9 +1,16 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
 	public class Receiver
 	{
+		[JsonConstructor]
+		private Receiver(IReadOnlyList<Activity> activities)
+		{
+			Activities = activities;
+		}
+
 		public string Name { get; set; }
 
 		public string Email { get; set; }
@@ -14,7 +21,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string Reference { get; set; }
 
-		public IList<dynamic> Activities { get; set; } = new List<dynamic>();
+		public IReadOnlyList<Activity> Activities { get; set; } =
+			new List<Activity>().AsReadOnly();
 
 		public dynamic Context { get; set; }
 	}

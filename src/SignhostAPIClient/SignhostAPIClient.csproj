@@ -1,107 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2A52486F-6D2C-479F-A7E5-CCD6F8953D5C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Build">
+    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
     <RootNamespace>Signhost.APIClient</RootNamespace>
-    <AssemblyName>SignhostClientLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <CodeAnalysisRuleSet>..\signhost.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\signhost.ruleset</CodeAnalysisRuleSet>
+  <PropertyGroup Label="Package">
+    <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
+    <VersionPrefix>3.0.$(VersionBuildNumber)</VersionPrefix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
+    <Authors>Evidos</Authors>
+    <Product>Signhost</Product>
+    <Copyright>Copyright 2016-2017 © Evidos</Copyright>
+    <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageId>SignhostClientLibrary</PackageId>
+    <PackageTags>sign;signing;digital signature;pdf</PackageTags>
+    <PackageReleaseNotes>
+* 3.0.0 - Bumped verifications support and added .net core target
+* 2.3.0 - Added support for custom forms creation over the API
+* 2.2.2 - Added basic parameter validation
+* 2.2.1 - Improved errorhandling
+* 2.2.0 - Add fillable PDFs api call
+* 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
+* 2.0.0 - First release using new multidoc API.
+    </PackageReleaseNotes>
+    <Company>Evidos</Company>
+    <Description>A .NET library for the signhost.com api.</Description>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Flurl, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.1.0.10\lib\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+MonoTouch10\Flurl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Flurl.Http, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.0.7.0\lib\net45\Flurl.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
+  <ItemGroup Label="Build">
+    <AdditionalFiles Include="../stylecop.json" />
+  </ItemGroup>
+  <ItemGroup Label="Package References">
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+  </ItemGroup>
+  <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Rest\DataObjects\Field.cs" />
-    <Compile Include="Rest\DataObjects\FileMeta.cs" />
-    <Compile Include="Rest\DataObjects\FileSignerMeta.cs" />
-    <Compile Include="Rest\DataObjects\Location.cs" />
-    <Compile Include="Rest\DataObjects\Activity.cs" />
-    <Compile Include="Rest\DataObjects\FileEntry.cs" />
-    <Compile Include="Rest\DataObjects\FileLink.cs" />
-    <Compile Include="Rest\DataObjects\Ideal.cs" />
-    <Compile Include="Rest\DataObjects\Idin.cs" />
-    <Compile Include="Rest\DataObjects\IVerification.cs" />
-    <Compile Include="Rest\DataObjects\UnknownVerification.cs" />
-    <Compile Include="Rest\ErrorHandling\BadAuthorizationException.cs" />
-    <Compile Include="Rest\ErrorHandling\BadRequestException.cs" />
-    <Compile Include="Rest\ErrorHandling\ErrorHandling.cs" />
-    <Compile Include="Rest\ErrorHandling\InternalServerErrorException.cs" />
-    <Compile Include="Rest\ErrorHandling\NotFoundException.cs" />
-    <Compile Include="Rest\ErrorHandling\SignhostException.cs" />
-    <Compile Include="Rest\ErrorHandling\SignhostRestApiClientException.cs" />
-    <Compile Include="Rest\ISignhostApiClientSettings.cs" />
-    <Compile Include="Rest\JsonConverters\JsonBaseConverter.cs" />
-    <Compile Include="Rest\JsonConverters\JsonVerificationConverter.cs" />
-    <Compile Include="Rest\SignHostApiClient.cs" />
-    <Compile Include="Rest\ConfigureHTTPClientExtensions.cs" />
-    <Compile Include="Rest\DataObjects\File.cs" />
-    <Compile Include="Rest\DataObjects\Receiver.cs" />
-    <Compile Include="Rest\DataObjects\Signer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rest\DataObjects\Transaction.cs" />
-    <Compile Include="Rest\SignHostApiClientSettings.cs" />
+  <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\signhost.ruleset" />
-    <AdditionalFiles Include="..\stylecop.json" />
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

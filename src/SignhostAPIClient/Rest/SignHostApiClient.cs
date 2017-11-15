@@ -1,31 +1,55 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
 using Signhost.APIClient.Rest.DataObjects;
+using Signhost.APIClient.Rest.ErrorHandling;
 
 namespace Signhost.APIClient.Rest
 {
 	public class SignHostApiClient
+		: IDisposable
 	{
+		private static readonly string Version = typeof(SignHostApiClient)
+			.GetTypeInfo()
+			.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
+			.Version;
+
 		private readonly ISignHostApiClientSettings settings;
+		private readonly HttpClient client;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
+		/// Set your usertoken and APPKey by creating a <see cref="SignHostApiClientSettings"/>.
+		/// </summary>
+		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
 		public SignHostApiClient(ISignHostApiClientSettings settings)
+			: this(settings, new HttpClient())
 		{
-			this.settings = settings;
-
-			FlurlHttp.Configure(c =>
-			{
-				c.OnError = ErrorHandling.ErrorHandling.HandleError;
-			});
 		}
 
-		public SignHostApiClient(string appName, string appKey, string authkey, string apiUrl = SignHostApiClientSettings.DefaultEndpoint)
-			: this(new SignHostApiClientSettings(appName, appKey, authkey) {
-				Endpoint = apiUrl
-			})
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
+		/// Set your usertoken and APPKey by creating a <see cref="SignHostApiClientSettings"/>.
+		/// </summary>
+		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
+		/// <param name="httpClient"><see cref="HttpClient"/> to use for all http calls.</param>
+		public SignHostApiClient(ISignHostApiClientSettings settings, HttpClient httpClient)
 		{
+			this.settings = settings;
+			this.client = httpClient;
+			this.client.BaseAddress = new Uri(
+				settings.Endpoint + (settings.Endpoint.EndsWith("/") ? string.Empty : "/"));
+			this.client.DefaultRequestHeaders.UserAgent.Add(
+				new System.Net.Http.Headers.ProductInfoHeaderValue(
+					"SignhostClientLibrary",
+					Version));
+			this.client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
+			this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
+			settings.AddHeader?.Invoke(this.client.DefaultRequestHeaders.Add);
 		}
 
 		private string ApplicationHeader
@@ -35,25 +59,32 @@ namespace Signhost.APIClient.Rest
 			=> $"APIKey {settings.APIKey}";
 
 		/// <summary>
+		/// Globally register an additional verification type.
+		/// </summary>
+		/// <typeparam name="T"><see cref="IVerification"/> to </typeparam>
+		public static void RegisterVerification<T>()
+			where T : IVerification
+		{
+			JsonConverters.JsonVerificationConverter.RegisterVerification<T>();
+		}
+
+		/// <summary>
 		/// Creates a new transaction.
 		/// </summary>
 		/// <param name="transaction">A transaction model</param>
 		/// <returns>A transaction object</returns>
-		public Task<Transaction> CreateTransaction(Transaction transaction)
+		public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
 		{
 			if (transaction == null) {
 				throw new ArgumentNullException(nameof(transaction));
 			}
 
-			return settings.Endpoint
-				.AppendPathSegment("transaction")
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.PostJsonAsync(transaction)
-				.ReceiveJson<Transaction>();
+			var result = await client.PostAsync("transaction", JsonContent.From(transaction))
+				.EnsureSignhostSuccessStatusCodeAsync()
+				.ConfigureAwait(false);
+
+			return await result.Content.FromJsonAsync<Transaction>()
+				.ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -61,8 +92,8 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
-		/// <returns>A transaction object</returns>
-		public Task<Transaction> GetTransaction(string transactionId)
+		/// <returns>A <see cref="ApiResponse{Transaction}"/> object.
+		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -72,15 +103,29 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.GetAsync()
-				.ReceiveJson<Transaction>();
+			var result = await client.GetAsync("transaction".JoinPaths(transactionId))
+				.EnsureSignhostSuccessStatusCodeAsync(HttpStatusCode.Gone)
+				.ConfigureAwait(false);
+			var transaction = await result.Content.FromJsonAsync<Transaction>()
+				.ConfigureAwait(false);
+
+			return new ApiResponse<Transaction>(result, transaction);
+		}
+
+		/// <summary>
+		/// Gets an exisiting transaction by providing a transaction id.
+		/// </summary>
+		/// <param name="transactionId">A valid transaction id for an existing
+		/// transaction</param>
+		/// <returns>A <see cref="Transaction"/> object.</returns>
+		public async Task<Transaction> GetTransactionAsync(string transactionId)
+		{
+			var response = await GetTransactionResponseAsync(transactionId)
+				.ConfigureAwait(false);
+
+			response.EnsureAvailableStatusCode();
+
+			return response.Value;
 		}
 
 		/// <summary>
@@ -88,8 +133,9 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
+		/// <param name="options">Optional <see cref="DeleteTransactionOptions"/>.</param>
 		/// <returns>A Task</returns>
-		public Task DeleteTransaction(string transactionId)
+		public async Task DeleteTransactionAsync(string transactionId, DeleteTransactionOptions options = null)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -99,14 +145,15 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.DeleteAsync();
+			if (options == null) {
+				options = new DeleteTransactionOptions();
+			}
+
+			var request = new HttpRequestMessage(HttpMethod.Delete, "transaction".JoinPaths(transactionId));
+			request.Content = JsonContent.From(options);
+			var result = await client.SendAsync(request)
+				.EnsureSignhostSuccessStatusCodeAsync()
+				.ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -121,7 +168,7 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A task</returns>
 		/// <remarks>Make sure to call this method before
 		/// <see cref="AddOrReplaceFileToTransaction"/>.</remarks>
-		public Task AddOrReplaceFileMetaToTransaction(FileMeta fileMeta, string transactionId, string fileId)
+		public async Task AddOrReplaceFileMetaToTransactionAsync(FileMeta fileMeta, string transactionId, string fileId)
 		{
 			if (fileMeta == null) {
 				throw new ArgumentNullException("fileMeta");
@@ -143,24 +190,12 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
-			if (!ValidPathSegment(fileId)) {
-				throw new ArgumentException("Contains invalid character.", nameof(fileId));
-			}
-
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId)
-				.AppendPathSegments("file", fileId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.PutJsonAsync(fileMeta);
+			var result = await client.PutAsync(
+					"transaction".JoinPaths(transactionId, "file", fileId),
+					JsonContent.From(fileMeta))
+				.EnsureSignhostSuccessStatusCodeAsync()
+				.ConfigureAwait(false);
 		}
-
-		[Obsolete("Deprecated, use AddOrReplaceFileToTransaction instead")]
-		public Task AddOrReplaceFileToTansaction(Stream fileStream, string transactionId, string fileId)
-			=> AddOrReplaceFileToTransaction(fileStream, transactionId, fileId);
 
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
@@ -171,8 +206,13 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A Id for the file. Using the file name is recommended.
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
+		/// <param name="uploadOptions"><see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public Task AddOrReplaceFileToTransaction(Stream fileStream, string transactionId, string fileId)
+		public async Task AddOrReplaceFileToTransactionAsync(
+			Stream fileStream,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions)
 		{
 			if (fileStream == null) {
 				throw new ArgumentNullException(nameof(fileStream));
@@ -194,24 +234,33 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
-			if (!ValidPathSegment(fileId)) {
-				throw new ArgumentException("Contains invalid character.", nameof(fileId));
+			if (uploadOptions == null) {
+				uploadOptions = new FileUploadOptions();
 			}
 
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId)
-				.AppendPathSegments("file", fileId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.PutStreamAsync(fileStream, "application/pdf");
+			var content = new StreamContent(fileStream)
+				.WithDigest(fileStream, uploadOptions.DigestOptions);
+			content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+
+			var result = await client.PutAsync(
+					"transaction".JoinPaths(transactionId, "file", fileId),
+					content)
+				.EnsureSignhostSuccessStatusCodeAsync()
+				.ConfigureAwait(false);
 		}
 
-		[Obsolete("Deprecated, use AddOrReplaceFileToTransaction instead")]
-		public Task AddOrReplaceFileToTansaction(string filePath, string transactionId, string fileId)
-			=> AddOrReplaceFileToTransaction(filePath, transactionId, fileId);
+		/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(Stream, string, string, FileUploadOptions)" />
+		public Task AddOrReplaceFileToTransaction(
+			Stream fileStream,
+			string transactionId,
+			string fileId)
+		{
+			return AddOrReplaceFileToTransactionAsync(
+				fileStream,
+				transactionId,
+				fileId,
+				null);
+		}
 
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
@@ -222,8 +271,13 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A Id for the file. Using the file name is recommended.
 		/// If a file with the same fileId allready exists the file wil be replaced</param>
+		/// <param name="uploadOptions">Optional <see cref="FileUploadOptions"/></param>
 		/// <returns>A Task</returns>
-		public async Task AddOrReplaceFileToTransaction(string filePath, string transactionId, string fileId)
+		public async Task AddOrReplaceFileToTransactionAsync(
+			string filePath,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions)
 		{
 			if (filePath == null) {
 				throw new ArgumentNullException(nameof(filePath));
@@ -235,8 +289,26 @@ namespace Signhost.APIClient.Rest
 					FileAccess.Read,
 					FileShare.Delete | FileShare.Read))
 			{
-				await AddOrReplaceFileToTransaction(fileStream, transactionId, fileId).ConfigureAwait(false);
+				await AddOrReplaceFileToTransactionAsync(
+						fileStream,
+						transactionId,
+						fileId,
+						uploadOptions)
+					.ConfigureAwait(false);
 			}
+		}
+
+		/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(string, string, string, FileUploadOptions)" />
+		public Task AddOrReplaceFileToTransaction(
+			string filePath,
+			string transactionId,
+			string fileId)
+		{
+			return AddOrReplaceFileToTransactionAsync(
+				filePath,
+				transactionId,
+				fileId,
+				null);
 		}
 
 		/// <summary>
@@ -245,7 +317,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an existing
 		/// transaction</param>
 		/// <returns>A Task</returns>
-		public Task StartTransaction(string transactionId)
+		public async Task StartTransactionAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -255,14 +327,11 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId, "start")
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.PutAsync();
+			var result = await client.PutAsync(
+					"transaction".JoinPaths(transactionId, "start"),
+					null)
+				.EnsureSignhostSuccessStatusCodeAsync()
+				.ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -271,7 +340,7 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an finnished
 		/// transaction</param>
 		/// <returns>Returns a stream containing the receipt data</returns>
-		public Task<Stream> GetReceipt(string transactionId)
+		public async Task<Stream> GetReceiptAsync(string transactionId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -281,15 +350,11 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			return settings.Endpoint
-				.AppendPathSegments("file", "receipt", transactionId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.GetAsync()
-				.ReceiveStream();
+			var result = await client.GetStreamAsync(
+					"file".JoinPaths("receipt", transactionId))
+				.ConfigureAwait(false);
+
+			return result;
 		}
 
 		/// <summary>
@@ -299,7 +364,7 @@ namespace Signhost.APIClient.Rest
 		/// transaction</param>
 		/// <param name="fileId">A valid file Id of a signed document</param>
 		/// <returns>Returns a stream containing the signed document data</returns>
-		public Task<Stream> GetDocument(string transactionId, string fileId)
+		public async Task<Stream> GetDocumentAsync(string transactionId, string fileId)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -317,33 +382,28 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
-			if (!ValidPathSegment(fileId)) {
-				throw new ArgumentException("Contains invalid character.", nameof(fileId));
-			}
+			var result = await client.GetStreamAsync(
+					"transaction".JoinPaths(transactionId, "file", fileId))
+				.ConfigureAwait(false);
 
-			return settings.Endpoint
-				.AppendPathSegments("transaction", transactionId)
-				.AppendPathSegments("file", fileId)
-				.WithHeaders(new
-				{
-					Application = ApplicationHeader,
-					Authorization = AuthorizationHeader
-				})
-				.GetAsync()
-				.ReceiveStream();
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public void Dispose()
+		{
+			Dispose(true);
 		}
 
 		/// <summary>
-		/// Flurl does some weird things when preparing the path segment making
-		/// it impossible to encode / as %2F as Flurl removes the encoding.
-		/// This method checks these unfortunate characters and returns false
-		/// if such a character is found.
+		/// Disposes the instance.
 		/// </summary>
-		/// <param name="segment">A URL segment</param>
-		/// <returns>True when the path segment is valid.</returns>
-		private bool ValidPathSegment(string segment)
+		/// <param name="disposing">Is <see cref="Dispose"/> callled.</param>
+		protected virtual void Dispose(bool disposing)
 		{
-			return segment.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1;
+			if (disposing) {
+				client?.Dispose();
+			}
 		}
 	}
 }

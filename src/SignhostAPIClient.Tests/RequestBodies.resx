@@ -120,4 +120,52 @@
   <data name="AddOrReplaceFileMetaToTransaction" xml:space="preserve">
     <value>{"DisplayOrder":null,"DisplayName":null,"Description":null,"Signers":{"someSignerId":{"FormSets":["SampleFormSet"]}},"FormSets":{"SampleFormSet":{"SampleCheck":{"Type":"Check","Value":"I agree","Location":{"Search":"test","Occurence":null,"Top":null,"Right":null,"Bottom":null,"Left":null,"Width":null,"Height":null,"PageNumber":null}}}}}</value>
   </data>
+  <data name="TransactionSingleSignerJson" xml:space="preserve">
+    <value>{
+  "Id": "50262c3f-9744-45bf-a4c6-8a3whatever",
+  "Status": 5,
+  "CanceledDateTime": "2017-01-01 15:00",
+  "Files": {},
+  "Seal": false,
+  "Signers": [
+    {
+      "Id": "Signer1",
+      "Email": "test1@example.com",
+      "Verifications": [
+        {
+          "Type": "PhoneNumber",
+          "Number": "+31615123456"
+        }
+      ],
+      "Mobile": "+31615087075",
+      "SignRequestMessage": "Hello 1st signer",
+      "Language": "nl-NL",
+      "Activities": [
+        {
+          "Id": "Activity1",
+          "Code": 103,
+          "CreatedDateTime": "2017-05-31T22:15:17.6409005+02:00"
+        },
+        {
+          "Id": "Activity2",
+          "Code": 105,
+          "Info": "592f2448347cd",
+          "CreatedDateTime": "2017-05-31T22:15:20.3284659+02:00"
+        },
+        {
+          "Id": "25dd4131-f1c4-4e4c-a407-c4164cfe4096",
+          "Code": 105,
+          "Info": "592f244834807",
+          "CreatedDateTime": "2017-05-31T22:15:24.4379773+02:00"
+        }
+      ]
+    }
+  ],
+  "Receivers": [],
+  "Reference": "Contract #123",
+  "SignRequestMode": 2,
+  "DaysToExpire": 14,
+  "Context": null
+}</value>
+  </data>
 </root>

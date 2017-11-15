@@ -11,46 +11,21 @@ namespace Signhost.APIClient.Rest.DataObjects
 		}
 
 		[JsonConstructor]
-		private Signer(IReadOnlyList<IVerification> verifications)
+		private Signer(IReadOnlyList<Activity> activities)
 		{
-			Verifications = verifications;
+			Activities = activities;
 		}
 
 		public string Id { get; set; }
 
-		public DateTime? Expires { get; set; }
+		public DateTimeOffset? Expires { get; set; }
 
 		public string Email { get; set; }
 
 		public string SignRequestMessage { get; set; }
 
-		public string Mobile { get; set; }
-
-		public IReadOnlyList<IVerification> Verifications { get; private set; }
-			= new List<IVerification>().AsReadOnly();
-
-		[Obsolete("Iban is obsolete, switch to Verification object")]
-		public string Iban { get; set; }
-
-		public string BSN { get; set; }
-
-		public bool RequireScribble { get; set; }
-
-		public bool RequireScribbleName { get; set; }
-
-		[Obsolete("No longer supported")]
-		public bool RequireEmailVerification { get; set; }
-
-		public bool RequireSmsVerification { get; set; }
-
-		[Obsolete("RequireIdealVerification is obsolete, switch to Verification object")]
-		public bool RequireIdealVerification { get; set; }
-
-		public bool RequireDigidVerification { get; set; }
-
-		public bool RequireKennisnetVerification { get; set; }
-
-		public bool RequireSurfnetVerification { get; set; }
+		public IList<IVerification> Verifications { get; set; }
+			= new List<IVerification>();
 
 		public bool SendSignRequest { get; set; }
 
@@ -72,7 +47,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string SignUrl { get; set; }
 
-		public IList<dynamic> Activities { get; set; } = new List<dynamic>();
+		public IReadOnlyList<Activity> Activities { get; private set; } =
+			new List<Activity>().AsReadOnly();
 
 		public dynamic Context { get; set; }
 	}

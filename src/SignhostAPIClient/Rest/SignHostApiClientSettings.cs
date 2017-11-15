@@ -17,14 +17,12 @@ namespace Signhost.APIClient.Rest
 			APIKey = apikey;
 		}
 
-		public SignHostApiClientSettings(string appName, string appKey, string authkey)
-			: this($"{appName} {appKey}", authkey) {
-		}
-
 		public string APIKey { get; private set; }
 
 		public string APPKey { get; private set; }
 
 		public string Endpoint { get; set; } = DefaultEndpoint;
+
+		public Action<AddHeaders> AddHeader { get; set; }
 	}
 }

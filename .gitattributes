@@ -21,7 +21,7 @@
 
 # Custom for Visual Studio
 *.sln text eol=crlf merge=union
-*.csproj merge=union
+*.csproj text
 *.vbproj merge=union
 *.fsproj merge=union
 *.dbproj merge=union

@@ -27,9 +27,11 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		{
 		}
 
+#if SERIALIZABLE
 		protected BadAuthorizationException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}
+#endif
 	}
 }

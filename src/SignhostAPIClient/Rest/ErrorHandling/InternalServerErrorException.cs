@@ -19,8 +19,8 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		}
 
 		public InternalServerErrorException(
-			string message, Exception innerException, RetryConditionHeaderValue retryAfter)
-			: base(message, innerException)
+			string message, RetryConditionHeaderValue retryAfter)
+			: base(message)
 		{
 			HelpLink = "https://api.signhost.com/Help";
 
@@ -35,10 +35,12 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			}
 		}
 
+#if SERIALIZABLE
 		protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}
+#endif
 
 		private DateTimeOffset? RetryAfter { get; set; }
 	}

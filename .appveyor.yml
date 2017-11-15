@@ -1,27 +1,31 @@
-version: 2.3.0.{build}
-
 environment:
+  SH_VERSION_SUFFIX: 'preview'
+
   github_auth_token:
     secure: qOQatfN0omwlCj5Td82fK9Z3ZKQom0Nv3/x6OH98iB+L9mfOf26bH3q+PnQ7y7g7
 
 configuration: Release
 
-assembly_info:
-  patch: true
-  file: src\SignhostAPIClient\Properties\AssemblyInfo.cs
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
+image: Visual Studio 2017
+
+for:
+- branches:
+    only:
+      - master
+  environment:
+    SH_VERSION_SUFFIX: ''
 
 before_build:
-- cmd: nuget restore "src\SignhostAPIClient.sln
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { Set-AppveyorBuildVariable 'SH_VERSION_SUFFIX' 'alpha' }
+  - choco install "msbuild-sonarqube-runner" -y
+  - cmd: nuget restore "src\SignhostAPIClient.sln
 
 build_script:
-  - choco install "msbuild-sonarqube-runner" -y
-  - ps: Write-Output Hi $env:github_auth_token
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { MSBuild.SonarQube.Runner.exe begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Evidos/SignhostClientLibrary" /d:"sonar.github.oauth=$env:github_auth_token" }
   - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { MSBuild.SonarQube.Runner.exe begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" }
-  - msbuild "src\SignhostAPIClient.sln"
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER -or -not $env:github_auth_token) { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
+  - msbuild /m /t:Pack "src\SignhostAPIClient.sln"
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
+  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { MSBuild.SonarQube.Runner.exe end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
 
 build:
   parallel: true
@@ -34,7 +38,7 @@ nuget:
   disable_publish_on_pr: false
 
 artifacts:
-  - path: '**\SignhostAPIClient*.nupkg'
+  - path: '**\*.nupkg'
     name: Nuget
 
 notifications:

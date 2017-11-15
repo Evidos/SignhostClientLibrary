@@ -1,9 +1,9 @@
 ﻿namespace Signhost.APIClient.Rest.DataObjects
 {
-	public class Ideal
+	public class IdealVerification
 		: IVerification
 	{
-		public string Type { get; } = "iDeal";
+		public string Type => "iDeal";
 
 		public string Iban { get; set; }
 

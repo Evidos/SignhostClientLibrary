@@ -6,7 +6,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 	{
 		public string Id { get; set; }
 
-		public int Code { get; set; }
+		public ActivityType Code { get; set; }
 
 		public string Info { get; set; }
 

@@ -39,7 +39,7 @@ namespace Signhost.APIClient.Rest.Tests {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Tests.RequestBodies", typeof(RequestBodies).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Signhost.APIClient.Rest.Tests.RequestBodies", typeof(RequestBodies).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,36 @@ namespace Signhost.APIClient.Rest.Tests {
         internal static string AddOrReplaceFileMetaToTransaction {
             get {
                 return ResourceManager.GetString("AddOrReplaceFileMetaToTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;Id&quot;: &quot;50262c3f-9744-45bf-a4c6-8a3whatever&quot;,
+        ///  &quot;Status&quot;: 5,
+        ///  &quot;CanceledDateTime&quot;: &quot;2017-01-01 15:00&quot;,
+        ///  &quot;Files&quot;: {},
+        ///  &quot;Seal&quot;: false,
+        ///  &quot;Signers&quot;: [
+        ///    {
+        ///      &quot;Id&quot;: &quot;Signer1&quot;,
+        ///      &quot;Email&quot;: &quot;test1@example.com&quot;,
+        ///      &quot;Verifications&quot;: [
+        ///        {
+        ///          &quot;Type&quot;: &quot;PhoneNumber&quot;,
+        ///          &quot;Number&quot;: &quot;+31615123456&quot;
+        ///        }
+        ///      ],
+        ///      &quot;Mobile&quot;: &quot;+31615087075&quot;,
+        ///      &quot;SignRequestMessage&quot;: &quot;Hello 1st signer&quot;,
+        ///      &quot;Language&quot;: &quot;nl-NL&quot;,
+        ///      &quot;Activities&quot;: [
+        ///        {
+        ///          &quot;I [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TransactionSingleSignerJson {
+            get {
+                return ResourceManager.GetString("TransactionSingleSignerJson", resourceCulture);
             }
         }
     }
