@@ -4,7 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Signhost.APIClient.Rest.DataObjects;
 using Signhost.APIClient.Rest.ErrorHandling;
 
@@ -20,6 +23,112 @@ namespace Signhost.APIClient.Rest
 
 		private readonly ISignHostApiClientSettings settings;
 		private readonly HttpClient client;
+
+        /*
+        public bool TryReceivePostback(IDictionary<string, string[]> headers, Stream body, out Transaction transaction){
+            // parse headers and body
+            // retrieve given checksum
+            // Calculate expected checksum
+
+            if (givenChecksum == expectedChecksum){
+                transaction = // parsed json
+                return true;
+            }
+
+            return false;
+        }
+        */
+
+		/*
+        /// <summary>
+        /// Calculates and validates checksum.
+        /// </summary>
+        /// <param name="transactionId">Transaction identifier.</param>
+        /// <param name="transactionStatus">Status.</param>
+        /// <param name="sharedSecret">Shared secret.</param>
+        /// <param name="validChecksum">valid checksum</param>
+        public void CalculateAndValidateChecksum(
+			string transactionId, 
+			string transactionStatus, 
+			string sharedSecret, 
+			string validChecksum) 
+        {
+            var checksumString = $"{transactionId}||{transactionStatus}|{sharedSecret}";
+            var checksumByteArray = System.Text.Encoding.UTF8.GetBytes(checksumString);
+            byte[] result;
+
+            System.Security.Cryptography.HashAlgorithm hashalgorithm = null;
+
+#if NETSTANDARD1_4
+            switch ("SHA1")
+            {
+                case "SHA1":
+                case "SHA-1":
+                    hashalgorithm = SHA1.Create();
+                    break;
+                case "SHA256":
+                case "SHA-256":
+                    hashalgorithm = SHA256.Create();
+                    break;
+                case "SHA384":
+                case "SHA-384":
+                    hashalgorithm = SHA384.Create();
+                    break;
+                case "SHA512":
+                case "SHA-512":
+                    hashalgorithm = SHA512.Create();
+                    break;
+            }
+#else
+            algorithm = HashAlgorithm.Create(algorithmName);
+#endif
+
+            result = hashalgorithm.ComputeHash(checksumByteArray);
+
+            string checksumHexadecimal = BitConverter
+                .ToString(result)
+                .ToLower()
+                .Replace("-", string.Empty);
+
+            if (checksumHexadecimal != validChecksum) {
+                throw new BadAuthorizationException("Checksum is invalid.");
+            }
+        }
+		*/
+
+		public static bool IsPostbackChecksumValid(string postback, string sharedSecred)
+		{
+			string transactionId;
+			long status;
+			string postbackChecksum;
+			string sharedSecret = sharedSecred;
+			string calculatedChecksum;
+
+			try {
+				Postback obj = JsonConvert.DeserializeObject<Postback>(postback);
+
+				transactionId = obj.Id;
+				status = obj.Status;
+				postbackChecksum = obj.Checksum;
+
+				if(!string.IsNullOrEmpty(transactionId) && !string.IsNullOrEmpty(status.ToString()) && !string.IsNullOrEmpty(postbackChecksum))
+				{
+					using (var sha1 = SHA1.Create())
+					{
+						var preCalculatedChecksum = sha1.ComputeHash(Encoding.UTF8.GetBytes(
+						$"{transactionId}||{status}|{sharedSecret}"));
+						calculatedChecksum = BitConverter.ToString(preCalculatedChecksum).Replace("-", string.Empty).ToLower();
+					};
+				} else {
+					throw new Exception("Invalid postback format.");
+				}
+				}
+			catch {
+				throw new Exception("Invalid postback");
+			}
+
+			return string.Equals(calculatedChecksum, postbackChecksum);
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
@@ -283,7 +392,7 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentNullException(nameof(filePath));
 			}
 
-			using (Stream fileStream = System.IO.File.Open(
+			using (Stream fileStream = File.Open(
 					filePath,
 					FileMode.Open,
 					FileAccess.Read,

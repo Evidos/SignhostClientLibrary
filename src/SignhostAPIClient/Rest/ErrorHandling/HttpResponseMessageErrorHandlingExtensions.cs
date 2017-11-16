@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -62,7 +63,7 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 
 			switch (response.StatusCode) {
 				case HttpStatusCode.Unauthorized:
-					throw new System.UnauthorizedAccessException(
+					throw new UnauthorizedAccessException(
 						errorMessage);
 				case HttpStatusCode.BadRequest:
 					throw new BadRequestException(
@@ -78,7 +79,7 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 						errorMessage);
 			}
 
-			System.Diagnostics.Debug.Fail("Should not be reached");
+			Debug.Fail("Should not be reached");
 		}
 	}
 }

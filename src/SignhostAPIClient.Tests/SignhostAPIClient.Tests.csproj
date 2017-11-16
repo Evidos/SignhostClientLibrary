@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <VersionSuffix>test</VersionSuffix>
   </PropertyGroup>
@@ -8,15 +8,11 @@
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
   <ItemGroup Label="Package References">
-    <PackageReference Include="FluentAssertions" Version="4.2.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="1.5.*" />
-    <PackageReference Include="xunit" Version="2.1.0" />
-    <PackageReference Include="xunit.abstractions" Version="2.0.0" />
-    <PackageReference Include="xunit.assert" Version="2.1.0" />
-    <PackageReference Include="xunit.core" Version="2.1.0" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.1.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References">
     <Reference Include="System.Net" />

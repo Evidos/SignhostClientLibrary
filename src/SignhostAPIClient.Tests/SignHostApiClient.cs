@@ -20,10 +20,52 @@ namespace Signhost.APIClient.Rest.Tests
 		};
 
 		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_valid_postback_then_true_is_returned()
+		{
+			// Arrange
+			string sharedSecret = "UwMKSuFPtydaZHpNzVyJDfgX7f1wMf6F";
+			string truechecksum = @"{""Id"":""47af4d88-dcff-400a-b5cb-02b73e69602f"",""Status"":30,""Files"":{""InsomniaDocument"":{""Links"":[{""Rel"":""file"",""Type"":""application / pdf"",""Link"":""https://api.signhost.com/api/transaction/47af4d88-dcff-400a-b5cb-02b73e69602f/file/InsomniaDocument""}],""DisplayName"":""InsomniaDocument""}},""Seal"":false,""Signers"":[{""Id"":""Signer1"",""Expires"":null,""Email"":""d.jakupovic@evidos.nl"",""Verifications"":[{""Type"":""Scribble"",""RequireHandsignature"":true,""ScribbleNameFixed"":false},{""Type"":""IPAddress"",""IPAddress"":""95.97.133.42""}],""Mobile"":null,""Iban"":null,""BSN"":null,""RequireScribbleName"":true,""RequireScribble"":true,""RequireEmailVerification"":true,""RequireSmsVerification"":false,""RequireIdealVerification"":false,""RequireDigidVerification"":false,""RequireKennisnetVerification"":false,""RequireSurfnetVerification"":false,""SendSignRequest"":true,""SendSignConfirmation"":false,""SignRequestMessage"":""Dear Signer, Send from Insomnia, please sign."",""DaysToRemind"":2,""Language"":""nl-NL"",""ScribbleName"":""de"",""ScribbleNameFixed"":false,""Reference"":null,""ReturnUrl"":""https://androidworld.nl/"",""Activities"":[{""Id"":""9c0fae67-4ca2-4362-843a-69b3b69c648d"",""Code"":101,""Activity"":""InvitationSent"",""CreatedDateTime"":""2018-02-21T15:07:23.5731112+01:00""},{""Id"":""5715f46d-4209-47a7-b176-e225e59c9120"",""Code"":103,""Activity"":""Opened"",""CreatedDateTime"":""2018-02-21T15:07:30.7395289+01:00""},{""Id"":""a017ba56-18e3-401c-83e1-bd3ae88b6849"",""Code"":105,""Activity"":""DocumentOpened"",""Info"":""InsomniaDocument"",""CreatedDateTime"":""2018-02-21T15:07:31.0989104+01:00""},{""Id"":""967e9597-de0b-4dbe-ad29-ae54a67669bd"",""Code"":203,""Activity"":""Signed"",""CreatedDateTime"":""2018-02-21T15:07:38.3545781+01:00""}],""RejectReason"":null,""SignUrl"":""https://view.signhost.com/sign/f5b8a769-c0e6-4b9d-8769-63ddfd47ff41"",""SignedDateTime"":""2018-02-21T15:07:36+01:00"",""RejectDateTime"":null,""CreatedDateTime"":""2018-02-21T15:07:17.1612932+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:38.3545781+01:00"",""Context"":{""InsomniaDocument"":{}}}],""Receivers"":[{""Id"":""f040f830-91c2-4afa-8023-712b9a6ab140"",""Name"":""Dennis"",""Email"":""d.jakupovic@evidos.nl"",""Language"":""nl-NL"",""Message"":""Hierbij het ondertekenverzoek dat je ontvangt als receiver vanuit Insomnia"",""Reference"":""Referentie Insomnia-Receiver"",""Activities"":[{""Id"":""4b52716c-9105-476d-b754-807b36d86f89"",""Code"":301,""Activity"":""SignedDocumentSent"",""CreatedDateTime"":""2018-02-21T15:07:40.5889877+01:00""}],""CreatedDateTime"":""2018-02-21T15:07:17.2081649+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:17.2081649+01:00"",""Context"":null}],""Reference"":""Insomnia transaction reference"",""PostbackUrl"":""https://requestb.in/1fplcsk1"",""SignRequestMode"":2,""DaysToExpire"":3,""SendEmailNotifications"":false,""CreatedDateTime"":""2018-02-21T15:07:17.083161+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:40.5264869+01:00"",""CanceledDateTime"":null,""Context"":{""Environment"":""Production"",""Context"":true},""Checksum"":""e861fa102c7ca5f75f36347849adbb4561638749""}";
+
+			// Act
+			bool validatePostback = SignHostApiClient.IsPostbackChecksumValid(truechecksum, sharedSecret);
+
+			// Assert
+			validatePostback.ShouldBeEquivalentTo(true);
+		}
+
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_checksum_then_false_is_returned()
+		{
+			// Arrange
+			string sharedSecret = "UwMKSuFPtydaZHpNzVyJDfgX7f1wMf6F";
+			string falsechecksum = @"{""Id"":""47af4d88-dcff-400a-b5cb-02b73e69602f"",""Status"":30,""Files"":{""InsomniaDocument"":{""Links"":[{""Rel"":""file"",""Type"":""application / pdf"",""Link"":""https://api.signhost.com/api/transaction/47af4d88-dcff-400a-b5cb-02b73e69602f/file/InsomniaDocument""}],""DisplayName"":""InsomniaDocument""}},""Seal"":false,""Signers"":[{""Id"":""Signer1"",""Expires"":null,""Email"":""d.jakupovic@evidos.nl"",""Verifications"":[{""Type"":""Scribble"",""RequireHandsignature"":true,""ScribbleNameFixed"":false},{""Type"":""IPAddress"",""IPAddress"":""95.97.133.42""}],""Mobile"":null,""Iban"":null,""BSN"":null,""RequireScribbleName"":true,""RequireScribble"":true,""RequireEmailVerification"":true,""RequireSmsVerification"":false,""RequireIdealVerification"":false,""RequireDigidVerification"":false,""RequireKennisnetVerification"":false,""RequireSurfnetVerification"":false,""SendSignRequest"":true,""SendSignConfirmation"":false,""SignRequestMessage"":""Dear Signer, Send from Insomnia, please sign."",""DaysToRemind"":2,""Language"":""nl-NL"",""ScribbleName"":""de"",""ScribbleNameFixed"":false,""Reference"":null,""ReturnUrl"":""https://androidworld.nl/"",""Activities"":[{""Id"":""9c0fae67-4ca2-4362-843a-69b3b69c648d"",""Code"":101,""Activity"":""InvitationSent"",""CreatedDateTime"":""2018-02-21T15:07:23.5731112+01:00""},{""Id"":""5715f46d-4209-47a7-b176-e225e59c9120"",""Code"":103,""Activity"":""Opened"",""CreatedDateTime"":""2018-02-21T15:07:30.7395289+01:00""},{""Id"":""a017ba56-18e3-401c-83e1-bd3ae88b6849"",""Code"":105,""Activity"":""DocumentOpened"",""Info"":""InsomniaDocument"",""CreatedDateTime"":""2018-02-21T15:07:31.0989104+01:00""},{""Id"":""967e9597-de0b-4dbe-ad29-ae54a67669bd"",""Code"":203,""Activity"":""Signed"",""CreatedDateTime"":""2018-02-21T15:07:38.3545781+01:00""}],""RejectReason"":null,""SignUrl"":""https://view.signhost.com/sign/f5b8a769-c0e6-4b9d-8769-63ddfd47ff41"",""SignedDateTime"":""2018-02-21T15:07:36+01:00"",""RejectDateTime"":null,""CreatedDateTime"":""2018-02-21T15:07:17.1612932+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:38.3545781+01:00"",""Context"":{""InsomniaDocument"":{}}}],""Receivers"":[{""Id"":""f040f830-91c2-4afa-8023-712b9a6ab140"",""Name"":""Dennis"",""Email"":""d.jakupovic@evidos.nl"",""Language"":""nl-NL"",""Message"":""Hierbij het ondertekenverzoek dat je ontvangt als receiver vanuit Insomnia"",""Reference"":""Referentie Insomnia-Receiver"",""Activities"":[{""Id"":""4b52716c-9105-476d-b754-807b36d86f89"",""Code"":301,""Activity"":""SignedDocumentSent"",""CreatedDateTime"":""2018-02-21T15:07:40.5889877+01:00""}],""CreatedDateTime"":""2018-02-21T15:07:17.2081649+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:17.2081649+01:00"",""Context"":null}],""Reference"":""Insomnia transaction reference"",""PostbackUrl"":""https://requestb.in/1fplcsk1"",""SignRequestMode"":2,""DaysToExpire"":3,""SendEmailNotifications"":false,""CreatedDateTime"":""2018-02-21T15:07:17.083161+01:00"",""ModifiedDateTime"":""2018-02-21T15:07:40.5264869+01:00"",""CanceledDateTime"":null,""Context"":{""Environment"":""Production"",""Context"":true},""Checksum"":""e861fa102c7ca5f75f36347849adbb4561638740""}";
+
+			// Act
+			bool validatePostback = SignHostApiClient.IsPostbackChecksumValid(falsechecksum, sharedSecret);
+
+			// Assert
+			validatePostback.ShouldBeEquivalentTo(false);
+		}
+
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_format_then_exception_is_thrown()
+		{
+			// Arrange
+			string sharedSecret = "UwMKSuFPtydaZHpNzVyJDfgX7f1wMf6F";
+			string falsepostback = @"{""I'm not a valid postback"":""I'm still not a valid postback""}";
+			//string falsepostback = "I'm not a valid postback";
+
+			// Act
+			Action validatePostback = () => SignHostApiClient.IsPostbackChecksumValid(falsepostback, sharedSecret);
+
+			// Assert
+			validatePostback.ShouldThrow<Exception>(); 
+		}
+
+		[Fact]
 		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
 			var mockHttp = new MockHttpMessageHandler();
-
 			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/transactionId/file/fileId")
 				.WithContent(RequestBodies.AddOrReplaceFileMetaToTransaction)
 				.Respond(HttpStatusCode.OK);
