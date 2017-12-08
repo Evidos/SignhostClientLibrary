@@ -8,6 +8,13 @@ This is a client library in c# to demonstrate the usage of the [signhost api](ht
 You will need a valid APPKey and APIKey.
 You can request a APPKey for signhost at [ondertekenen.nl](https://www.ondertekenen.nl/api-proefversie/).
 
+### Install
+Get it on NuGet:
+
+`PM> Install-Package SignhostClientLibrary`
+
+### Example code
+The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
 var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey or usertoken"));
 
@@ -40,7 +47,3 @@ await client.AddOrReplaceFileToTransactionAsync("PathOtherFile", transaction.Id,
 await client.StartTransactionAsync(transaction.Id);
 
 ```
-
-Get it on NuGet:
-
-`PM> Install-Package SignhostClientLibrary`
