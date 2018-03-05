@@ -10,8 +10,13 @@ using Signhost.APIClient.Rest.ErrorHandling;
 
 namespace Signhost.APIClient.Rest
 {
+	/// <summary>
+	/// Implements the <see cref="ISignHostApiClient"/> interface which provides
+	/// an signhost api client implementation.
+	/// </summary>
 	public class SignHostApiClient
-		: IDisposable
+		: ISignHostApiClient
+		, IDisposable
 	{
 		private static readonly string Version = typeof(SignHostApiClient)
 			.GetTypeInfo()
@@ -68,11 +73,7 @@ namespace Signhost.APIClient.Rest
 			JsonConverters.JsonVerificationConverter.RegisterVerification<T>();
 		}
 
-		/// <summary>
-		/// Creates a new transaction.
-		/// </summary>
-		/// <param name="transaction">A transaction model</param>
-		/// <returns>A transaction object</returns>
+		/// <inheritdoc />
 		public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
 		{
 			if (transaction == null) {
@@ -87,12 +88,7 @@ namespace Signhost.APIClient.Rest
 				.ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Gets a existing transaction by providing a transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <returns>A <see cref="ApiResponse{Transaction}"/> object.
+		/// <inheritdoc />
 		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(string transactionId)
 		{
 			if (transactionId == null) {
@@ -112,12 +108,7 @@ namespace Signhost.APIClient.Rest
 			return new ApiResponse<Transaction>(result, transaction);
 		}
 
-		/// <summary>
-		/// Gets an exisiting transaction by providing a transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction id for an existing
-		/// transaction</param>
-		/// <returns>A <see cref="Transaction"/> object.</returns>
+		/// <inheritdoc />
 		public async Task<Transaction> GetTransactionAsync(string transactionId)
 		{
 			var response = await GetTransactionResponseAsync(transactionId)
@@ -128,13 +119,7 @@ namespace Signhost.APIClient.Rest
 			return response.Value;
 		}
 
-		/// <summary>
-		/// Deletes a existing transaction by providing a transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <param name="options">Optional <see cref="DeleteTransactionOptions"/>.</param>
-		/// <returns>A Task</returns>
+		/// <inheritdoc />
 		public async Task DeleteTransactionAsync(string transactionId, DeleteTransactionOptions options = null)
 		{
 			if (transactionId == null) {
@@ -156,18 +141,7 @@ namespace Signhost.APIClient.Rest
 				.ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Adds meta data for a file to an existing transaction by providing a
-		/// file location and a transaction id.
-		/// </summary>
-		/// <param name="fileMeta">Meta data for the file</param>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <param name="fileId">An Id for the file. Should be the same
-		/// as the fileId in the <see cref="AddOrReplaceFileToTransaction"/>.</param>
-		/// <returns>A task</returns>
-		/// <remarks>Make sure to call this method before
-		/// <see cref="AddOrReplaceFileToTransaction"/>.</remarks>
+		/// <inheritdoc />
 		public async Task AddOrReplaceFileMetaToTransactionAsync(FileMeta fileMeta, string transactionId, string fileId)
 		{
 			if (fileMeta == null) {
@@ -197,17 +171,7 @@ namespace Signhost.APIClient.Rest
 				.ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Add a file to a existing transaction by providing a file location
-		/// and a transaction id.
-		/// </summary>
-		/// <param name="fileStream">A Stream containing the file to upload</param>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <param name="fileId">A Id for the file. Using the file name is recommended.
-		/// If a file with the same fileId allready exists the file wil be replaced</param>
-		/// <param name="uploadOptions"><see cref="FileUploadOptions"/></param>
-		/// <returns>A Task</returns>
+		/// <inheritdoc />
 		public async Task AddOrReplaceFileToTransactionAsync(
 			Stream fileStream,
 			string transactionId,
@@ -262,17 +226,7 @@ namespace Signhost.APIClient.Rest
 				null);
 		}
 
-		/// <summary>
-		/// Add a file to a existing transaction by providing a file location
-		/// and a transaction id.
-		/// </summary>
-		/// <param name="filePath">A string representation of the file path.</param>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <param name="fileId">A Id for the file. Using the file name is recommended.
-		/// If a file with the same fileId allready exists the file wil be replaced</param>
-		/// <param name="uploadOptions">Optional <see cref="FileUploadOptions"/></param>
-		/// <returns>A Task</returns>
+		/// <inheritdoc />
 		public async Task AddOrReplaceFileToTransactionAsync(
 			string filePath,
 			string transactionId,
@@ -311,12 +265,7 @@ namespace Signhost.APIClient.Rest
 				null);
 		}
 
-		/// <summary>
-		/// start a existing transaction by providing transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <returns>A Task</returns>
+		/// <inheritdoc />
 		public async Task StartTransactionAsync(string transactionId)
 		{
 			if (transactionId == null) {
@@ -334,12 +283,7 @@ namespace Signhost.APIClient.Rest
 				.ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Gets the receipt of a finished transaction by providing transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction Id of an finnished
-		/// transaction</param>
-		/// <returns>Returns a stream containing the receipt data</returns>
+		/// <inheritdoc />
 		public async Task<Stream> GetReceiptAsync(string transactionId)
 		{
 			if (transactionId == null) {
@@ -357,13 +301,7 @@ namespace Signhost.APIClient.Rest
 			return result;
 		}
 
-		/// <summary>
-		/// Gets the signed document of a finished transaction by providing transaction id.
-		/// </summary>
-		/// <param name="transactionId">A valid transaction Id of an existing
-		/// transaction</param>
-		/// <param name="fileId">A valid file Id of a signed document</param>
-		/// <returns>Returns a stream containing the signed document data</returns>
+		/// <inheritdoc />
 		public async Task<Stream> GetDocumentAsync(string transactionId, string fileId)
 		{
 			if (transactionId == null) {
