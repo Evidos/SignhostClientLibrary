@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -16,7 +16,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 			DateTimeOffset? createdDateTime,
 			DateTimeOffset? canceledDateTime)
 		{
-			Files = files;
+			Files = files ?? new Dictionary<string, FileEntry>();
 			CreatedDateTime = createdDateTime;
 			CancelledDateTime = canceledDateTime;
 		}
