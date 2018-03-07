@@ -170,5 +170,17 @@ namespace Signhost.APIClient.Rest.Tests {
                 return ResourceManager.GetString("GetTransactionCustomVerificationType", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;Id&quot;: &quot;50262c3f-9744-45bf-a4c6-8a3whatever&quot;,
+        ///  &quot;Status&quot;: 5
+        ///}.
+        /// </summary>
+        internal static string MinimalTransactionResponse {
+            get {
+                return ResourceManager.GetString("MinimalTransactionResponse", resourceCulture);
+            }
+        }
     }
 }

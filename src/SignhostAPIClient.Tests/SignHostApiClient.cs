@@ -615,6 +615,28 @@ namespace Signhost.APIClient.Rest.Tests
 			}
 		}
 
+		[Fact]
+		public async Task When_a_minimal_response_is_retrieved_list_and_dictionaries_are_not_null()
+		{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/c487be92-0255-40c7-bd7d-20805a65e7d9")
+				.Respond(new StringContent(APIResponses.MinimalTransactionResponse));
+
+			SignHostApiClient.RegisterVerification<CustomVerification>();
+
+			using (var httpClient = mockHttp.ToHttpClient())
+			{
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				var result = await signhostApiClient.GetTransactionAsync("c487be92-0255-40c7-bd7d-20805a65e7d9");
+
+				result.Signers.Should().BeEmpty();
+				result.Receivers.Should().BeEmpty();
+				result.Files.Should().BeEmpty();
+			}
+		}
+
 		public class CustomVerification
 			: IVerification
 		{
