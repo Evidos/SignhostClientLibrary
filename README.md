@@ -6,7 +6,7 @@
 
 This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
 You will need a valid APPKey and APIKey.
-You can request a APPKey for signhost at [ondertekenen.nl](https://www.ondertekenen.nl/api-proefversie/).
+You can request a APPKey for signhost at [ondertekenen.nl](https://portal.signhost.com/signup/api-aanvraag).
 
 ### Install
 Get it on NuGet:
@@ -27,6 +27,13 @@ var transaction = await client.CreateTransactionAsync(new Transaction
 			Email = "john.doe@example.com",
 			SignRequestMessage = "Could you please sign this document?",
 			SendSignRequest = true,
+			/*
+			 * The verifications listed here are executed in order.
+			 * Your last verification _must_ be one of the following:
+			 * - PhoneNumberVerification
+			 * - ScribbleVerification
+			 * - ConsentVerification
+			 */
 			Verifications = new List<IVerification> {
 				new PhoneNumberVerification {
 					Number = "+3161234567890"
