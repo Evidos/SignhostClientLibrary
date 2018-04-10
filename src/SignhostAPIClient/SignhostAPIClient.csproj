@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
@@ -40,6 +40,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net" />
@@ -47,5 +49,8 @@
   </ItemGroup>
   <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Rest\DataObjects\Link.cs" />
   </ItemGroup>
 </Project>

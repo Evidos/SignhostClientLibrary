@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Signhost.APIClient.Rest.DataObjects;
 using Signhost.APIClient.Rest.ErrorHandling;
 
@@ -25,6 +30,65 @@ namespace Signhost.APIClient.Rest
 
 		private readonly ISignHostApiClientSettings settings;
 		private readonly HttpClient client;
+
+		public bool IsPostbackChecksumValid(
+			IDictionary<string, string[]> headers,
+			string body,
+			out Transaction postbackTransaction)
+		{
+			postbackTransaction = null;
+			string[] postbackChecksumArray;
+			string postbackChecksum;
+			string calculatedChecksum;
+			PostbackTransaction postback;
+
+			var jsonSettings = new JsonSerializerSettings() {
+				Error = delegate(object sender,
+					Newtonsoft.Json.Serialization.ErrorEventArgs args) {
+					args.ErrorContext.Handled = true;
+				}
+			};
+
+			postback = JsonConvert.DeserializeObject<PostbackTransaction>(body);
+			postbackTransaction = postback;
+
+			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
+				postbackChecksum = postbackChecksumArray.First();
+			}
+			else {
+				postbackChecksum = postback.Checksum;
+			}
+
+			if (!string.IsNullOrEmpty(postbackTransaction.Id) &&
+				!string.IsNullOrEmpty(postbackChecksum)) 
+			{
+				calculatedChecksum = ChecksumGenerator(
+					postbackTransaction.Id,
+					(int)postbackTransaction.Status,
+					settings.SharedSecret);
+			}
+			else {
+				return false;
+			}
+
+			return Equals(calculatedChecksum, postbackChecksum);
+		}
+
+		private static string ChecksumGenerator(string id, int status, string sharedSecret)
+		{
+			string calculatedChecksum;
+
+			using (var sha1 = SHA1.Create()) {
+				var preCalculatedChecksum = sha1.ComputeHash(Encoding.UTF8.GetBytes(
+					$"{id}||{status}|{sharedSecret}"));
+				calculatedChecksum = BitConverter.ToString(
+				preCalculatedChecksum)
+					 .Replace("-", string.Empty)
+					.ToLower();
+			}
+
+			return calculatedChecksum;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
