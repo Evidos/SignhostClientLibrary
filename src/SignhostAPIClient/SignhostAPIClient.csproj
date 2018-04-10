@@ -37,15 +37,15 @@
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
   <ItemGroup Label="Package References">
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+  </ItemGroup>
+  <ItemGroup Label=".NET Standard 1.4 References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
-    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
   </ItemGroup>
 </Project>
