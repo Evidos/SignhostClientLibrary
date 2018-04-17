@@ -15,10 +15,78 @@ namespace Signhost.APIClient.Rest.Tests
 	{
 		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
 				"AppKey",
-				"AuthKey") {
+				"AuthKey",
+				"SharedSecret"
+		) {
 			Endpoint = "http://localhost/api/"
 		};
 
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_body_then_true_is_returned()
+		{
+			// Arrange
+			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
+			string body = RequestBodies.MockPostbackValid;
+
+			// Act
+			SignHostApiClient signHostApiClient = new SignHostApiClient(settings);
+			bool result = signHostApiClient.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+
+			// Assert
+			result.Should().BeTrue();
+		}
+
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_body_then_false_is_returned()
+		{
+			// Arrange
+			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
+			string body = RequestBodies.MockPostbackInvalid;
+
+			// Act
+			SignHostApiClient signHostApiClient = new SignHostApiClient(settings);
+			bool result = signHostApiClient.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+
+			// Assert
+			result.Should().BeFalse();
+		}
+
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_header_then_true_is_returned()
+		{
+			// Arrange
+			IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
+				{ "Content-Type", new[] { "application/json" }},
+				{"Checksum", new[] {"cdc09eee2ed6df2846dcc193aedfef59f2834f8d"}}
+			};
+			string body = RequestBodies.MockPostbackValid;
+
+			// Act
+			SignHostApiClient signHostApiClient = new SignHostApiClient(settings);
+			bool result = signHostApiClient.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+
+			// Assert
+			result.Should().BeTrue();
+		}
+
+		[Fact]
+		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_header_then_false_is_returned()
+		{
+			// Arrange
+			IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
+				{ "Content-Type", new[] { "application/json" }},
+				{"Checksum", new[] {"70dda90616f744797972c0d2f787f86643a60c83"}}
+			};
+			string body = RequestBodies.MockPostbackValid;
+
+			// Act
+			SignHostApiClient signHostApiClient = new SignHostApiClient(settings);
+			bool result = signHostApiClient.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+
+			// Assert
+			result.Should().BeFalse();
+		}
+		
 		[Fact]
 		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
