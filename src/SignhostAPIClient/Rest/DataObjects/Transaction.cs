@@ -14,11 +14,13 @@ namespace Signhost.APIClient.Rest.DataObjects
 		private Transaction(
 			IReadOnlyDictionary<string, FileEntry> files,
 			DateTimeOffset? createdDateTime,
-			DateTimeOffset? canceledDateTime)
+			DateTimeOffset? canceledDateTime,
+			string cancelationReason)
 		{
 			Files = files ?? new Dictionary<string, FileEntry>();
 			CreatedDateTime = createdDateTime;
 			CancelledDateTime = canceledDateTime;
+			CancellationReason = cancelationReason;
 		}
 
 		public string Id { get; set; }
@@ -33,6 +35,11 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// Returns null if the transaction was not cancelled.
 		/// </summary>
 		public DateTimeOffset? CancelledDateTime { get; }
+
+		/// <summary>
+		/// Gets the cancellation reason when the <see cref="Transaction" /> was cancelled.
+		/// </summary>
+		public string CancellationReason { get; }
 
 		public IReadOnlyDictionary<string, FileEntry> Files { get; private set; }
 
