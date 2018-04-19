@@ -17,9 +17,18 @@ namespace Signhost.APIClient.Rest
 			APIKey = apikey;
 		}
 
+		public SignHostApiClientSettings(string appkey, string apikey, string sharedsecret)
+		{
+			APPKey = appkey;
+			APIKey = apikey;
+			SharedSecret = sharedsecret;
+		}
+
 		public string APIKey { get; private set; }
 
 		public string APPKey { get; private set; }
+
+		public string SharedSecret { get; private set; }
 
 		public string Endpoint { get; set; } = DefaultEndpoint;
 

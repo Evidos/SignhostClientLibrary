@@ -18,6 +18,8 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		string APPKey { get; }
 
+		string SharedSecret { get; }
+
 		/// <summary>
 		/// Gets the signhost API endpoint.
 		/// </summary>
