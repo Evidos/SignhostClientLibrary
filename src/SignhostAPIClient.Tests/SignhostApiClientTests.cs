@@ -19,7 +19,7 @@ namespace Signhost.APIClient.Rest.Tests
 		) {
 			Endpoint = "http://localhost/api/"
 		};
-		
+
 		[Fact]
 		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{

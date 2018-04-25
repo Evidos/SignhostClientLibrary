@@ -98,5 +98,17 @@ namespace Signhost.APIClient.Rest.Tests {
                 return ResourceManager.GetString("TransactionSingleSignerJson", resourceCulture);
             }
         }
+
+		internal static string MockPostbackValid {
+			get {
+				return ResourceManager.GetString("MockPostbackValid", resourceCulture);
+			}
+		}
+
+		internal static string MockPostbackInvalid {
+			get {
+				return ResourceManager.GetString("MockPostbackInvalid", resourceCulture);
+			}
+		}
     }
 }
