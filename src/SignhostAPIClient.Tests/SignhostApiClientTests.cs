@@ -15,7 +15,8 @@ namespace Signhost.APIClient.Rest.Tests
 	{
 		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
 				"AppKey",
-				"AuthKey") {
+				"AuthKey"
+		) {
 			Endpoint = "http://localhost/api/"
 		};
 
@@ -100,7 +101,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<UnauthorizedAccessException>();
+				getTransaction.Should().Throw<UnauthorizedAccessException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -119,7 +120,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.BadRequestException>();
+				getTransaction.Should().Throw<ErrorHandling.BadRequestException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -138,8 +139,8 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.NotFoundException>()
-					.WithMessage("Not Found");
+
+				getTransaction.Should().Throw<ErrorHandling.NotFoundException>().WithMessage("Not Found");
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -158,7 +159,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>()
+				getTransaction.Should().Throw<ErrorHandling.SignhostRestApiClientException>()
 					.WithMessage("*418*");
 			}
 
@@ -178,7 +179,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.InternalServerErrorException>();
+				getTransaction.Should().Throw<ErrorHandling.InternalServerErrorException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -196,7 +197,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.GoneException<Transaction>>();
+				getTransaction.Should().Throw<ErrorHandling.GoneException<Transaction>>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -214,7 +215,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionResponseAsync("transaction Id");
-				getTransaction.ShouldNotThrow();
+				getTransaction.Should().NotThrow();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -286,7 +287,7 @@ namespace Signhost.APIClient.Rest.Tests
 				testTransaction.Signers.Add(testSigner);
 
 				Func<Task> getTransaction = () => signhostApiClient.CreateTransactionAsync(testTransaction);
-				getTransaction.ShouldThrow<ErrorHandling.BadRequestException>();
+				getTransaction.Should().Throw<ErrorHandling.BadRequestException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -304,7 +305,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.ShouldThrow<ErrorHandling.SignhostRestApiClientException>()
+				getTransaction.Should().Throw<ErrorHandling.SignhostRestApiClientException>()
 					.WithMessage("Bad Gateway");
 			}
 
@@ -534,11 +535,11 @@ namespace Signhost.APIClient.Rest.Tests
 				result.Signers[0].Email.Should().Be("test1@example.com");
 				result.Signers[0].Verifications.Should().HaveCount(1);
 				result.Signers[0].Verifications[0].Should().BeOfType<PhoneNumberVerification>()
-					.And.Subject.ShouldBeEquivalentTo(new PhoneNumberVerification {
+				      .And.Subject.Should().BeEquivalentTo(new PhoneNumberVerification {
 					Number = "+31615123456"
 				});
 				result.Signers[0].Activities.Should().HaveCount(3);
-				result.Signers[0].Activities[0].ShouldBeEquivalentTo(new Activity
+				result.Signers[0].Activities[0].Should().BeEquivalentTo(new Activity
 				{
 					Id = "Activity1",
 					Code = ActivityType.Opened,
