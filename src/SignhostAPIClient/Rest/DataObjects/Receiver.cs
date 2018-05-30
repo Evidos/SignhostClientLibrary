@@ -5,6 +5,10 @@ namespace Signhost.APIClient.Rest.DataObjects
 {
 	public class Receiver
 	{
+		public Receiver()
+		{
+		}
+		
 		[JsonConstructor]
 		private Receiver(IReadOnlyList<Activity> activities)
 		{
