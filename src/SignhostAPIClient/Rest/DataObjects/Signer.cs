@@ -22,6 +22,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string Email { get; set; }
 
+		public string IntroText { get; set; }
+
 		public string SignRequestMessage { get; set; }
 
 		public IList<IVerification> Verifications { get; set; }
