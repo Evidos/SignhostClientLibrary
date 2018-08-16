@@ -17,7 +17,13 @@ namespace Signhost.APIClient.Rest
 			APIKey = apikey;
 		}
 
+		[Obsolete("Obsoleted by UserToken")]
 		public string APIKey { get; private set; }
+
+		public string UserToken {
+			get { return APIKey; }
+			set { APIKey = value; }
+		}
 
 		public string APPKey { get; private set; }
 
