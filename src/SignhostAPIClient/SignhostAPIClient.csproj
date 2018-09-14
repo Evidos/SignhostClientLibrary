@@ -31,12 +31,18 @@
     </PackageReleaseNotes>
     <Company>Evidos</Company>
     <Description>A .NET library for the signhost.com api.</Description>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
   </PropertyGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
