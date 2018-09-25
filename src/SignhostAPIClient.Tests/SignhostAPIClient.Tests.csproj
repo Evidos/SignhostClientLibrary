@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp2.0</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <VersionSuffix>test</VersionSuffix>
   </PropertyGroup>
@@ -9,11 +9,10 @@
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="FluentAssertions" Version="5.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="1.5.*" />
-    <PackageReference Include="xunit" Version="2.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="../SignhostAPIClient/SignhostAPIClient.csproj" />
