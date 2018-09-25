@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.4;net45</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
@@ -9,7 +9,7 @@
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionPrefix>3.0.$(VersionBuildNumber)</VersionPrefix>
+    <VersionPrefix>4.0.$(VersionBuildNumber)</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
     <Authors>Evidos</Authors>
     <Product>Signhost</Product>
@@ -19,6 +19,7 @@
     <PackageId>SignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
+* 4.0.0 - Added .NET Standard 2.0 target
 * 3.0.0 - Bumped verifications support and added .net core target
 * 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation
@@ -37,15 +38,16 @@
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
   <ItemGroup Label="Package References">
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" PrivateAssets="All" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>
