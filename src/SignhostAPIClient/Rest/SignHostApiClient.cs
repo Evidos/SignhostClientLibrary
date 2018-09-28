@@ -316,7 +316,7 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentNullException(nameof(fileId));
 			}
 
-			if (string.IsNullOrWhiteSpace(transactionId)) {
+			if (string.IsNullOrWhiteSpace(fileId)) {
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
