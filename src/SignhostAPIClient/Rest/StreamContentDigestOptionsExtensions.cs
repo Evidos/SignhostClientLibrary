@@ -60,7 +60,7 @@ namespace Signhost.APIClient.Rest
 			string algorithmName = options.DigestHashAlgorithm;
 			HashAlgorithm algorithm = null;
 
-#if NETSTANDARD1_4
+#if NETSTANDARD1_4 || NETSTANDARD2_0
 			switch (algorithmName) {
 				case "SHA1":
 				case "SHA-1":
@@ -95,7 +95,7 @@ namespace Signhost.APIClient.Rest
 		}
 
 		private static HashAlgorithm DefaultHashAlgorithm() =>
-#if NETSTANDARD1_4
+#if NETSTANDARD1_4 || NETSTANDARD2_0
 			SHA256.Create();
 #else
 			HashAlgorithm.Create();
