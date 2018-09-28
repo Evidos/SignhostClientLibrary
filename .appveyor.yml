@@ -21,8 +21,8 @@ before_build:
   - cmd: dotnet restore "src\SignhostAPIClient.sln
 
 build_script:
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { dotnet sonarscanner begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Evidos/SignhostClientLibrary" /d:"sonar.github.oauth=$env:github_auth_token" }
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { dotnet sonarscanner begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" }
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { dotnet sonarscanner begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Evidos/SignhostClientLibrary" /d:"sonar.github.oauth=$env:github_auth_token" }
+  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { dotnet sonarscanner begin /k:"SignhostAPIClient" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=signhost" /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0" }
   - dotnet build "src\SignhostAPIClient.sln"
   - dotnet pack "src\SignhostAPIClient\SignhostAPIClient.csproj"
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:github_auth_token) { dotnet sonarscanner end /d:"sonar.login=f79a82dc96828b5a4993b2f2640fca6e322c72a0"; $LASTEXITCODE=0 }
