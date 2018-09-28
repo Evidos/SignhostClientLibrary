@@ -41,13 +41,6 @@ namespace Signhost.APIClient
 			string calculatedChecksum;
 			PostbackTransaction postback;
 
-			var jsonSettings = new JsonSerializerSettings() 
-			{
-				Error = (sender, args) => {
-					args.ErrorContext.Handled = true;
-				},
-			};
-
 			postback = JsonConvert.DeserializeObject<PostbackTransaction>(body);
 			postbackTransaction = postback;
 
