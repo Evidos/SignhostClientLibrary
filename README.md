@@ -47,8 +47,8 @@ var transaction = await client.CreateTransactionAsync(new Transaction
 	}
 });
 
-await client.AddOrReplaceFileToTransactionAsync("PathToFile",    transaction.Id, "First document");
-await client.AddOrReplaceFileToTransactionAsync("PathOtherFile", transaction.Id, "General agreement");
+await client.AddOrReplaceFileToTransactionAsync("PathToFile",    transaction.Id, "First document",    new FileUploadOptions());
+await client.AddOrReplaceFileToTransactionAsync("PathOtherFile", transaction.Id, "General agreement", new FileUploadOptions());
 
 /* When everything is setup we can start the transaction flow */
 await client.StartTransactionAsync(transaction.Id);
