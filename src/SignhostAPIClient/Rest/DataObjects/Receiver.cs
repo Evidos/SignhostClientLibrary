@@ -21,6 +21,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string Language { get; set; }
 
+		public string Subject { get; set; }
+
 		public string Message { get; set; }
 
 		public string Reference { get; set; }
