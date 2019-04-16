@@ -8,7 +8,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public Receiver()
 		{
 		}
-		
+
 		[JsonConstructor]
 		private Receiver(IReadOnlyList<Activity> activities)
 		{
@@ -20,6 +20,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 		public string Email { get; set; }
 
 		public string Language { get; set; }
+
+		public string Subject { get; set; }
 
 		public string Message { get; set; }
 
