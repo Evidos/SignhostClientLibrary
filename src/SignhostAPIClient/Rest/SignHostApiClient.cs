@@ -229,6 +229,20 @@ namespace Signhost.APIClient.Rest
 				null);
 		}
 
+		/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(string, string, string, FileUploadOptions)" />
+		public Task AddOrReplaceFileToTransactionAsync(
+			string filePath,
+			string transactionId,
+			string fileId)
+		{
+			return AddOrReplaceFileToTransactionAsync(
+				filePath,
+				transactionId,
+				fileId,
+				null);
+		}
+
+
 		/// <inheritdoc />
 		public async Task AddOrReplaceFileToTransactionAsync(
 			string filePath,
