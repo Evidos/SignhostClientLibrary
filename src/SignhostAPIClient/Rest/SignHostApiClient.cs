@@ -18,6 +18,8 @@ namespace Signhost.APIClient.Rest
 		: ISignHostApiClient
 		, IDisposable
 	{
+		private const string ApiVersion = "v1";
+
 		private static readonly string Version = typeof(SignHostApiClient)
 			.GetTypeInfo()
 			.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
@@ -54,6 +56,7 @@ namespace Signhost.APIClient.Rest
 					Version));
 			this.client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
 			this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
+			this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
 			settings.AddHeader?.Invoke(this.client.DefaultRequestHeaders.Add);
 		}
 
