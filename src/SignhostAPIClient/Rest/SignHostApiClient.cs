@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Signhost.APIClient.Rest.DataObjects;
 using Signhost.APIClient.Rest.ErrorHandling;
@@ -74,13 +75,25 @@ namespace Signhost.APIClient.Rest
 		}
 
 		/// <inheritdoc />
-		public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
+		public async Task<Transaction> CreateTransactionAsync(
+			Transaction transaction)
+			=> await CreateTransactionAsync(transaction, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task<Transaction> CreateTransactionAsync(
+			Transaction transaction,
+			CancellationToken cancellationToken = default)
 		{
 			if (transaction == null) {
 				throw new ArgumentNullException(nameof(transaction));
 			}
 
-			var result = await client.PostAsync("transaction", JsonContent.From(transaction))
+			var result = await client
+				.PostAsync(
+					"transaction",
+					JsonContent.From(transaction),
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 
@@ -89,7 +102,15 @@ namespace Signhost.APIClient.Rest
 		}
 
 		/// <inheritdoc />
-		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(string transactionId)
+		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(
+			string transactionId)
+			=> await GetTransactionResponseAsync(transactionId, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(
+			string transactionId,
+			CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -99,7 +120,10 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			var result = await client.GetAsync("transaction".JoinPaths(transactionId))
+			var result = await client
+				.GetAsync(
+					"transaction".JoinPaths(transactionId),
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync(HttpStatusCode.Gone)
 				.ConfigureAwait(false);
 			var transaction = await result.Content.FromJsonAsync<Transaction>()
@@ -110,8 +134,17 @@ namespace Signhost.APIClient.Rest
 
 		/// <inheritdoc />
 		public async Task<Transaction> GetTransactionAsync(string transactionId)
+			=> await GetTransactionAsync(transactionId, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task<Transaction> GetTransactionAsync(
+			string transactionId,
+			CancellationToken cancellationToken = default)
 		{
-			var response = await GetTransactionResponseAsync(transactionId)
+			var response = await GetTransactionResponseAsync(
+				transactionId,
+				cancellationToken)
 				.ConfigureAwait(false);
 
 			response.EnsureAvailableStatusCode();
@@ -119,8 +152,28 @@ namespace Signhost.APIClient.Rest
 			return response.Value;
 		}
 
+		public async Task DeleteTransactionAsync(
+			string transactionId,
+			CancellationToken cancellationToken = default)
+			=> await DeleteTransactionAsync(
+				transactionId,
+				default,
+				cancellationToken).ConfigureAwait(false);
+
 		/// <inheritdoc />
-		public async Task DeleteTransactionAsync(string transactionId, DeleteTransactionOptions options = null)
+		public async Task DeleteTransactionAsync(
+			string transactionId,
+			DeleteTransactionOptions options)
+			=> await DeleteTransactionAsync(
+				transactionId,
+				options,
+				default).ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task DeleteTransactionAsync(
+			string transactionId,
+			DeleteTransactionOptions options,
+			CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -136,13 +189,31 @@ namespace Signhost.APIClient.Rest
 
 			var request = new HttpRequestMessage(HttpMethod.Delete, "transaction".JoinPaths(transactionId));
 			request.Content = JsonContent.From(options);
-			await client.SendAsync(request)
+			await client
+				.SendAsync(
+					request,
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
 		/// <inheritdoc />
-		public async Task AddOrReplaceFileMetaToTransactionAsync(FileMeta fileMeta, string transactionId, string fileId)
+		public async Task AddOrReplaceFileMetaToTransactionAsync(
+			FileMeta fileMeta,
+			string transactionId,
+			string fileId)
+			=> await AddOrReplaceFileMetaToTransactionAsync(
+				fileMeta,
+				transactionId,
+				fileId,
+				default).ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task AddOrReplaceFileMetaToTransactionAsync(
+			FileMeta fileMeta,
+			string transactionId,
+			string fileId,
+			CancellationToken cancellationToken = default)
 		{
 			if (fileMeta == null) {
 				throw new ArgumentNullException("fileMeta");
@@ -166,17 +237,32 @@ namespace Signhost.APIClient.Rest
 
 			await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
-					JsonContent.From(fileMeta))
+					JsonContent.From(fileMeta),
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
 		/// <inheritdoc />
 		public async Task AddOrReplaceFileToTransactionAsync(
+		Stream fileStream,
+		string transactionId,
+		string fileId,
+		FileUploadOptions uploadOptions)
+			=> await AddOrReplaceFileToTransactionAsync(
+				fileStream,
+				transactionId,
+				fileId,
+				uploadOptions,
+				default).ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task AddOrReplaceFileToTransactionAsync(
 			Stream fileStream,
 			string transactionId,
 			string fileId,
-			FileUploadOptions uploadOptions)
+			FileUploadOptions uploadOptions,
+			CancellationToken cancellationToken = default)
 		{
 			if (fileStream == null) {
 				throw new ArgumentNullException(nameof(fileStream));
@@ -208,7 +294,8 @@ namespace Signhost.APIClient.Rest
 
 			await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
-					content)
+					content,
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
@@ -232,6 +319,20 @@ namespace Signhost.APIClient.Rest
 			string transactionId,
 			string fileId,
 			FileUploadOptions uploadOptions)
+			=> await AddOrReplaceFileToTransactionAsync(
+				filePath,
+				transactionId,
+				fileId,
+				uploadOptions,
+				default).ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task AddOrReplaceFileToTransactionAsync(
+			string filePath,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions,
+			CancellationToken cancellationToken = default)
 		{
 			if (filePath == null) {
 				throw new ArgumentNullException(nameof(filePath));
@@ -247,7 +348,8 @@ namespace Signhost.APIClient.Rest
 						fileStream,
 						transactionId,
 						fileId,
-						uploadOptions)
+						uploadOptions,
+						cancellationToken)
 					.ConfigureAwait(false);
 			}
 		}
@@ -266,7 +368,15 @@ namespace Signhost.APIClient.Rest
 		}
 
 		/// <inheritdoc />
-		public async Task StartTransactionAsync(string transactionId)
+		public async Task StartTransactionAsync(
+			string transactionId)
+			=> await StartTransactionAsync(transactionId, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task StartTransactionAsync(
+			string transactionId,
+			CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -278,13 +388,21 @@ namespace Signhost.APIClient.Rest
 
 			await client.PutAsync(
 					"transaction".JoinPaths(transactionId, "start"),
-					null)
+					null,
+					cancellationToken)
 				.EnsureSignhostSuccessStatusCodeAsync()
 				.ConfigureAwait(false);
 		}
 
 		/// <inheritdoc />
 		public async Task<Stream> GetReceiptAsync(string transactionId)
+			=> await GetReceiptAsync(transactionId, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task<Stream> GetReceiptAsync(
+			string transactionId,
+			CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
@@ -302,7 +420,17 @@ namespace Signhost.APIClient.Rest
 		}
 
 		/// <inheritdoc />
-		public async Task<Stream> GetDocumentAsync(string transactionId, string fileId)
+		public async Task<Stream> GetDocumentAsync(
+			string transactionId,
+			string fileId)
+			=> await GetDocumentAsync(transactionId, fileId, default)
+				.ConfigureAwait(false);
+
+		/// <inheritdoc />
+		public async Task<Stream> GetDocumentAsync(
+			string transactionId,
+			string fileId,
+			CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) {
 				throw new ArgumentNullException(nameof(transactionId));
