@@ -35,36 +35,63 @@ namespace Signhost.APIClient
 			out Transaction postbackTransaction)
 		{
 			postbackTransaction = null;
-			string[] postbackChecksumArray;
 			string postbackChecksum;
 			string calculatedChecksum;
 			PostbackTransaction postback;
 
-			postback = JsonConvert.DeserializeObject<PostbackTransaction>(body);
-			postbackTransaction = postback;
+			postback = DeserializeToPostbackTransaction(body);
+			postbackChecksum = GetChecksumFromHeadersOrPostback(headers, postback);
+			bool parametersAreValid = ChecksumCalculationParametersAreValid(postbackChecksum, postback);
 
-			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
-				postbackChecksum = postbackChecksumArray.First();
-			} else {
-				postbackChecksum = postback.Checksum;
-			}
-
-			if (!string.IsNullOrEmpty(postbackTransaction.Id) &&
-				!string.IsNullOrEmpty(postbackChecksum)
-			) {
-				using (var sha1 = SHA1.Create()) {
-					var preCalculatedChecksum = sha1.ComputeHash(Encoding.UTF8.GetBytes(
-						$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
-					calculatedChecksum = BitConverter.ToString(
-					preCalculatedChecksum)
-						 .Replace("-", string.Empty)
-						.ToLower();
-				}
+			if (parametersAreValid) {
+				calculatedChecksum = CalculateChecksumFromPostback(postback);
+				postbackTransaction = postback;
 			} else {
 				return false;
 			}
 
 			return Equals(calculatedChecksum, postbackChecksum);
+		}
+
+		private string CalculateChecksumFromPostback(PostbackTransaction postback)
+		{
+			string calculatedChecksum;
+			using (var sha1 = SHA1.Create()) {
+				var checksumBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(
+					$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
+				return calculatedChecksum = BitConverter.ToString(checksumBytes)
+					.Replace("-", string.Empty)
+					.ToLower();
+			}
+		}
+
+		private PostbackTransaction DeserializeToPostbackTransaction(string body)
+		{
+			return JsonConvert.DeserializeObject<PostbackTransaction>(body);
+		}
+
+		private string GetChecksumFromHeadersOrPostback(
+			IDictionary<string, string[]> headers,
+			PostbackTransaction postback)
+		{
+			string[] postbackChecksumArray;
+			string postbackChecksum;
+			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
+				return postbackChecksumArray.First();
+			}
+			else {
+				return postbackChecksum = postback.Checksum;
+			}
+		}
+
+		private bool ChecksumCalculationParametersAreValid(string postbackChecksum, PostbackTransaction postback)
+		{
+			if (!string.IsNullOrWhiteSpace(postbackChecksum) && !string.IsNullOrWhiteSpace(postback.Id)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 }
