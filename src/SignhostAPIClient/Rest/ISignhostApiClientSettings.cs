@@ -2,6 +2,8 @@
 
 namespace Signhost.APIClient.Rest
 {
+	public delegate void AddHeaders(string name, string value);
+
 	public interface ISignHostApiClientSettings
 	{
 		/// <summary>
@@ -21,6 +23,4 @@ namespace Signhost.APIClient.Rest
 
 		Action<AddHeaders> AddHeader { get; }
 	}
-
-	public delegate void AddHeaders(string name, string value);
 }
