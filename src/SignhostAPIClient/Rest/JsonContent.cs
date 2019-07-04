@@ -43,5 +43,4 @@ namespace Signhost.APIClient.Rest
 			return JsonConvert.SerializeObject(value);
 		}
 	}
-
 }
