@@ -79,6 +79,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// <summary>
 		/// Receipt downloaded.
 		/// </summary>
-		ReceiptDownloaded = 403
+		ReceiptDownloaded = 403,
 	}
 }
