@@ -42,6 +42,6 @@
 		/// <summary>
 		/// The transaction could not be completed.
 		/// </summary>
-		Failed = 70
+		Failed = 70,
 	}
 }
