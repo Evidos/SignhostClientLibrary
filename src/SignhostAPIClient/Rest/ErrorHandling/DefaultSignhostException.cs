@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
@@ -12,13 +12,17 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			HelpLink = "https://api.signhost.com/Help";
 		}
 
-		public DefaultSignhostException(string message, Exception innerException)
+		public DefaultSignhostException(
+			string message,
+			Exception innerException)
 			: base(message, innerException)
 		{
 		}
 
 #if SERIALIZABLE
-		protected DefaultSignhostException(SerializationInfo info, StreamingContext context)
+		protected DefaultSignhostException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}

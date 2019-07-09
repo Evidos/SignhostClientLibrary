@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
@@ -24,7 +24,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		}
 
 #if SERIALIZABLE
-		protected NotFoundException(SerializationInfo info, StreamingContext context)
+		protected NotFoundException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}

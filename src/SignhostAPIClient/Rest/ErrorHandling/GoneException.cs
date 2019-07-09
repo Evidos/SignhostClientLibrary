@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
@@ -52,7 +52,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		public TResult Result { get; private set; }
 
 #if SERIALIZABLE
-		protected GoneException(SerializationInfo info, StreamingContext context)
+		protected GoneException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}

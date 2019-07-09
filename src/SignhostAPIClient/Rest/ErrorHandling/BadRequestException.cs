@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
@@ -17,14 +17,18 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		{
 		}
 
-		public BadRequestException(string message, Exception innerException)
+		public BadRequestException(
+			string message,
+			Exception innerException)
 			: base(message, innerException)
 		{
 			HelpLink = "https://api.signhost.com/Help";
 		}
 
 #if SERIALIZABLE
-		protected BadRequestException(SerializationInfo info, StreamingContext context)
+		protected BadRequestException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}

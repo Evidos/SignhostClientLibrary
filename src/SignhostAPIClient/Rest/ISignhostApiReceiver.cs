@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Signhost.APIClient.Rest;
@@ -18,6 +18,9 @@ namespace Signhost.APIClient.Rest
 		/// <param name="headers">HTTP response headers.</param>
 		/// <param name="body">HTTP response body.</param>
 		/// <param name="postbackTransaction">A transaction object.</param>
-		bool IsPostbackChecksumValid(IDictionary<string, string[]> headers, string body, out Transaction postbackTransaction);
+		bool IsPostbackChecksumValid(
+			IDictionary<string, string[]> headers,
+			string body,
+			out Transaction postbackTransaction);
 	}
 }

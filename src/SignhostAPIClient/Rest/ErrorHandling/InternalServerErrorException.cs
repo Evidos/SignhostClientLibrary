@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 
@@ -36,7 +36,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		}
 
 #if SERIALIZABLE
-		protected InternalServerErrorException(SerializationInfo info, StreamingContext context)
+		protected InternalServerErrorException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}

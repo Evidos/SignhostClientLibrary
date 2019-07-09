@@ -43,7 +43,9 @@ namespace Signhost.APIClient.Rest
 		/// </summary>
 		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
 		/// <param name="httpClient"><see cref="HttpClient"/> to use for all http calls.</param>
-		public SignHostApiClient(ISignHostApiClientSettings settings, HttpClient httpClient)
+		public SignHostApiClient(
+			ISignHostApiClientSettings settings,
+			HttpClient httpClient)
 		{
 			this.settings = settings;
 			this.client = httpClient;

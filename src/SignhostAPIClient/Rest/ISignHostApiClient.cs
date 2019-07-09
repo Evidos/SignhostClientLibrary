@@ -37,7 +37,10 @@ namespace Signhost.APIClient.Rest
 		/// <returns>A task.</returns>
 		/// <remarks>Make sure to call this method before
 		/// <see cref="AddOrReplaceFileToTransaction"/>.</remarks>
-		Task AddOrReplaceFileMetaToTransactionAsync(FileMeta fileMeta, string transactionId, string fileId);
+		Task AddOrReplaceFileMetaToTransactionAsync(
+			FileMeta fileMeta,
+			string transactionId,
+			string fileId);
 
 		/// <summary>
 		/// Adds meta data for a file to an existing transaction by providing a
@@ -66,7 +69,11 @@ namespace Signhost.APIClient.Rest
 		/// If a file with the same fileId allready exists the file wil be replaced.</param>
 		/// <param name="uploadOptions"><see cref="FileUploadOptions"/>.</param>
 		/// <returns>A Task.</returns>
-		Task AddOrReplaceFileToTransactionAsync(Stream fileStream, string transactionId, string fileId, FileUploadOptions uploadOptions);
+		Task AddOrReplaceFileToTransactionAsync(
+			Stream fileStream,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions);
 
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
@@ -96,7 +103,11 @@ namespace Signhost.APIClient.Rest
 		/// If a file with the same fileId allready exists the file wil be replaced.</param>
 		/// <param name="uploadOptions">Optional <see cref="FileUploadOptions"/>.</param>
 		/// <returns>A Task.</returns>
-		Task AddOrReplaceFileToTransactionAsync(string filePath, string transactionId, string fileId, FileUploadOptions uploadOptions);
+		Task AddOrReplaceFileToTransactionAsync(
+			string filePath,
+			string transactionId,
+			string fileId,
+			FileUploadOptions uploadOptions);
 
 		/// <summary>
 		/// Add a file to a existing transaction by providing a file location
@@ -183,7 +194,9 @@ namespace Signhost.APIClient.Rest
 		/// <param name="transactionId">A valid transaction Id of an existing transaction.</param>
 		/// <param name="options">Optional <see cref="DeleteTransactionOptions"/>.</param>
 		/// <returns>A Task.</returns>
-		Task DeleteTransactionAsync(string transactionId, DeleteTransactionOptions options);
+		Task DeleteTransactionAsync(
+			string transactionId,
+			DeleteTransactionOptions options);
 
 		/// <summary>
 		/// Deletes a existing transaction by providing a transaction id.

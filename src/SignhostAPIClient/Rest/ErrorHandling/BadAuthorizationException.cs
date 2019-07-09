@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -22,13 +22,17 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		{
 		}
 
-		public BadAuthorizationException(string message, Exception innerException)
+		public BadAuthorizationException(
+			string message,
+			Exception innerException)
 			: base(message, innerException)
 		{
 		}
 
 #if SERIALIZABLE
-		protected BadAuthorizationException(SerializationInfo info, StreamingContext context)
+		protected BadAuthorizationException(
+			SerializationInfo info,
+			StreamingContext context)
 			: base(info, context)
 		{
 		}
