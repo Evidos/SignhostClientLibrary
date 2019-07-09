@@ -55,11 +55,10 @@ namespace Signhost.APIClient
 
 		private string CalculateChecksumFromPostback(PostbackTransaction postback)
 		{
-			string calculatedChecksum;
 			using (var sha1 = SHA1.Create()) {
 				var checksumBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(
 					$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
-				return calculatedChecksum = BitConverter.ToString(checksumBytes)
+				return BitConverter.ToString(checksumBytes)
 					.Replace("-", string.Empty)
 					.ToLower();
 			}
@@ -75,12 +74,11 @@ namespace Signhost.APIClient
 			PostbackTransaction postback)
 		{
 			string[] postbackChecksumArray;
-			string postbackChecksum;
 			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
 				return postbackChecksumArray.First();
 			}
 			else {
-				return postbackChecksum = postback.Checksum;
+				return postback.Checksum;
 			}
 		}
 
