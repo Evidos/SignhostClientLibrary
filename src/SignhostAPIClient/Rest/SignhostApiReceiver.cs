@@ -41,7 +41,7 @@ namespace Signhost.APIClient
 
 			postback = DeserializeToPostbackTransaction(body);
 			postbackChecksum = GetChecksumFromHeadersOrPostback(headers, postback);
-			bool parametersAreValid = ChecksumCalculationParametersAreValid(postbackChecksum, postback);
+			bool parametersAreValid = HasValidChecksumProperties(postbackChecksum, postback);
 
 			if (parametersAreValid) {
 				calculatedChecksum = CalculateChecksumFromPostback(postback);
@@ -84,14 +84,9 @@ namespace Signhost.APIClient
 			}
 		}
 
-		private bool ChecksumCalculationParametersAreValid(string postbackChecksum, PostbackTransaction postback)
+		private bool HasValidChecksumProperties(string postbackChecksum, PostbackTransaction postback)
 		{
-			if (!string.IsNullOrWhiteSpace(postbackChecksum) && !string.IsNullOrWhiteSpace(postback.Id)) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			return !string.IsNullOrWhiteSpace(postbackChecksum) && !string.IsNullOrWhiteSpace(postback.Id);
 		}
 	}
 }
