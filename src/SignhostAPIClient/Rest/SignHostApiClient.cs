@@ -237,7 +237,8 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
-			await client.PutAsync(
+			await client
+				.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
 					JsonContent.From(fileMeta),
 					cancellationToken)
@@ -294,7 +295,8 @@ namespace Signhost.APIClient.Rest
 				.WithDigest(fileStream, uploadOptions.DigestOptions);
 			content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
 
-			await client.PutAsync(
+			await client
+				.PutAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId),
 					content,
 					cancellationToken)
@@ -388,7 +390,8 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			await client.PutAsync(
+			await client
+				.PutAsync(
 					"transaction".JoinPaths(transactionId, "start"),
 					null,
 					cancellationToken)
@@ -414,7 +417,8 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 			}
 
-			var result = await client.GetStreamAsync(
+			var result = await client
+				.GetStreamAsync(
 					"file".JoinPaths("receipt", transactionId))
 				.ConfigureAwait(false);
 
@@ -450,7 +454,8 @@ namespace Signhost.APIClient.Rest
 				throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 			}
 
-			var result = await client.GetStreamAsync(
+			var result = await client
+				.GetStreamAsync(
 					"transaction".JoinPaths(transactionId, "file", fileId))
 				.ConfigureAwait(false);
 
