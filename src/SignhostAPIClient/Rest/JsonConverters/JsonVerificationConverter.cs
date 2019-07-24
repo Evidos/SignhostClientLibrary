@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +33,9 @@ namespace Signhost.APIClient.Rest.JsonConverters
 			VerificationTypes[verification.Type] = typeof(T).GetTypeInfo();
 		}
 
-		protected override IVerification Create(Type objectType, JObject jsonObject)
+		protected override IVerification Create(
+			Type objectType,
+			JObject jsonObject)
 		{
 			var typeName = jsonObject["Type"]?.ToString();
 

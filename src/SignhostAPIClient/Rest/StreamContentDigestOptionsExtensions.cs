@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -36,7 +36,9 @@ namespace Signhost.APIClient.Rest
 			return content;
 		}
 
-		private static void SetHashValue(Stream fileStream, FileDigestOptions options)
+		private static void SetHashValue(
+			Stream fileStream,
+			FileDigestOptions options)
 		{
 			if (options.DigestHashValue != null) {
 				return;
@@ -55,7 +57,8 @@ namespace Signhost.APIClient.Rest
 			fileStream.Position = position;
 		}
 
-		private static HashAlgorithm HashAlgorithmCreate(FileDigestOptions options)
+		private static HashAlgorithm HashAlgorithmCreate(
+			FileDigestOptions options)
 		{
 			string algorithmName = options.DigestHashAlgorithm;
 			HashAlgorithm algorithm = null;

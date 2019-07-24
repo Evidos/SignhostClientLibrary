@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,7 +16,11 @@ namespace Signhost.APIClient.Rest.JsonConverters
 			=> typeof(T).IsAssignableFrom(objectType);
 #endif
 
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		public override object ReadJson(
+			JsonReader reader,
+			Type objectType,
+			object existingValue,
+			JsonSerializer serializer)
 		{
 			var jsonObject = JObject.Load(reader);
 			var target = Create(objectType, jsonObject);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Signhost.APIClient.Rest
@@ -12,7 +12,9 @@ namespace Signhost.APIClient.Rest
 			return builder;
 		}
 
-		internal static Uri JoinPaths(this string url, params string[] segments)
+		internal static Uri JoinPaths(
+			this string url,
+			params string[] segments)
 		{
 			var segmentList = segments.ToList();
 			segmentList.Insert(0, url);
