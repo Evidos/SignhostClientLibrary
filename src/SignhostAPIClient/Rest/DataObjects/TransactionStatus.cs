@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Signhost.APIClient.Rest.DataObjects
+﻿namespace Signhost.APIClient.Rest.DataObjects
 {
 	public enum TransactionStatus
 	{
@@ -46,6 +42,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// <summary>
 		/// The transaction could not be completed.
 		/// </summary>
-		Failed = 70
+		Failed = 70,
 	}
 }

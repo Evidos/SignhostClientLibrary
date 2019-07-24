@@ -44,18 +44,18 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			HelpLink = "https://api.signhost.com/Help";
 		}
 
-		/// <summary>
-		/// Gets the api / transaction details which are still available.
-		/// Please note that this no longer contains the full transaction
-		/// details as most data is removed.
-		/// </summary>
-		public TResult Result { get; private set; }
-
 #if SERIALIZABLE
 		protected GoneException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}
 #endif
+
+		/// <summary>
+		/// Gets the api / transaction details which are still available.
+		/// Please note that this no longer contains the full transaction
+		/// details as most data is removed.
+		/// </summary>
+		public TResult Result { get; private set; }
 	}
 }

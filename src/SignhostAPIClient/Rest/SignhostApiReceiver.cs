@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Signhost.APIClient.Rest;
 using Signhost.APIClient.Rest.DataObjects;
@@ -36,36 +35,56 @@ namespace Signhost.APIClient
 			out Transaction postbackTransaction)
 		{
 			postbackTransaction = null;
-			string[] postbackChecksumArray;
 			string postbackChecksum;
 			string calculatedChecksum;
 			PostbackTransaction postback;
 
-			postback = JsonConvert.DeserializeObject<PostbackTransaction>(body);
-			postbackTransaction = postback;
+			postback = DeserializeToPostbackTransaction(body);
+			postbackChecksum = GetChecksumFromHeadersOrPostback(headers, postback);
+			bool parametersAreValid = HasValidChecksumProperties(postbackChecksum, postback);
 
-			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
-				postbackChecksum = postbackChecksumArray.First();
-			} else {
-				postbackChecksum = postback.Checksum;
-			}
-
-			if (!string.IsNullOrEmpty(postbackTransaction.Id) &&
-				!string.IsNullOrEmpty(postbackChecksum)
-			) {
-				using (var sha1 = SHA1.Create()) {
-					var preCalculatedChecksum = sha1.ComputeHash(Encoding.UTF8.GetBytes(
-						$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
-					calculatedChecksum = BitConverter.ToString(
-					preCalculatedChecksum)
-						 .Replace("-", string.Empty)
-						.ToLower();
-				}
+			if (parametersAreValid) {
+				calculatedChecksum = CalculateChecksumFromPostback(postback);
+				postbackTransaction = postback;
 			} else {
 				return false;
 			}
 
 			return Equals(calculatedChecksum, postbackChecksum);
+		}
+
+		private string CalculateChecksumFromPostback(PostbackTransaction postback)
+		{
+			using (var sha1 = SHA1.Create()) {
+				var checksumBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(
+					$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
+				return BitConverter.ToString(checksumBytes)
+					.Replace("-", string.Empty)
+					.ToLower();
+			}
+		}
+
+		private PostbackTransaction DeserializeToPostbackTransaction(string body)
+		{
+			return JsonConvert.DeserializeObject<PostbackTransaction>(body);
+		}
+
+		private string GetChecksumFromHeadersOrPostback(
+			IDictionary<string, string[]> headers,
+			PostbackTransaction postback)
+		{
+			string[] postbackChecksumArray;
+			if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
+				return postbackChecksumArray.First();
+			}
+			else {
+				return postback.Checksum;
+			}
+		}
+
+		private bool HasValidChecksumProperties(string postbackChecksum, PostbackTransaction postback)
+		{
+			return !string.IsNullOrWhiteSpace(postbackChecksum) && !string.IsNullOrWhiteSpace(postback.Id);
 		}
 	}
 }
