@@ -26,6 +26,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		/// <exception cref="BadRequestException">
 		/// When the API request was an invalid request for your account.
 		/// </exception>
+		/// <exception cref="OutOfCreditsException">
+		/// When your organisation has run out of credits.
+		/// </exception>
 		/// <exception cref="NotFoundException">
 		/// When the request resource (ie transaction id or file id) was not found.
 		/// </exception>
@@ -50,13 +53,21 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 				return response;
 			}
 
+			string errorType = string.Empty;
 			string errorMessage = "Unknown Signhost error";
 
 			if (response.Content != null) {
 				string responsejson = await response.Content.ReadAsStringAsync()
 					.ConfigureAwait(false);
 
-				var error = JsonConvert.DeserializeAnonymousType(responsejson, new { Message = string.Empty });
+				var error = JsonConvert.DeserializeAnonymousType(
+					responsejson,
+					new {
+						Type = string.Empty,
+						Message = string.Empty,
+					});
+
+				errorType = error.Type;
 				errorMessage = error.Message;
 			}
 
@@ -66,6 +77,14 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 						errorMessage);
 				case HttpStatusCode.BadRequest:
 					throw new BadRequestException(
+						errorMessage);
+				case HttpStatusCode.PaymentRequired
+				when errorType == "https://api.signhost.com/problem/subscription/out-of-credits":
+					if (string.IsNullOrEmpty(errorMessage)) {
+						errorMessage = "The credit bundle has been exceeded.";
+					}
+
+					throw new OutOfCreditsException(
 						errorMessage);
 				case HttpStatusCode.NotFound:
 					throw new NotFoundException(

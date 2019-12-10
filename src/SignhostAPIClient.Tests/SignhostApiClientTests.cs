@@ -127,6 +127,25 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
+		public void when_GetTransaction_is_called_and_credits_have_run_out_then_we_should_get_a_OutOfCreditsException()
+		{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.PaymentRequired, new StringContent("{ 'type': 'https://api.signhost.com/problem/subscription/out-of-credits' }"));
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
+				getTransaction.Should().Throw<ErrorHandling.OutOfCreditsException>();
+			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Fact]
 		public void when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
