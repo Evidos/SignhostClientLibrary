@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -38,7 +38,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public bool? SendSignConfirmation { get; set; }
 
-		public int DaysToRemind { get; set; }
+		public int? DaysToRemind { get; set; }
 
 		public string Language { get; set; }
 
