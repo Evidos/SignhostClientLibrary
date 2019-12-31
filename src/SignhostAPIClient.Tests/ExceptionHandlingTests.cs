@@ -179,5 +179,99 @@ namespace Signhost.APIClient.Rest.Tests
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
+
+		[Fact]
+		public void When_a_problem_details_contains_both_detail_and_message_property_the_detail_should_be_prefered()
+		{
+			using var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond(HttpStatusCode.BadRequest, new StringContent(@"
+					{
+						'type': 'https://api.signhost.com/problems/example',
+						'title': 'Example title',
+						'status': 400,
+						'detail': 'Detail text',
+						'message': 'Message text'
+					}"));
+
+			using var httpClient = mockHttp.ToHttpClient();
+			using var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+			Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
+			getTransaction
+				.Should()
+				.Throw<BadRequestException>()
+				.WithMessage("Detail text");
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Theory]
+		[MemberData(nameof(GetStatusCodesWithExpectedExceptionTypes))]
+		public void When_a_problem_details_is_returned_the_detail_property_should_be_used_as_the_exception_message(
+			HttpStatusCode statusCode,
+			Type expectedException,
+			string problemType = "https://api.signhost.com/problems/example")
+		{
+			using var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transactionId")
+				.Respond(statusCode, new StringContent($@"
+					{{
+						'type': '{problemType}',
+						'title': 'Example title',
+						'status': {(int)statusCode},
+						'detail': 'Detail text'
+					}}"));
+
+			using var httpClient = mockHttp.ToHttpClient();
+			using var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+			Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transactionId");
+			getTransaction
+				.Should()
+				.Throw<Exception>()
+				.WithMessage("Detail text")
+				.And
+				.Should()
+				.BeOfType(expectedException);
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		public static IEnumerable<object[]> GetStatusCodesWithExpectedExceptionTypes()
+		{
+			yield return new object[] {
+				HttpStatusCode.Unauthorized,
+				typeof(UnauthorizedAccessException)
+			};
+
+			yield return new object[] {
+				HttpStatusCode.BadRequest,
+				typeof(BadRequestException)
+			};
+
+			yield return new object[] {
+				HttpStatusCode.PaymentRequired,
+				typeof(OutOfCreditsException),
+				"https://api.signhost.com/problem/subscription/out-of-credits"
+			};
+
+			yield return new object[] {
+				HttpStatusCode.NotFound,
+				typeof(NotFoundException)
+			};
+
+			yield return new object[] {
+				HttpStatusCode.InternalServerError,
+				typeof(InternalServerErrorException)
+			};
+
+			yield return new object[] {
+				(HttpStatusCode)418, /* I'm a Teapot */
+				typeof(SignhostRestApiClientException)
+			};
+		}
 	}
 }
