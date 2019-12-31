@@ -3,6 +3,7 @@
     <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
     <VersionSuffix>test</VersionSuffix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
