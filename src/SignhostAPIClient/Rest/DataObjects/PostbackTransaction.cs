@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
-	public partial class PostbackTransaction
+	public class PostbackTransaction
 		: Transaction
 	{
 		[JsonConstructor]
