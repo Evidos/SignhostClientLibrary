@@ -193,8 +193,12 @@
 		"Email": "user@example.com",
 		"Verifications": [
 			{
+				"Type": "PhoneNumber",
+				"Number": "+31612345678"
+			},
+			{
 				"Type": "Scribble",
-				"RequireHandsignature": true,
+				"RequireHandsignature": false,
 				"ScribbleNameFixed": false,
 				"ScribbleName": "John Doe"
 			},
@@ -206,12 +210,13 @@
 		"Mobile": "+31612345678",
 		"Iban": null,
 		"BSN": null,
-		"RequireScribbleName": true,
+		"RequireScribbleName": false,
 		"RequireScribble": true,
 		"RequireEmailVerification": true,
-		"RequireSmsVerification": false,
+		"RequireSmsVerification": true,
 		"RequireIdealVerification": false,
 		"RequireDigidVerification": false,
+		"RequireKennisnetVerification": false,
 		"RequireSurfnetVerification": false,
 		"SendSignRequest": true,
 		"SendSignConfirmation": null,

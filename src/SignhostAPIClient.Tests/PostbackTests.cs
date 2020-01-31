@@ -49,16 +49,21 @@ namespace Signhost.APIClient.Rest.Tests
 			(signer.Context is null)   .Should().BeTrue();
 
 			var verifications = signer.Verifications;
-			verifications.Should().HaveCount(2);
+			verifications.Should().HaveCount(3);
 
-			var scribbleVerification = verifications[0] as ScribbleVerification;
+			var phoneNumberVerification = verifications[0] as PhoneNumberVerification;
+			phoneNumberVerification       .Should().NotBeNull();
+			phoneNumberVerification.Type  .Should().Be("PhoneNumber");
+			phoneNumberVerification.Number.Should().Be("+31612345678");
+
+			var scribbleVerification = verifications[1] as ScribbleVerification;
 			scribbleVerification                     .Should().NotBeNull();
 			scribbleVerification.Type                .Should().Be("Scribble");
-			scribbleVerification.RequireHandsignature.Should().BeTrue();
+			scribbleVerification.RequireHandsignature.Should().BeFalse();
 			scribbleVerification.ScribbleNameFixed   .Should().BeFalse();
 			scribbleVerification.ScribbleName        .Should().Be("John Doe");
 
-			var ipAddressVerification = verifications[1] as IPAddressVerification;
+			var ipAddressVerification = verifications[2] as IPAddressVerification;
 			ipAddressVerification          .Should().NotBeNull();
 			ipAddressVerification.Type     .Should().Be("IPAddress");
 			ipAddressVerification.IPAddress.Should().Be("1.2.3.4");
