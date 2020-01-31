@@ -11,7 +11,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		}
 
 		[JsonConstructor]
-		private Transaction(
+		protected Transaction(
 			IReadOnlyDictionary<string, FileEntry> files,
 			DateTimeOffset? createdDateTime,
 			DateTimeOffset? canceledDateTime,
