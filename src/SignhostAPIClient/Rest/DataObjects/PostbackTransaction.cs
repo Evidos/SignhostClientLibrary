@@ -7,6 +7,10 @@ namespace Signhost.APIClient.Rest.DataObjects
 	public class PostbackTransaction
 		: Transaction
 	{
+		public PostbackTransaction()
+		{
+		}
+
 		[JsonConstructor]
 		private PostbackTransaction(
 			IReadOnlyDictionary<string, FileEntry> files,
