@@ -173,12 +173,40 @@
 {
 	"Id": "b10ae331-af78-4e79-a39e-5b64693b6b68",
 	"Status": 20,
+	"Files": {
+		"file1": {
+			"Links": [
+				{
+					"Rel": "file",
+					"Type": "application/pdf",
+					"Link": "https://api.signhost.com/api/transaction/b10ae331-af78-4e79-a39e-5b64693b6b68/file/file1"
+				}
+			],
+			"DisplayName": "Sample File"
+		}
+	},
 	"Seal": true,
 	"Signers":
 	[{
 		"Id": "fa95495d-6c59-48e0-962a-a4552f8d6b85",
 		"Expires": null,
 		"Email": "user@example.com",
+		"Verifications": [
+			{
+				"Type": "PhoneNumber",
+				"Number": "+31612345678"
+			},
+			{
+				"Type": "Scribble",
+				"RequireHandsignature": false,
+				"ScribbleNameFixed": false,
+				"ScribbleName": "John Doe"
+			},
+			{
+				"Type": "IPAddress",
+				"IPAddress": "1.2.3.4"
+			}
+		],
 		"Mobile": "+31612345678",
 		"Iban": null,
 		"BSN": null,
@@ -205,6 +233,13 @@
 			"Code": 103,
 			"Activity": "Opened",
 			"CreatedDateTime": "2016-06-15T23:33:04.1965465+02:00"},
+		{
+			"Id": "7aacf96a-5c2f-475d-98a5-726e41bfc5d3",
+			"Code": 105,
+			"Activity": "DocumentOpened",
+			"Info": "file1",
+			"CreatedDateTime": "2020-01-30T16:31:05.6679583+01:00"
+		},
 		{
 			"Id": "de94cf6e-e1a3-4c33-93bf-2013b036daaf",
 			"Code": 203,"Activity": "Signed",
