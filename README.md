@@ -5,8 +5,9 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SignhostAPIClient&metric=alert_status)](https://sonarcloud.io/dashboard?id=SignhostAPIClient)
 
 This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
-You will need a valid APPKey and APIKey.
+You will need a valid APPKey and UserToken.
 You can request a APPKey for signhost at [ondertekenen.nl](https://portal.signhost.com/signup/api-aanvraag).
+The Usertoken can be generated via Settings > Usertokens at the [SignHost Portal](https://portal.signhost.com/).
 
 ### Install
 Get it on NuGet:
@@ -16,7 +17,7 @@ Get it on NuGet:
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
-var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey or usertoken"));
+var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "usertoken"));
 
 var transaction = await client.CreateTransactionAsync(new Transaction
 {
