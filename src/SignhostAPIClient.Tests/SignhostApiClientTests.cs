@@ -146,6 +146,65 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
+		public void When_GetTransaction_is_called_and_a_429_is_returned_without_JSON_content_then_we_should_not_throw_an_exception()
+		{
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond((HttpStatusCode)429, new StringContent("Too many invalid requests."));
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
+				getTransaction.Should().NotThrow<Newtonsoft.Json.JsonException>();
+			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Fact]
+		public void When_GetTransaction_is_called_and_a_429_is_returned_without_JSON_content_then_we_should_get_a_RateLimitException_with_reponse_content()
+		{
+			var rateLimitMessage = "Too many invalid requests.";
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond((HttpStatusCode)429, new StringContent(rateLimitMessage));
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
+				getTransaction.Should().Throw<ErrorHandling.RateLimitException>().WithMessage(rateLimitMessage);
+			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Fact]
+		public void When_GetTransaction_is_called_and_a_429_is_returned_then_we_should_get_a_RateLimitException()
+		{
+			var rateLimitMessage = "Too many invalid requests.";
+			var mockHttp = new MockHttpMessageHandler();
+			mockHttp
+				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
+				.Respond((HttpStatusCode)429, new StringContent("{ 'Message': '"+ rateLimitMessage +"' }"));
+
+			using (var httpClient = mockHttp.ToHttpClient()) {
+
+				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+
+				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
+				getTransaction.Should().Throw<ErrorHandling.RateLimitException>().WithMessage(rateLimitMessage);
+			}
+
+			mockHttp.VerifyNoOutstandingExpectation();
+		}
+
+		[Fact]
 		public void when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
