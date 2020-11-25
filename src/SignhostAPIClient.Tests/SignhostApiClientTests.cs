@@ -21,7 +21,7 @@ namespace Signhost.APIClient.Rest.Tests
 		};
 
 		[Fact]
-		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
+		public async void When_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 
@@ -70,7 +70,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
+		public async Task When_a_GetTransaction_is_called_then_we_should_have_called_the_transaction_get_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -89,7 +89,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_the_authorization_is_bad_then_we_should_get_a_BadAuthorizationException()
+		public void When_GetTransaction_is_called_and_the_authorization_is_bad_then_we_should_get_a_BadAuthorizationException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -108,7 +108,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_request_is_bad_then_we_should_get_a_BadRequestException()
+		public void When_GetTransaction_is_called_and_request_is_bad_then_we_should_get_a_BadRequestException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -127,7 +127,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_credits_have_run_out_then_we_should_get_a_OutOfCreditsException()
+		public void When_GetTransaction_is_called_and_credits_have_run_out_then_we_should_get_a_OutOfCreditsException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -205,7 +205,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
+		public void When_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -225,7 +225,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_unkownerror_like_418_occures_then_we_should_get_a_SignhostException()
+		public void When_GetTransaction_is_called_and_unkownerror_like_418_occures_then_we_should_get_a_SignhostException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -245,7 +245,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_there_is_an_InternalServerError_then_we_should_get_a_InternalServerErrorException()
+		public void When_GetTransaction_is_called_and_there_is_an_InternalServerError_then_we_should_get_a_InternalServerErrorException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -300,7 +300,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
+		public async Task When_a_CreateTransaction_is_called_then_we_should_have_called_the_transaction_Post_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -324,7 +324,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_a_CreateTransaction_is_called_we_can_add_custom_http_headers()
+		public async Task When_a_CreateTransaction_is_called_we_can_add_custom_http_headers()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -347,7 +347,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
+		public void When_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -372,7 +372,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
+		public void When_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -391,7 +391,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
+		public async Task When_a_DeleteTransaction_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -408,7 +408,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_a_DeleteTransaction_with_notification_is_called_then_we_should_have_called_the_transaction_delete_once()
+		public async Task When_a_DeleteTransaction_with_notification_is_called_then_we_should_have_called_the_transaction_delete_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -429,7 +429,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_AddOrReplaceFileToTransaction_is_called_then_we_should_have_called_the_file_put_once()
+		public async Task When_AddOrReplaceFileToTransaction_is_called_then_we_should_have_called_the_file_put_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -451,7 +451,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_AddOrReplaceFileToTransaction_is_called_default_digest_is_sha256()
+		public async Task When_AddOrReplaceFileToTransaction_is_called_default_digest_is_sha256()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -469,7 +469,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_AddOrReplaceFileToTransaction_with_sha512_is_called_default_digest_is_sha512()
+		public async Task When_AddOrReplaceFileToTransaction_with_sha512_is_called_default_digest_is_sha512()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -496,7 +496,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_AddOrReplaceFileToTransaction_with_digest_value_is_used_as_is()
+		public async Task When_AddOrReplaceFileToTransaction_with_digest_value_is_used_as_is()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -525,7 +525,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
+		public async Task When_StartTransaction_is_called_then_we_should_have_called_the_transaction_put_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect("http://localhost/api/transaction/transaction Id/start")
@@ -542,7 +542,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
+		public async Task When_GetReceipt_is_called_then_we_should_have_called_the_filereceipt_get_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect("http://localhost/api/file/receipt/transaction ID")
@@ -558,7 +558,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task when_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
+		public async Task When_GetDocument_is_called_then_we_should_have_called_the_file_get_once()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Get, "http://localhost/api/transaction/*/file/file Id")
