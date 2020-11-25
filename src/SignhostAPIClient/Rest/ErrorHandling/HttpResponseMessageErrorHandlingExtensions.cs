@@ -80,30 +80,32 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 
 			switch (response.StatusCode) {
 				case HttpStatusCode.Unauthorized:
-					throw new System.UnauthorizedAccessException(
-						errorMessage);
+					throw new UnauthorizedAccessException(errorMessage);
+
 				case HttpStatusCode.BadRequest:
-					throw new BadRequestException(
-						errorMessage);
+					throw new BadRequestException(errorMessage);
+
 				case HttpStatusCode.PaymentRequired
 				when errorType == "https://api.signhost.com/problem/subscription/out-of-credits":
 					if (string.IsNullOrEmpty(errorMessage)) {
 						errorMessage = "The credit bundle has been exceeded.";
 					}
 
-					throw new OutOfCreditsException(
-						errorMessage);
+					throw new OutOfCreditsException(errorMessage);
+
 				case HttpStatusCode.NotFound:
-					throw new NotFoundException(
-						errorMessage);
+					throw new NotFoundException(errorMessage);
+
 				case (HttpStatusCode)429:
 					throw new RateLimitException(errorMessage);
+
 				case HttpStatusCode.InternalServerError:
 					throw new InternalServerErrorException(
-						errorMessage, response.Headers.RetryAfter);
+						errorMessage,
+						response.Headers.RetryAfter);
+
 				default:
-					throw new SignhostRestApiClientException(
-						errorMessage);
+					throw new SignhostRestApiClientException(errorMessage);
 			}
 
 			System.Diagnostics.Debug.Fail("Should not be reached");
