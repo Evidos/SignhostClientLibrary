@@ -59,6 +59,8 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public int DaysToExpire { get; set; }
 
+		 public string Language { get; set;}
+
 		public bool SendEmailNotifications { get; set; }
 
 		public dynamic Context { get; set; }
