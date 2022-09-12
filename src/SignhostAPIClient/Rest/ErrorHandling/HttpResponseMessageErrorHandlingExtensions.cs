@@ -26,6 +26,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		/// <exception cref="BadRequestException">
 		/// When the API request was an invalid request for your account.
 		/// </exception>
+		/// <exception cref="ForbiddenException">
+		/// When the request is unauthorized by Signhost.
+		/// </exception>
 		/// <exception cref="OutOfCreditsException">
 		/// When your organisation has run out of credits.
 		/// </exception>
@@ -75,6 +78,8 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 				case HttpStatusCode.Unauthorized:
 					throw new System.UnauthorizedAccessException(
 						errorMessage);
+				case HttpStatusCode.Forbidden:
+					throw new ForbiddenException(errorMessage);
 				case HttpStatusCode.BadRequest:
 					throw new BadRequestException(
 						errorMessage);

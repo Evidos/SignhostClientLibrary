@@ -28,6 +28,7 @@ namespace Signhost.APIClient.Rest
 
 		private readonly ISignHostApiClientSettings settings;
 		private readonly HttpClient client;
+		private ITeamsApiClient teamsApiClient;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
@@ -61,6 +62,24 @@ namespace Signhost.APIClient.Rest
 			this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
 			this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
 			settings.AddHeader?.Invoke(this.client.DefaultRequestHeaders.Add);
+		}
+
+		/// <summary>
+		/// Gets an api client to create and manage teams of users.
+		/// </summary>
+		/// <value>
+		/// A client instance used to call several teams api endpoints.
+		/// </value>
+		public ITeamsApiClient Teams
+		{
+			get
+			{
+				if (teamsApiClient == null) {
+					teamsApiClient = new TeamsApiClient(client);
+				}
+
+				return teamsApiClient;
+			}
 		}
 
 		private string ApplicationHeader

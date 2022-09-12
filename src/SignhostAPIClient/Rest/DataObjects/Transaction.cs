@@ -63,6 +63,19 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public bool SendEmailNotifications { get; set; }
 
+		/// <summary>
+		/// Gets or sets the teamId of the Team this Transaction will be
+		/// assigned to.
+		/// </summary>
+		/// <value>a string representing the id of the Team.</value>
+		/// <remarks>
+		/// When set to null, no Team will be assigned and therefore only the
+		/// user that cerated the Transaction can manage it (i.e. GET and PUT
+		/// files). When set to a teamId of a Team, all members of that Team
+		/// can then manage the Transaction.
+		/// </remarks>
+		public string TeamId { get; set; }
+
 		public dynamic Context { get; set; }
 	}
 }

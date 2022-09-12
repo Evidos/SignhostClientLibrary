@@ -1,0 +1,17 @@
+{
+	"Id": "DZkAmRhY5MLnoz39R6KmTp",
+	"Name": "Team-8d3b01",
+	"Members": [
+		{
+			"Id": "BqTsn4rTX4iy6m4hLT8FGVBF9swfFvtgzk2rJxQzHU96",
+			"Name": "John Doe",
+			"EmailAddress": "testing@evidos.nl"
+		},
+		{
+			"Id": "BqTsn4rTX4iy6m4hLT8FGVTmpr4rsMvvgjexnkyaPJhH",
+			"Name": "James Smith",
+			"EmailAddress": "testing2@evidos.com"
+		}
+	],
+	"InvitedMembers": []
+}

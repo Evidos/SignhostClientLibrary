@@ -196,6 +196,7 @@
   "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
   "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
   "CanceledDateTime": null,
+  "TeamId": null,
   "Context": null
 }</value>
   </data>
@@ -278,6 +279,7 @@
   "CreatedDateTime": "2016-03-31T21:11:42.0267461+02:00",
   "ModifiedDateTime": "2016-03-31T21:11:42.0267461+02:00",
   "CanceledDateTime": null,
+  "TeamId": null,
   "Context": null
 }</value>
   </data>
@@ -360,6 +362,7 @@
   "CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
   "ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
   "CanceledDateTime": null,
+  "TeamId": null,
   "Context": null
 }</value>
   </data>
@@ -431,7 +434,8 @@
 	"DaysToExpire": 30,
 	"SendEmailNotifications": true,
 	"CreatedDateTime": "2016-03-17T21:08:55.1349315+01:00",
-	"ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00"
+	"ModifiedDateTime": "2016-03-17T21:08:55.1349315+01:00",
+  "TeamId": null
 }</value>
   </data>
   <data name="MinimalTransactionResponse" xml:space="preserve">

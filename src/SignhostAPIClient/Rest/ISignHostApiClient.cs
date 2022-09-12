@@ -11,6 +11,14 @@ namespace Signhost.APIClient.Rest
 	public interface ISignHostApiClient
 	{
 		/// <summary>
+		/// Gets the api client to create and manage Teams.
+		/// </summary>
+		/// <value>
+		/// A Teams api clientinstance.
+		/// </value>
+		ITeamsApiClient Teams { get; }
+
+		/// <summary>
 		/// Creates a new transaction.
 		/// </summary>
 		/// <param name="transaction">A transaction model.</param>
