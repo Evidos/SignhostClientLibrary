@@ -80,5 +80,45 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// Receipt downloaded.
 		/// </summary>
 		ReceiptDownloaded = 403,
+
+		/// <summary>
+		/// Finished.
+		/// </summary>
+		Finished = 500,
+
+		/// <summary>
+		/// Deleted.
+		/// </summary>
+		Deleted = 600,
+
+		/// <summary>
+		/// Expired.
+		/// </summary>
+		Expired = 700,
+
+		/// <summary>
+		/// Email bounce - hard.
+		/// </summary>
+		EmailBounceHard = 901,
+
+		/// <summary>
+		/// Email bounce - soft.
+		/// </summary>
+		EmailBounceSoft = 902,
+
+		/// <summary>
+		/// Email bounce - blocked.
+		/// </summary>
+		EmailBounceBlocked = 903,
+
+		/// <summary>
+		/// Email bounce - undetermined.
+		/// </summary>
+		EmailBounceUndetermined = 904,
+
+		/// <summary>
+		/// Operation failed.
+		/// </summary>
+		Failed = 999,
 	}
 }
