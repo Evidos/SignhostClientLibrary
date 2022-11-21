@@ -11,7 +11,7 @@ namespace Signhost.APIClient.Rest.Tests
 	public class LevelEnumConverterTests
 	{
 		[Fact]
-		public void when_Level_is_null_should_deserialize_to_null()
+		public void When_Level_is_null_should_deserialize_to_null()
 		{
 			// Arrange
 			const string json = "{\"Type\":\"eIDAS Login\",\"Level\":null}";
@@ -24,7 +24,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_Level_is_not_supplied_should_deserialize_to_null()
+		public void When_Level_is_not_supplied_should_deserialize_to_null()
 		{
 			// Arrange
 			const string json = "{\"Type\":\"eIDAS Login\"}";
@@ -37,7 +37,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_Level_is_unknown_should_deserialize_to_Unknown_Level()
+		public void When_Level_is_unknown_should_deserialize_to_Unknown_Level()
 		{
 			// Arrange
 			const string json = "{\"Type\":\"eIDAS Login\",\"Level\":\"foobar\"}";
@@ -51,7 +51,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 		[Theory]
 		[ClassData(typeof(LevelTestData))]
-		public void when_Level_is_valid_should_deserialize_to_correct_value(Level level)
+		public void When_Level_is_valid_should_deserialize_to_correct_value(Level level)
 		{
 			// Arrange
 			string json = $"{{\"Type\":\"eIDAS Login\",\"Level\":\"{level}\"}}";
