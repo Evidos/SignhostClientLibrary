@@ -65,10 +65,13 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 					new {
 						Type = string.Empty,
 						Message = string.Empty,
+						Detail = string.Empty,
 					});
 
 				errorType = error.Type;
-				errorMessage = error.Message;
+				errorMessage = string.IsNullOrEmpty(error.Detail)
+					? error.Message
+					: error.Detail;
 			}
 
 			switch (response.StatusCode) {
