@@ -7,18 +7,9 @@ namespace Signhost.APIClient.Rest
 	{
 		public const string DefaultEndpoint = "https://api.signhost.com/api/";
 
-		public SignHostApiClientSettings(string appkey, string apikey)
+		public SignHostApiClientSettings(string appkey)
 		{
 			APPKey = appkey;
-			APIKey = apikey;
-		}
-
-		[Obsolete("Obsoleted by UserToken")]
-		public string APIKey { get; private set; }
-
-		public string UserToken {
-			get { return APIKey; }
-			set { APIKey = value; }
 		}
 
 		public string APPKey { get; private set; }
