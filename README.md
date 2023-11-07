@@ -4,7 +4,7 @@
 [![Nuget package](https://img.shields.io/nuget/v/SignhostClientLibrary.svg)](https://www.nuget.org/Packages/SignhostClientLibrary)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SignhostAPIClient&metric=alert_status)](https://sonarcloud.io/dashboard?id=SignhostAPIClient)
 
-This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
+This is a client library in C# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
 You will need a valid APPKey and APIKey.
 You can request a APPKey for signhost at [ondertekenen.nl](https://portal.signhost.com/signup/api-aanvraag).
 
