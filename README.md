@@ -16,17 +16,18 @@ Get it on NuGet:
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
-var client = new SignHostApiClient(new SignHostApiClientSettings("AppName appkey", "apikey or usertoken"));
+var settings = new SignHostApiClientSettings(
+	"AppName appkey",
+	"apikey or usertoken"));
 
-var transaction = await client.CreateTransactionAsync(new Transaction
-{
-	Signers = new List<Signer>
-	{
-		new Signer
-		{
-			Email = "john.doe@example.com",
+var client = new SignHostApiClient(settings);
+
+var transaction = await client.CreateTransactionAsync(new Transaction {
+	Signers = new List<Signer> {
+		new Signer {
+			Email              = "john.doe@example.com",
 			SignRequestMessage = "Could you please sign this document?",
-			SendSignRequest = true,
+			SendSignRequest    = true,
 			/*
 			 * The verifications listed here are executed in order.
 			 * Your last verification _must_ be one of the following:
@@ -34,23 +35,32 @@ var transaction = await client.CreateTransactionAsync(new Transaction
 			 * - ScribbleVerification
 			 * - ConsentVerification
 			 */
-			Verifications = new List<IVerification> {
+			Verifications      = new List<IVerification> {
 				new PhoneNumberVerification {
-					Number = "+3161234567890"
+					Number = "+3161234567890",
 				},
 				new ScribbleVerification {
-					ScribbleName = "John Doe",
-					RequireHandsignature = true,
+					ScribbleName           = "John Doe",
+					RequireHandsignature   = true,
 				},
-			}
-		}
-	}
+			},
+		},
+	},
 });
 
-await client.AddOrReplaceFileToTransactionAsync("PathToFile",    transaction.Id, "First document",    new FileUploadOptions());
-await client.AddOrReplaceFileToTransactionAsync("PathOtherFile", transaction.Id, "General agreement", new FileUploadOptions());
+await client.AddOrReplaceFileToTransactionAsync(
+	"PathToFile",
+	transaction.Id,
+	"First document",
+	new FileUploadOptions());
 
-/* When everything is setup we can start the transaction flow */
+await client.AddOrReplaceFileToTransactionAsync(
+	"PathOtherFile",
+	transaction.Id,
+	"General agreement",
+	new FileUploadOptions());
+
+/* When everything is setup we can start the transaction flow. */
 await client.StartTransactionAsync(transaction.Id);
 
 ```
