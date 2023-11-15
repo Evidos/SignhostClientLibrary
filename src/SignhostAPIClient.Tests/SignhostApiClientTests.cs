@@ -14,8 +14,7 @@ namespace Signhost.APIClient.Rest.Tests
 	public class SignHostApiClientTests
 	{
 		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
-				"AppKey",
-				"AuthKey"
+				"AppKey"
 		) {
 			Endpoint = "http://localhost/api/"
 		};
@@ -575,22 +574,18 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction")
 				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("Authorization", "APIKey AuthKey")
 				.WithHeaders("X-Custom", "test")
 				.Respond(new StringContent(RequestBodies.TransactionSingleSignerJson));
 			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
 				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("Authorization", "APIKey AuthKey")
 				.WithHeaders("X-Custom", "test")
 				.Respond(HttpStatusCode.Accepted, new StringContent(RequestBodies.AddOrReplaceFileMetaToTransaction));
 			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
 				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("Authorization", "APIKey AuthKey")
 				.WithHeaders("X-Custom", "test")
 				.Respond(HttpStatusCode.Created);
 			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/start")
 				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("Authorization", "APIKey AuthKey")
 				.WithHeaders("X-Custom", "test")
 				.Respond(HttpStatusCode.NoContent);
 
