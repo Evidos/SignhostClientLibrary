@@ -270,7 +270,7 @@ namespace Signhost.APIClient.Rest.Tests
 			mockHttp
 				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
 				.WithHeaders("X-Forwarded-For", "localhost")
-				.With(matcher => matcher.Headers.UserAgent.ToString().Contains("SignhostClientLibrary"))
+				.With(matcher => matcher.Headers.UserAgent.ToString().Contains("EntrustSignhostClientLibrary"))
 				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.AddTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {

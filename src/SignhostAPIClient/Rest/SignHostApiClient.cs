@@ -55,7 +55,7 @@ namespace Signhost.APIClient.Rest
 				settings.Endpoint + (settings.Endpoint.EndsWith("/") ? string.Empty : "/"));
 			this.client.DefaultRequestHeaders.UserAgent.Add(
 				new System.Net.Http.Headers.ProductInfoHeaderValue(
-					"SignhostClientLibrary",
+					"EntrustSignhostClientLibrary",
 					Version));
 			this.client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
 			this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
