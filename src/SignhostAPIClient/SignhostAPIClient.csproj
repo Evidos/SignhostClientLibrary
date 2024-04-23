@@ -21,7 +21,6 @@
     <PackageId>EntrustSignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
-* 4.0.0 - Added access token marks a significant enhancement in the security and authentication mechanisms of the application
 * 3.0.0 - Bumped verifications support and added .net core target
 * 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation

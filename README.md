@@ -1,17 +1,14 @@
 # Signhost client library
 [![join gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Evidos/signhost-api)
 [![Build status](https://ci.appveyor.com/api/projects/status/696lddgivr6kkhsd/branch/master?svg=true)](https://ci.appveyor.com/project/MrJoe/signhostclientlibrary-xcr5f/branch/master)
-[![Nuget package](https://img.shields.io/nuget/v/EntrustSignhostClientLibary.svg)](https://www.nuget.org/Packages/EntrustSignhostClientLibary)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SignhostAPIClient&metric=alert_status)](https://sonarcloud.io/dashboard?id=SignhostAPIClient)
+[![Nuget package](https://img.shields.io/nuget/v/EntrustSignhostClientLibrary.svg)](https://www.nuget.org/Packages/EntrustSignhostClientLibrary)
 
-This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
-You will need a valid APPKey and APIKey.
-You can request a APPKey for signhost at [ondertekenen.nl](https://portal.signhost.com/signup/api-aanvraag).
+This is a client library in c# to demonstrate the usage of the [Signhost API](https://api.signhost.com/) using .NET. You will need a valid APPKey. You can request an APPKey [here](https://portal.signhost.com/signup/api-aanvraag).
 
 ### Install
 Get it on NuGet:
 
-`PM> Install-Package SignhostClientLibrary`
+`PM> Install-Package EntrustSignhostClientLibrary`
 
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
@@ -63,3 +60,6 @@ await client.AddOrReplaceFileToTransactionAsync(
 await client.StartTransactionAsync(transaction.Id);
 
 ```
+
+## Migration Guides
+Please refer to the migration notes in our [migration guides](https://github.com/Evidos/SignhostClientLibrary/wiki/Migration-Guides).
