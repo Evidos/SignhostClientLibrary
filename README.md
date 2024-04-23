@@ -2,7 +2,7 @@
 [![join gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Evidos/signhost-api)
 [![Nuget package](https://img.shields.io/nuget/v/EntrustSignhostClientLibrary.svg)](https://www.nuget.org/Packages/EntrustSignhostClientLibrary)
 
-This is a client library in c# to demonstrate the usage of the [Signhost API](https://api.signhost.com/) using .NET. You will need a valid APPKey and APIKey. You can request an APPKey [here](https://portal.signhost.com/signup/api-aanvraag).
+This is a client library in c# to demonstrate the usage of the [Signhost API](https://api.signhost.com/) using .NET. You will need a valid APPKey. You can request an APPKey [here](https://portal.signhost.com/signup/api-aanvraag).
 
 ### Install
 Get it on NuGet:
