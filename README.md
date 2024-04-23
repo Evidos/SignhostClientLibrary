@@ -11,7 +11,7 @@ You can request a APPKey for signhost at [ondertekenen.nl](https://portal.signho
 ### Install
 Get it on NuGet:
 
-`PM> Install-Package SignhostClientLibrary`
+`PM> Install-Package EntrustSignhostClientLibrary`
 
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
