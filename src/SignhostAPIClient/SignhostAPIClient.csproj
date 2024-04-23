@@ -13,12 +13,12 @@
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
     <VersionPrefix>3.0.$(VersionBuildNumber)</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
-    <Authors>Evidos</Authors>
+    <Authors>Entrust</Authors>
     <Product>Signhost</Product>
-    <Copyright>Copyright 2016-2018 © Evidos</Copyright>
+    <Copyright>Copyright © Entrust</Copyright>
     <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageId>SignhostClientLibrary</PackageId>
+    <PackageId>EntrustSignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
 * 3.0.0 - Bumped verifications support and added .net core target
@@ -29,7 +29,7 @@
 * 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
 * 2.0.0 - First release using new multidoc API.
     </PackageReleaseNotes>
-    <Company>Evidos</Company>
+    <Company>Entrust</Company>
     <Description>A .NET library for the signhost.com api.</Description>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
