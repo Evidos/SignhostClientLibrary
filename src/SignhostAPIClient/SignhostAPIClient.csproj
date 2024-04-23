@@ -18,9 +18,11 @@
     <Copyright>Copyright 2016-2018 © Evidos</Copyright>
     <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageId>SignhostClientLibrary</PackageId>
+    <PackageId>EntrustSignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
+
+* 4.0.0 - Added Access token
 * 3.0.0 - Bumped verifications support and added .net core target
 * 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation
@@ -36,7 +38,12 @@
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+
   </PropertyGroup>
+    <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
