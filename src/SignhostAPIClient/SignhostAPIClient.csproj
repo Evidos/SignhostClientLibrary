@@ -15,7 +15,7 @@
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
     <Authors>Evidos</Authors>
     <Product>Signhost</Product>
-    <Copyright>Copyright 2016-2018 © Evidos</Copyright>
+    <Copyright>Copyright © Entrust</Copyright>
     <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageId>EntrustSignhostClientLibrary</PackageId>
