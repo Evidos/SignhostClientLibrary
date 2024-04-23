@@ -1,7 +1,7 @@
 # Signhost client library
 [![join gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Evidos/signhost-api)
 [![Build status](https://ci.appveyor.com/api/projects/status/696lddgivr6kkhsd/branch/master?svg=true)](https://ci.appveyor.com/project/MrJoe/signhostclientlibrary-xcr5f/branch/master)
-[![Nuget package](https://img.shields.io/nuget/v/SignhostClientLibrary.svg)](https://www.nuget.org/Packages/SignhostClientLibrary)
+[![Nuget package](https://img.shields.io/nuget/v/EntrustSignhostClientLibary.svg)](https://www.nuget.org/Packages/EntrustSignhostClientLibary)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SignhostAPIClient&metric=alert_status)](https://sonarcloud.io/dashboard?id=SignhostAPIClient)
 
 This is a client library in c# to demonstrate the usage of the [signhost api](https://api.signhost.com/) using .net.
@@ -17,8 +17,7 @@ Get it on NuGet:
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
 var settings = new SignHostApiClientSettings(
-	"AppName appkey",
-	"apikey or usertoken"));
+	"AppName appkey"));
 
 var client = new SignHostApiClient(settings);
 

@@ -11,7 +11,7 @@
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionPrefix>3.0.$(VersionBuildNumber)</VersionPrefix>
+    <VersionPrefix>4.0.$(VersionBuildNumber)</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
     <Authors>Evidos</Authors>
     <Product>Signhost</Product>
@@ -21,6 +21,7 @@
     <PackageId>EntrustSignhostClientLibrary</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
+* 4.0.0 - Added access token marks a significant enhancement in the security and authentication mechanisms of the application
 * 3.0.0 - Bumped verifications support and added .net core target
 * 2.3.0 - Added support for custom forms creation over the API
 * 2.2.2 - Added basic parameter validation
