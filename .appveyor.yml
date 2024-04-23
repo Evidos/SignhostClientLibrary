@@ -17,13 +17,10 @@ for:
 
 before_build:
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { Set-AppveyorBuildVariable 'SH_VERSION_SUFFIX' 'alpha' }
-  - dotnet tool install --global dotnet-sonarscanner --version 5.5.3
   - dotnet add "src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj" package coverlet.msbuild --version 3.1.0
   - cmd: dotnet restore "src\SignhostAPIClient.sln
 
 build_script:
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER )                            { dotnet sonarscanner begin /key:"SignhostAPIClient" /d:"sonar.host.url=https://sonarcloud.io" /organization:"signhost" /d:"sonar.login=$env:sonarcloud_auth_token" /d:"sonar.cs.opencover.reportsPaths=src\SignhostAPIClient.Tests\result.cover" /d:"sonar.pullrequest.base=master" /d:"sonar.pullrequest.branch=PR-$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.provider=GitHub" /d:"sonar.pullrequest.github.repository=Evidos/SignhostClientLibrary" }
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER)                        { dotnet sonarscanner begin /key:"SignhostAPIClient" /d:"sonar.host.url=https://sonarcloud.io" /organization:"signhost" /d:"sonar.login=$env:sonarcloud_auth_token" /d:"sonar.cs.opencover.reportsPaths=src\SignhostAPIClient.Tests\result.cover" }
   - dotnet build "src\SignhostAPIClient.sln"
   - dotnet pack "src\SignhostAPIClient\SignhostAPIClient.csproj"
 
@@ -31,7 +28,7 @@ test_script:
   - dotnet test --no-build "src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="./result.cover" /p:Exclude="[xunit*]*"
 
 after_test:
-  - ps: dotnet sonarscanner end /d:"sonar.login=$env:sonarcloud_auth_token"; $LASTEXITCODE=0
+  # No need for SonarScanner operation here
 
 nuget:
   project_feed: true
