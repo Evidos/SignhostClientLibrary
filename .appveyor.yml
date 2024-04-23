@@ -12,13 +12,14 @@ for:
 - branches:
     only:
       - master
+      - legacy
   environment:
     SH_VERSION_SUFFIX: ''
 
 before_build:
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { Set-AppveyorBuildVariable 'SH_VERSION_SUFFIX' 'alpha' }
-  - dotnet tool install --global dotnet-sonarscanner
-  - dotnet add "src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj" package coverlet.msbuild
+  - dotnet tool install --global dotnet-sonarscanner --version 5.5.3
+  - dotnet add "src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj" package coverlet.msbuild --version 3.1.0
   - cmd: dotnet restore "src\SignhostAPIClient.sln
 
 build_script:

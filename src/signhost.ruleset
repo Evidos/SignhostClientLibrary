@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Signhost rules" Description="Signhost rules" ToolsVersion="14.0">  
+<RuleSet Name="Signhost rules" Description="Signhost rules" ToolsVersion="14.0">
  <Include Path="BasicDesignGuidelineRules.ruleset" Action="Default" />
  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
  </Rules>
- <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">  
+ <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">
  </Rules>
  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
    <Rule Id="SA1027" Action="None" /><!-- Tabs must not be used -->
