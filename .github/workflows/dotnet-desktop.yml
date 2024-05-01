@@ -2,23 +2,75 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
+    # Skip workflow execution if the commit message contains [skip ci]
+    paths-ignore:
+      - 'version.txt'
+    if: "!(contains(github.event.head_commit.message, '[skip ci]'))"
   pull_request:
-
-env:
-  SH_VERSION_SUFFIX: ${{ env.SH_VERSION_SUFFIX }}
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: windows-latest
-
+    environment: client
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      # Add a step to check if version.txt exists
+      - name: Check if version.txt exists
+        run: |
+          if [ ! -f version.txt ]; then
+            echo "0" > version.txt
+          fi
+
+      # Add a step to read the current version number from version.txt
+      - name: Read current version
+        id: read_version
+        run: echo ::set-output name=version::$(cat version.txt)
+
+      # Add a step to increment the version number
+      - name: Increment version
+        id: increment_version
+        run: echo ::set-output name=version::$((${{ steps.read_version.outputs.version }} + 1))
+
+      # Add a step to write the incremented version number back to version.txt
+      - name: Write version to file
+        run: echo "${{ steps.increment_version.outputs.version }}" > version.txt
+
+      # Add a step to commit the changes
+      - name: Commit version increment
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add version.txt
+          git commit -m "Incremented version to ${{ steps.increment_version.outputs.version }} [skip ci]"
+          git pull --rebase
+          git push
+
+      # Your existing steps can follow here...
+      - name: Print BUILD_NUMBER variable
+        shell: bash
+        run: |
+          echo "${{ vars.BUILD_TEST }} out tests failed on CI"
+          echo "BUILD_TEST=1234" >> $GITHUB_ENV
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
+          include-prerelease: true
+
+      - name: Install .NET Framework 4.6.2 reference assemblies
+        run: nuget install Microsoft.NETFramework.ReferenceAssemblies.net462 -Version 1.0.0 -OutputDirectory ./.nuget/packages
+
+      - name: Set up environment variables
+        run: |
+          echo "MSBuildFrameworkPathOverride=$(pwd)/.nuget/packages/Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.0/lib/net462" >> $GITHUB_ENV
+          echo "MSBuildSDKsPath=$(pwd)/.nuget/packages/Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.0/build/native" >> $GITHUB_ENV
 
       - name: Install coverlet.msbuild
         run: dotnet add src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj package coverlet.msbuild --version 3.1.0
@@ -29,17 +81,33 @@ jobs:
       - name: Build solution
         run: dotnet build src/SignhostAPIClient.sln
 
-      - name: Run tests with coverage
-        run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj --collect:"XPlat Code Coverage" --settings coverlet.runsettings
-        env:
-          APPVEYOR_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Determine version
+        id: determine_version
+        shell: bash
+        run: |
+          version="3.0.0"
+          if [ $GITHUB_REF_NAME = "main" ]; then
+            suffix=""
+          else
+            suffix="-alpha"
+          fi
+          echo "Version=$version" >> $GITHUB_ENV
+          echo "Suffix=$suffix" >> $GITHUB_ENV
 
-      - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+      - name: Pack NuGet package
+        run: |
+          echo "${{ env.Version }} out tests failed on CI"
+          echo "${{ env.Suffix }}"
+          dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj -p:Version=${{ env.Version }}${{ env.Suffix }} --output ./artifacts
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
-          name: nuget
+          name: EntrustSignhostClientLibrary.${{ env.Version }}${{ env.Suffix }}
           path: ./artifacts
 
-      - name: Notify on Gitter
-        if: ${{ always() }}
-        run: curl -X POST -d "message=Build succeeded" https://webhooks.gitter.im/e/69c5136a745342743ec4
+      - name: Download
+        uses: actions/download-artifact@v2
+        with:
+          name: EntrustSignhostClientLibrary.${{ env.Version }}${{ env.Suffix }}
+          path: ./artifacts
