@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      SH_VERSION_SUFFIX: preview
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Install coverlet.msbuild
+        run: dotnet add src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj package coverlet.msbuild --version 3.1.0
+
+      - name: Restore NuGet packages
+        run: dotnet restore src/SignhostAPIClient.sln
+
+      - name: Build solution
+        run: dotnet build src/SignhostAPIClient.sln
+
+      - name: Run tests with coverage
+        run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+        env:
+          APPVEYOR_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+
+      - name: Download NuGet package artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: nuget
+          path: ./artifacts
+
+      - name: Notify on Gitter
+        if: ${{ always() }}
+        run: curl -X POST -d "message=Build succeeded" https://webhooks.gitter.im/e/69c5136a745342743ec4

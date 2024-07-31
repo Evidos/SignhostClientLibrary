@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard2.0;netstandard1.4;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.4;net462</TargetFrameworks>
     <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants Condition="'$(TargetFramework)' == 'net45'">SERIALIZABLE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net462'">SERIALIZABLE</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">TYPEINFO</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
@@ -39,16 +39,12 @@
   </PropertyGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Label=".NET 4.5 Package References" Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Label=".NET 4.61 Package References" Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
