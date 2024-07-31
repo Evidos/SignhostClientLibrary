@@ -2,74 +2,61 @@ name: CI
 
 on:
   push:
+    branches:
+      - master
+      - legacy
   pull_request:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: windows-latest
-    environment: client
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Print BUILD_NUMBER variable
-        shell: bash
-        run: |
-          echo "${{ vars.BUILD_TEST }} out tests failed on CI"
-          echo "BUILD_TEST=1234" >> $GITHUB_ENV
-
-
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '3.1.x'
-          include-prerelease: true
+          dotnet-version: '6.x' # Specify the version you need
 
-      - name: Install .NET Framework 4.6.2 reference assemblies
-        run: nuget install Microsoft.NETFramework.ReferenceAssemblies.net462 -Version 1.0.0 -OutputDirectory ./.nuget/packages
-
-      - name: Set up environment variables
+      - name: Calculate Version Number
+        id: version
         run: |
-          echo "MSBuildFrameworkPathOverride=$(pwd)/.nuget/packages/Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.0/lib/net462" >> $GITHUB_ENV
-          echo "MSBuildSDKsPath=$(pwd)/.nuget/packages/Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.0/build/native" >> $GITHUB_ENV
+          # Extract the latest commit SHA and use it to create a unique build number
+          BUILD_NUMBER=$(echo "${GITHUB_RUN_NUMBER}")
+          VERSION="3.0.$BUILD_NUMBER"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Install coverlet.msbuild
+      - name: Install Coverlet
         run: dotnet add src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj package coverlet.msbuild --version 3.1.0
 
-      - name: Restore NuGet packages
+      - name: Restore dependencies
         run: dotnet restore src/SignhostAPIClient.sln
 
-      - name: Build solution
+      - name: Build
         run: dotnet build src/SignhostAPIClient.sln
 
-      - name: Determine version
-        id: determine_version
-        shell: bash
-        run: |
-          version="3.0.0"
-          if [ $GITHUB_REF_NAME = "master" ]; then
-            suffix=""
-          else
-            suffix="-alpha"
-          fi
-          echo "Version=$version" >> $GITHUB_ENV
-          echo "Suffix=$suffix" >> $GITHUB_ENV
+      - name: Pack
+        run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.VERSION }}
 
-      - name: Pack NuGet package
-        run: |
-          echo "${{ env.Version }} out tests failed on CI"
-          echo "${{ env.Suffix }}"
-          dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj -p:Version=${{ env.Version }}${{ env.Suffix }} --output ./artifacts
+      - name: Test
+        run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="./result.cover" /p:Exclude="[xunit*]*"
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+      - name: Upload NuGet Package
+        uses: actions/upload-artifact@v3
         with:
-          name: EntrustSignhostClientLibrary.${{ env.Version }}${{ env.Suffix }}
-          path: ./artifacts
+          name: Nuget
+          path: '**/*.nupkg'
 
-      - name: Download
-        uses: actions/download-artifact@v2
+      - name: Notify
+        uses: actions/http-client@v3
         with:
-          name: EntrustSignhostClientLibrary.${{ env.Version }}${{ env.Suffix }}
-          path: ./artifacts
+          url: https://webhooks.gitter.im/e/69c5136a745342743ec4
+          method: POST
+          headers: |
+            Content-Type: application/json
+          body: |
+            { "text": "CI build completed successfully with version ${{ env.VERSION }}" }
