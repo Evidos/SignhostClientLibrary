@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      SH_VERSION_SUFFIX: preview
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+
+      - name: Calculate Version Number
+        id: version
+        run: |
+          MAJOR_VERSION=${{ vars.MAJOR_VERSION }}
+          MINOR_VERSION=${{ vars.MINOR_VERSION }}
+          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+          VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_NUMBER}"
+          if [ "${GITHUB_REF##*/}" != "master" ]; then
+            VERSION="${VERSION}-alpha"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Major Version: $MAJOR_VERSION"
+          echo "Minor Version: $MINOR_VERSION"
+          echo "Build Number: $BUILD_NUMBER"
+          echo "Version: $VERSION"
+        shell: bash
+
+      - name: Clear NuGet Cache
+        run: dotnet nuget locals all --clear
+
+      - name: Install Coverlet
+        run: dotnet add src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj package coverlet.msbuild --version 3.1.0
+
+      - name: Restore NuGet packages
+        run: dotnet restore src/SignhostAPIClient.sln
+
+      - name: Build solution
+        run: dotnet build src/SignhostAPIClient.sln -c release
+
+      - name: Test with Coverage
+        run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj --collect:"XPlat Code Coverage" -c Release
+
+      - name: Pack
+        run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.VERSION }}
+
+      - name: Upload NuGet Package
+        uses: actions/upload-artifact@v3
+        with:
+          name: Nuget
+          path: '**/*.nupkg'
+
+      - name: Publish NuGet Package
+        run: |
+          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+
