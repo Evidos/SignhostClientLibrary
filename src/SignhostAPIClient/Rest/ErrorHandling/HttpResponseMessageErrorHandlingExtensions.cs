@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Signhost.APIClient.Rest.DataObjects;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
@@ -36,6 +36,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 		/// When the API was unable to proces the request at the moment,
 		/// a RetryAfter property is set if available.
 		/// </exception>
+		/// <exception cref="RateLimitException">
+		/// When you are being ratelimited.
+		/// </exception>
 		/// <exception cref="SignhostRestApiClientException">
 		/// An other unknown API error occured.
 		/// </exception>
@@ -60,41 +63,49 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 				string responsejson = await response.Content.ReadAsStringAsync()
 					.ConfigureAwait(false);
 
-				var error = JsonConvert.DeserializeAnonymousType(
-					responsejson,
-					new {
-						Type = string.Empty,
-						Message = string.Empty,
-					});
+				var deserialized = responsejson.TryParseAsJson(out SignhostError error);
 
-				errorType = error.Type;
-				errorMessage = error.Message;
+				if (deserialized) {
+					errorType = error.Type;
+					errorMessage = error.Message;
+				}
+				else {
+					// Some statuscodes are known to (currently) not return JSON,
+					// in this case we return the response content itself.
+					if (response.StatusCode == (HttpStatusCode)429) {
+						errorMessage = responsejson;
+					}
+				}
 			}
 
 			switch (response.StatusCode) {
 				case HttpStatusCode.Unauthorized:
-					throw new System.UnauthorizedAccessException(
-						errorMessage);
+					throw new UnauthorizedAccessException(errorMessage);
+
 				case HttpStatusCode.BadRequest:
-					throw new BadRequestException(
-						errorMessage);
+					throw new BadRequestException(errorMessage);
+
 				case HttpStatusCode.PaymentRequired
 				when errorType == "https://api.signhost.com/problem/subscription/out-of-credits":
 					if (string.IsNullOrEmpty(errorMessage)) {
 						errorMessage = "The credit bundle has been exceeded.";
 					}
 
-					throw new OutOfCreditsException(
-						errorMessage);
+					throw new OutOfCreditsException(errorMessage);
+
 				case HttpStatusCode.NotFound:
-					throw new NotFoundException(
-						errorMessage);
+					throw new NotFoundException(errorMessage);
+
+				case (HttpStatusCode)429:
+					throw new RateLimitException(errorMessage);
+
 				case HttpStatusCode.InternalServerError:
 					throw new InternalServerErrorException(
-						errorMessage, response.Headers.RetryAfter);
+						errorMessage,
+						response.Headers.RetryAfter);
+
 				default:
-					throw new SignhostRestApiClientException(
-						errorMessage);
+					throw new SignhostRestApiClientException(errorMessage);
 			}
 
 			System.Diagnostics.Debug.Fail("Should not be reached");
