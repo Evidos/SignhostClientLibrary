@@ -2,14 +2,15 @@ name: CI
 
 on:
   push:
+    branches:
+      - '*'
   pull_request:
+    branches:
+      - '*'
 
 jobs:
   build:
     runs-on: windows-latest
-
-    env:
-      SH_VERSION_SUFFIX: preview
 
     steps:
       - name: Checkout repository
@@ -20,15 +21,17 @@ jobs:
         with:
           dotnet-version: '6.x'
 
+
       - name: Calculate Version Number
         id: version
         run: |
-          MAJOR_VERSION=${{ vars.MAJOR_VERSION }}
-          MINOR_VERSION=${{ vars.MINOR_VERSION }}
+          MAJOR_VERSION=3
+          MINOR_VERSION=0
           BUILD_NUMBER=${GITHUB_RUN_NUMBER}
           VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_NUMBER}"
+
           if [ "${GITHUB_REF##*/}" != "master" ]; then
-            VERSION="${VERSION}-alpha"
+            VERSION="${VERSION}-preview"
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Major Version: $MAJOR_VERSION"
@@ -61,10 +64,10 @@ jobs:
           name: Nuget
           path: '**/*.nupkg'
 
-      - name: Publish NuGet Package
-        run: |
-          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      # - name: Publish NuGet Package
+      #   run: |
+      #     dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
 
 
