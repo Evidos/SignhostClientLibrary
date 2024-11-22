@@ -18,23 +18,30 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.x'
+          dotnet-version: '8.x'
 
       - name: Calculate Version Number
         id: version
         run: |
-          MAJOR_VERSION=${{ vars.MAJOR_VERSION }}
-          MINOR_VERSION=${{ vars.MINOR_VERSION }}
-          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
-          VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_NUMBER}"
-          if [ "${GITHUB_REF##*/}" != "master" ]; then
-            VERSION="${VERSION}-alpha"
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Major Version: $MAJOR_VERSION"
-          echo "Minor Version: $MINOR_VERSION"
-          echo "Build Number: $BUILD_NUMBER"
-          echo "Version: $VERSION"
+            MAJOR_VERSION=${{ vars.MAJOR_VERSIONV4 }}
+            MINOR_VERSION=${{ vars.MINOR_VERSION }}
+            BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+            BRANCH_NAME=${GITHUB_REF##*/}
+
+            MAJOR_VERSION=${MAJOR_VERSION:-0}
+            MINOR_VERSION=${MINOR_VERSION:-0}
+            VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_NUMBER}"
+
+            if [ "$BRANCH_NAME" != "master" ]; then
+              VERSION="${VERSION}-preview"
+            fi
+
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "Major Version: $MAJOR_VERSION"
+            echo "Minor Version: $MINOR_VERSION"
+            echo "Build Number: $BUILD_NUMBER"
+            echo "Branch Name: $BRANCH_NAME"
+            echo "Version: $VERSION"
         shell: bash
 
       - name: Clear NuGet Cache
@@ -54,10 +61,18 @@ jobs:
 
       - name: Pack
         run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.VERSION }}
+        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Upload NuGet Package
         uses: actions/upload-artifact@v3
         with:
           name: Nuget
           path: '**/*.nupkg'
+        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
+      - name: Publish NuGet Package
+        run: |
+          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+        if: ${{ github.event.pull_request.head.repo.fork == false}}
