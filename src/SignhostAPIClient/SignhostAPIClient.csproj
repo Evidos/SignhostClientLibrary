@@ -18,7 +18,7 @@
     <Copyright>Copyright © Entrust</Copyright>
     <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageId>EntrustSignhostClientLibrary</PackageId>
+    <PackageId>canxxp.Polly</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
 * 3.0.0 - Bumped verifications support and added .net core target
