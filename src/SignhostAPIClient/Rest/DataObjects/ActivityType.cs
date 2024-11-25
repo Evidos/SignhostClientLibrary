@@ -37,6 +37,16 @@ namespace Signhost.APIClient.Rest.DataObjects
 		DocumentOpened = 105,
 
 		/// <summary>
+		/// Consumer Signing identity approved.
+		/// </summary>
+		IdentityApproved = 110,
+
+		/// <summary>
+		/// Consumer Signing identity failed.
+		/// </summary>
+		IdentityFailed = 111,
+
+		/// <summary>
 		/// Cancelled.
 		/// </summary>
 		Cancelled = 201,
