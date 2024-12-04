@@ -8,6 +8,11 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
     <RootNamespace>Signhost.APIClient</RootNamespace>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
@@ -18,7 +23,7 @@
     <Copyright>Copyright © Entrust</Copyright>
     <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageId>EntrustSignhostClientLibrary</PackageId>
+    <PackageId>Evidos.TestPackage</PackageId>
     <PackageTags>sign;signing;digital signature;pdf</PackageTags>
     <PackageReleaseNotes>
 * 3.0.0 - Bumped verifications support and added .net core target
@@ -36,7 +41,11 @@
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+    <ItemGroup>
+    <None Include="../../LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
@@ -52,5 +61,9 @@
   <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <None Include="../../README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
 </Project>
