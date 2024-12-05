@@ -8,6 +8,9 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
     <RootNamespace>Signhost.APIClient</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
   <PropertyGroup Label="Package">
     <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
@@ -36,7 +39,14 @@
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+     <None Include="../../README.md" Pack="true" PackagePath="README.md" />
+  </ItemGroup>
   <ItemGroup Label="Build">
     <AdditionalFiles Include="../stylecop.json" />
   </ItemGroup>
