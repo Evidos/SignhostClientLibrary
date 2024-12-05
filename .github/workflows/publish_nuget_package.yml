@@ -20,28 +20,26 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Calculate Version Number
-        id: version
+      - name: Get Latest NuGet Version
+        id: get_version
         run: |
-            MAJOR_VERSION=${{ vars.MAJOR_VERSION }}
-            MINOR_VERSION=${{ vars.MINOR_VERSION }}
-            BUILD_NUMBER=${GITHUB_RUN_NUMBER}
-            BRANCH_NAME=${GITHUB_REF##*/}
+            VERSION=$(curl -sL "https://api.nuget.org/v3/registration5-gz-semver2/entrustsignhostclientlibrary/index.json" | gunzip -c | jq -r '.items[].items[].catalogEntry.version' | grep '^3' | sort -V | tail -n 1)
+            echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
+            echo "Latest version: $VERSION"
+            IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
 
-            MAJOR_VERSION=${MAJOR_VERSION:-0}
-            MINOR_VERSION=${MINOR_VERSION:-0}
-            VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_NUMBER}"
+            # Increment the patch version (the third component)
+            PATCH_VERSION=${VERSION_PARTS[2]}
+            PATCH_VERSION=$((PATCH_VERSION + 1))
 
-            if [ "$BRANCH_NAME" != "master" ]; then
-              VERSION="${VERSION}-preview"
-            fi
+            # Recombine the version (major.minor.patch)
+            NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH_VERSION"
 
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-            echo "Major Version: $MAJOR_VERSION"
-            echo "Minor Version: $MINOR_VERSION"
-            echo "Build Number: $BUILD_NUMBER"
-            echo "Branch Name: $BRANCH_NAME"
-            echo "Version: $VERSION"
+            # Set the new version as the environment variable
+            echo "LATEST_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+
+            # Print the new version
+            echo "Latest version: $NEW_VERSION"
         shell: bash
 
       - name: Clear NuGet Cache
@@ -60,7 +58,7 @@ jobs:
         run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj --collect:"XPlat Code Coverage" -c Release
 
       - name: Pack
-        run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.VERSION }}
+        run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.LATEST_VERSION }}
         if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Upload NuGet Package
