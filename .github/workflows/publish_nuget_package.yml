@@ -22,15 +22,6 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Print All Git Tags
-        run: |
-              # Fetch all tags
-              git fetch --tags
-              # Print all tags
-              echo "All tags in the repository:"
-              git tag
-        shell: bash
-
       - name: Fetch All Tags and Set Version
         run: |
           # Fetch all tags
@@ -46,7 +37,7 @@ jobs:
           echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
 
           # Print the version
-          echo "Version without 'v' prefix: ${VERSION}"
+          echo "Version ${VERSION}"
         shell: bash
 
       - name: Clear NuGet Cache
@@ -75,9 +66,9 @@ jobs:
           path: '**/*.nupkg'
         if: ${{ github.event.pull_request.head.repo.fork == false}}
 
-      # - name: Publish NuGet Package
-      #   run: |
-      #     dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
-      #   env:
-      #     NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-      #   if: ${{ github.event.pull_request.head.repo.fork == false}}
+      - name: Publish NuGet Package
+        run: |
+          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+        if: ${{ github.event.pull_request.head.repo.fork == false}}
