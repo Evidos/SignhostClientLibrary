@@ -14,32 +14,39 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetches all history and tags
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.x'
 
-      - name: Get Latest NuGet Version
-        id: get_version
+      - name: Print All Git Tags
         run: |
-            VERSION=$(curl -sL "https://api.nuget.org/v3/registration5-gz-semver2/entrustsignhostclientlibrary/index.json" | gunzip -c | jq -r '.items[].items[].catalogEntry.version' | grep '^3' | sort -V | tail -n 1)
-            echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
-            echo "Latest version: $VERSION"
-            IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+              # Fetch all tags
+              git fetch --tags
+              # Print all tags
+              echo "All tags in the repository:"
+              git tag
+        shell: bash
 
-            # Increment the patch version (the third component)
-            PATCH_VERSION=${VERSION_PARTS[2]}
-            PATCH_VERSION=$((PATCH_VERSION + 1))
+      - name: Fetch All Tags and Set Version
+        run: |
+          # Fetch all tags
+          git fetch --tags
 
-            # Recombine the version (major.minor.patch)
-            NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH_VERSION"
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0)
 
-            # Set the new version as the environment variable
-            echo "LATEST_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          # Remove the "v" prefix if present
+          VERSION=${LATEST_TAG#v}
 
-            # Print the new version
-            echo "Latest version: $NEW_VERSION"
+          # Set the version as an environment variable for subsequent steps
+          echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
+
+          # Print the version
+          echo "Version without 'v' prefix: ${VERSION}"
         shell: bash
 
       - name: Clear NuGet Cache
@@ -68,9 +75,9 @@ jobs:
           path: '**/*.nupkg'
         if: ${{ github.event.pull_request.head.repo.fork == false}}
 
-      - name: Publish NuGet Package
-        run: |
-          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
+      # - name: Publish NuGet Package
+      #   run: |
+      #     dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+      #   if: ${{ github.event.pull_request.head.repo.fork == false}}
