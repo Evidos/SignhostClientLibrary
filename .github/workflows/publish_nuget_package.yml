@@ -68,9 +68,9 @@ jobs:
           path: '**/*.nupkg'
         if: ${{ github.event.pull_request.head.repo.fork == false}}
 
-      - name: Publish NuGet Package
-        run: |
-          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
+      # - name: Publish NuGet Package
+      #   run: |
+      #     dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+      #   if: ${{ github.event.pull_request.head.repo.fork == false}}
