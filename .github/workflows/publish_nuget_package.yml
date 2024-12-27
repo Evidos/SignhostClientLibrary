@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-  pull_request:
+  pull_request_target:
+    branches:
+      - v4-prerelease  # Make sure this is the target branch of your PR
 
 jobs:
   build:
@@ -63,18 +65,16 @@ jobs:
 
       - name: Pack
         run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.LATEST_VERSION }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Upload NuGet Package
         uses: actions/upload-artifact@v3
         with:
           name: Nuget
           path: '**/*.nupkg'
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Publish NuGet Package
         run: |
           dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
+        if: ${{ github.event.pull_request.head.repo.fork == false }}
