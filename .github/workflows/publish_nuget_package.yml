@@ -70,9 +70,19 @@ jobs:
           name: Nuget
           path: '**/*.nupkg'
 
-      # - name: Test NuGet API Key (Dry Run - Echo)
-      #   run: |
-      #       echo "Simulating NuGet push command: dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json"
-      #   env:
-      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Publish NuGet Package
+        run: |
+            # Only run this step if the secret is available
+            if [ "${{ github.event.pull_request.head.repo.fork }}" == "false" ]; then
+              echo "Publishing NuGet package..."
+              dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+            else
+              echo "Skipping NuGet push since this PR is from a fork and secrets are unavailable."
+            fi
+        env:
+            NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+        shell: bash
+        if: ${{ github.event.pull_request.head.repo.fork == false }}  # Ensure this step only runs in the main repo
+
+
 
