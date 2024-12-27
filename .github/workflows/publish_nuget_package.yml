@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-  pull_request:
+  pull_request_target:
 
 jobs:
   build:
@@ -63,18 +63,26 @@ jobs:
 
       - name: Pack
         run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.LATEST_VERSION }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Upload NuGet Package
         uses: actions/upload-artifact@v3
         with:
           name: Nuget
           path: '**/*.nupkg'
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
 
       - name: Publish NuGet Package
         run: |
-          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+            # Only run this step if the secret is available
+            if [ "${{ github.event.pull_request.head.repo.fork }}" == "false" ]; then
+              echo "Publishing NuGet package..."
+              dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+            else
+              echo "Skipping NuGet push since this PR is from a fork and secrets are unavailable."
+            fi
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ github.event.pull_request.head.repo.fork == false}}
+            NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+        shell: bash
+        if: ${{ github.event.pull_request.head.repo.fork == false }}  # Ensure this step only runs in the main repo
+
+
+
