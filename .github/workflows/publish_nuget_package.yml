@@ -3,8 +3,6 @@ name: CI
 on:
   push:
   pull_request_target:
-    branches:
-      - v4-prerelease  # Make sure this is the target branch of your PR
 
 jobs:
   build:
@@ -72,9 +70,9 @@ jobs:
           name: Nuget
           path: '**/*.nupkg'
 
-      - name: Publish NuGet Package
-        run: |
-          dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ github.event.pull_request.head.repo.fork == false }}
+      # - name: Test NuGet API Key (Dry Run - Echo)
+      #   run: |
+      #       echo "Simulating NuGet push command: dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json"
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
