@@ -36,7 +36,6 @@ jobs:
 
           # Print the version for debugging
           echo "Version ${VERSION}"
-
         shell: bash
 
       - name: Clear NuGet Cache
@@ -56,18 +55,18 @@ jobs:
 
       - name: Pack
         run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.LATEST_VERSION }}
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/v4-prerelease'
 
       - name: Upload NuGet Package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Nuget
           path: '**/*.nupkg'
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/v4-prerelease'
 
       - name: Publish NuGet Package
         run: |
           dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/v4-prerelease'
