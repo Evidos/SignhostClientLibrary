@@ -1,0 +1,14 @@
+{
+	"extends": ["config:base"],
+	"nuget": {
+	  "enabled": true
+	},
+	"automerge": false,
+	"prCreation": "immediate",
+	"packageRules": [
+	  {
+		"matchUpdateTypes": ["patch", "minor", "major"],
+		"groupName": "all-updates"
+	  }
+	]
+  }
