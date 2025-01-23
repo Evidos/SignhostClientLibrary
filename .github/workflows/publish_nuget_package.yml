@@ -59,7 +59,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
 
       - name: Upload NuGet Package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Nuget
           path: '**/*.nupkg'
