@@ -13,33 +13,30 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      - name: Get Latest NuGet Version
-        id: get_version
+      - name: Fetch The Tag
         run: |
-            VERSION=$(curl -sL "https://api.nuget.org/v3/registration5-gz-semver2/entrustsignhostclientlibrary/index.json" | gunzip -c | jq -r '.items[].items[].catalogEntry.version' | grep '^3' | sort -V | tail -n 1)
-            echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
-            echo "Latest version: $VERSION"
-            IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+          # Fetch all tags from the remote repository
+          git fetch https://github.com/Evidos/SignhostClientLibrary.git --tags
 
-            # Increment the patch version (the third component)
-            PATCH_VERSION=${VERSION_PARTS[2]}
-            PATCH_VERSION=$((PATCH_VERSION + 1))
+          # Get the most recent tag based on the commit date
+          LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
 
-            # Recombine the version (major.minor.patch)
-            NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH_VERSION"
+          # If the tag contains a "v", remove it to get the version (if needed)
+          VERSION=${LATEST_TAG#v}
 
-            # Set the new version as the environment variable
-            echo "LATEST_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          # Set the version as an environment variable for subsequent steps
+          echo "LATEST_VERSION=${VERSION}" >> $GITHUB_ENV
 
-            # Print the new version
-            echo "Latest version: $NEW_VERSION"
+          # Print the version for debugging
+          echo "Version ${VERSION}"
+
         shell: bash
 
       - name: Clear NuGet Cache
