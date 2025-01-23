@@ -20,6 +20,13 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Debug Branch Names
+        run: |
+            echo "HEAD Branch: ${{ github.head_ref }}"
+            echo "BASE Branch: ${{ github.base_ref }}"
+            echo "GitHub ref: ${{ github.ref }}"
+            echo "GitHub ref_name: ${{ github.ref_name }}"
+
       - name: Fetch The Tag
         run: |
           # Fetch all tags from the remote repository
@@ -62,11 +69,11 @@ jobs:
         with:
           name: Nuget
           path: '**/*.nupkg'
-        if: github.ref == 'refs/heads/v4-prerelease'
+        if: github.head_ref == 'refs/heads/v4-prerelease'
 
       - name: Publish NuGet Package
         run: |
           dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
-        if: github.ref == 'refs/heads/v4-prerelease'
+        if: github.head_ref == 'refs/heads/v4-prerelease'
