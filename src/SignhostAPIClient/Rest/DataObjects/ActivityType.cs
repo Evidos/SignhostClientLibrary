@@ -62,6 +62,11 @@ namespace Signhost.APIClient.Rest.DataObjects
 		Signed = 203,
 
 		/// <summary>
+		/// The signer delegated signing to a different signer.
+		/// </summary>
+		SignerDelegated = 204,
+
+		/// <summary>
 		/// Signed document sent.
 		/// </summary>
 		SignedDocumentSent = 301,
