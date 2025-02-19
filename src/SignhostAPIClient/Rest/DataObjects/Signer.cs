@@ -54,6 +54,16 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string SignUrl { get; set; }
 
+		public bool AllowDelegation { get; set; }
+
+		public string DelegateSignUrl { get; set; }
+
+		public string DelegateReason { get; set; }
+
+		public string DelegateSignerEmail { get; set; }
+
+		public string DelegateSignerName { get; set; }
+
 		public IReadOnlyList<Activity> Activities { get; private set; } =
 			new List<Activity>().AsReadOnly();
 
