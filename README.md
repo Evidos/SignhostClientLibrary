@@ -13,7 +13,8 @@ Get it on NuGet:
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
 var settings = new SignHostApiClientSettings(
-	"AppName appkey"));
+	"AppName appkey",
+	"apikey or usertoken"));
 
 var client = new SignHostApiClient(settings);
 

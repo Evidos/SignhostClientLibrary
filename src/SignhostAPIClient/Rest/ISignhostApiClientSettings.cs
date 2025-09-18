@@ -7,6 +7,11 @@ namespace Signhost.APIClient.Rest
 	public interface ISignHostApiClientSettings
 	{
 		/// <summary>
+		/// Gets the usertoken identifying an authorized user.
+		/// </summary>
+		string UserToken { get; }
+
+		/// <summary>
 		/// Gets the app key of your applications.
 		/// </summary>
 		string APPKey { get; }

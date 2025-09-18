@@ -13,9 +13,11 @@ namespace Signhost.APIClient.Rest.Tests
 {
 	public class SignHostApiClientTests
 	{
-		private SignHostApiClientSettings settings = new SignHostApiClientSettings(
-				"AppKey"
-		) {
+		private readonly SignHostApiClientSettings settings = new("AppKey", "Usertoken") {
+			Endpoint = "http://localhost/api/"
+		};
+
+		private readonly SignHostApiClientSettings oauthSettings = new("AppKey") {
 			Endpoint = "http://localhost/api/"
 		};
 
@@ -568,31 +570,37 @@ namespace Signhost.APIClient.Rest.Tests
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
-		[Fact]
-		public async Task When_a_complete_transaction_flow_is_created_headers_are_not_set_multiple_times()
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public async Task When_a_complete_transaction_flow_is_created_headers_are_not_set_multiple_times(
+			bool isOauth)
 		{
+			MockedRequest AddHeaders(MockedRequest request)
+			{
+				if (!isOauth) {
+					request = request.WithHeaders("Authorization", "APIKey Usertoken");
+				}
+
+				return request
+					.WithHeaders("Application", "APPKey AppKey")
+					.WithHeaders("X-Custom", "test");
+			}
+
 			var mockHttp = new MockHttpMessageHandler();
-			mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction")
-				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("X-Custom", "test")
+			AddHeaders(mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction"))
 				.Respond(new StringContent(RequestBodies.TransactionSingleSignerJson));
-			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
-				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("X-Custom", "test")
+			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid"))
 				.Respond(HttpStatusCode.Accepted, new StringContent(RequestBodies.AddOrReplaceFileMetaToTransaction));
-			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid")
-				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("X-Custom", "test")
+			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid"))
 				.Respond(HttpStatusCode.Created);
-			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/start")
-				.WithHeaders("Application", "APPKey AppKey")
-				.WithHeaders("X-Custom", "test")
+			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/start"))
 				.Respond(HttpStatusCode.NoContent);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-
-				settings.AddHeader = add => add("X-Custom", "test");
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var clientSettings = isOauth ? oauthSettings : settings;
+				clientSettings.AddHeader = add => add("X-Custom", "test");
+				var signhostApiClient = new SignHostApiClient(clientSettings, httpClient);
 
 				var result = await signhostApiClient.CreateTransactionAsync(new Transaction());
 				await signhostApiClient.AddOrReplaceFileMetaToTransactionAsync(new FileMeta(), result.Id, "somefileid");
