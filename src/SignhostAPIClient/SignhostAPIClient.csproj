@@ -1,66 +1,61 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard2.0;netstandard1.4;net462</TargetFrameworks>
-    <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants Condition="'$(TargetFramework)' == 'net462'">SERIALIZABLE</DefineConstants>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">TYPEINFO</DefineConstants>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
-    <RootNamespace>Signhost.APIClient</RootNamespace>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
-  <PropertyGroup Label="Package">
-    <VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
-    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionPrefix>3.0.$(VersionBuildNumber)</VersionPrefix>
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
-    <Authors>Entrust</Authors>
-    <Product>Signhost</Product>
-    <Copyright>Copyright © Entrust</Copyright>
-    <PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageId>EntrustSignhostClientLibrary</PackageId>
-    <PackageTags>sign;signing;digital signature;pdf</PackageTags>
-    <PackageReleaseNotes>
-* 3.0.0 - Bumped verifications support and added .net core target
-* 2.3.0 - Added support for custom forms creation over the API
-* 2.2.2 - Added basic parameter validation
-* 2.2.1 - Improved errorhandling
-* 2.2.0 - Add fillable PDFs api call
-* 2.1.0 - Lowered minimum framework from 4.5.2 to 4.5
-* 2.0.0 - First release using new multidoc API.
-    </PackageReleaseNotes>
-    <Company>Entrust</Company>
-    <Description>A .NET library for the signhost.com api.</Description>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>$(VersionPrefix)</FileVersion>
-    <InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="../../LICENSE" Pack="true" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-     <None Include="../../README.md" Pack="true" PackagePath="README.md" />
-  </ItemGroup>
-  <ItemGroup Label="Build">
-    <AdditionalFiles Include="../stylecop.json" />
-  </ItemGroup>
-  <ItemGroup Label="Package References">
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup Label=".NET 4.61 Package References" Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
-  </ItemGroup>
-  <ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
-    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
-  </ItemGroup>
+	<PropertyGroup Label="Build">
+		<TargetFrameworks>netstandard2.0;netstandard1.4;net462</TargetFrameworks>
+		<CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
+		<DefineConstants Condition="'$(TargetFramework)' == 'net462'">SERIALIZABLE</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">TYPEINFO</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
+		<RootNamespace>Signhost.APIClient</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package">
+		<VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
+		<VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
+		<VersionPrefix>4.0.$(VersionBuildNumber)</VersionPrefix>
+		<Authors>Entrust</Authors>
+		<Product>Signhost</Product>
+		<Copyright>Copyright © Entrust</Copyright>
+		<PackageProjectUrl>https://github.com/Evidos/SignhostClientLibrary</PackageProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageId>EntrustSignhostClientLibrary</PackageId>
+		<PackageTags>sign;signing;digital signature;pdf</PackageTags>
+		<Company>Entrust</Company>
+		<Description>A .NET library for the signhost.com api.</Description>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
+		<FileVersion>$(VersionPrefix)</FileVersion>
+		<InformationalVersion>$(VersionPrefix) $(VersionSufix)</InformationalVersion>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../../LICENSE" Pack="true" PackagePath="" />
+		<None Include="../../README.md" Pack="true" PackagePath="README.md" />
+	</ItemGroup>
+
+	<ItemGroup Label="Build">
+		<AdditionalFiles Include="../stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup Label="Package References">
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup Label=".NET 4.61 Package References" Condition="'$(TargetFramework)' == 'net462'">
+		<Reference Include="System.Net" />
+		<Reference Include="System.Net.Http" />
+		<PackageReference Include="System.ValueTuple" Version="4.3.1" />
+	</ItemGroup>
+
+	<ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
+		<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
+		<PackageReference Include="System.ValueTuple" Version="4.3.1" />
+	</ItemGroup>
 </Project>

@@ -58,7 +58,11 @@ namespace Signhost.APIClient.Rest
 					"SignhostClientLibrary",
 					Version));
 			this.client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
-			this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
+
+			if (!string.IsNullOrWhiteSpace(settings.UserToken)) {
+				this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
+			}
+
 			this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
 			settings.AddHeader?.Invoke(this.client.DefaultRequestHeaders.Add);
 		}
@@ -67,7 +71,7 @@ namespace Signhost.APIClient.Rest
 			=> $"APPKey {settings.APPKey}";
 
 		private string AuthorizationHeader
-			=> $"APIKey {settings.APIKey}";
+			=> $"APIKey {settings.UserToken}";
 
 		/// <summary>
 		/// Globally register an additional verification type.

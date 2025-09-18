@@ -37,6 +37,16 @@ namespace Signhost.APIClient.Rest.DataObjects
 		DocumentOpened = 105,
 
 		/// <summary>
+		/// Consumer Signing identity approved.
+		/// </summary>
+		IdentityApproved = 110,
+
+		/// <summary>
+		/// Consumer Signing identity failed.
+		/// </summary>
+		IdentityFailed = 111,
+
+		/// <summary>
 		/// Cancelled.
 		/// </summary>
 		Cancelled = 201,
@@ -50,6 +60,11 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// The signer signed the documents.
 		/// </summary>
 		Signed = 203,
+
+		/// <summary>
+		/// The signer delegated signing to a different signer.
+		/// </summary>
+		SignerDelegated = 204,
 
 		/// <summary>
 		/// Signed document sent.

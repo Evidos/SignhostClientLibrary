@@ -9,7 +9,7 @@ namespace Signhost.APIClient.Rest
 		/// <summary>
 		/// Gets the usertoken identifying an authorized user.
 		/// </summary>
-		string APIKey { get; }
+		string UserToken { get; }
 
 		/// <summary>
 		/// Gets the app key of your applications.
