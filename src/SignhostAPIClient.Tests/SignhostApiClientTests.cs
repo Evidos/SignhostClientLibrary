@@ -22,7 +22,7 @@ namespace Signhost.APIClient.Rest.Tests
 		};
 
 		[Fact]
-		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
+		public async Task when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 
@@ -90,7 +90,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_the_authorization_is_bad_then_we_should_get_a_BadAuthorizationException()
+		public async Task when_GetTransaction_is_called_and_the_authorization_is_bad_then_we_should_get_a_BadAuthorizationException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -102,14 +102,14 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<UnauthorizedAccessException>();
+				await getTransaction.Should().ThrowAsync<UnauthorizedAccessException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_request_is_bad_then_we_should_get_a_BadRequestException()
+		public async Task when_GetTransaction_is_called_and_request_is_bad_then_we_should_get_a_BadRequestException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -121,14 +121,14 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.BadRequestException>();
+				await getTransaction.Should().ThrowAsync<ErrorHandling.BadRequestException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_credits_have_run_out_then_we_should_get_a_OutOfCreditsException()
+		public async Task when_GetTransaction_is_called_and_credits_have_run_out_then_we_should_get_a_OutOfCreditsException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -140,14 +140,14 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.OutOfCreditsException>();
+				await getTransaction.Should().ThrowAsync<ErrorHandling.OutOfCreditsException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
+		public async Task when_GetTransaction_is_called_and_not_found_then_we_should_get_a_NotFoundException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -160,14 +160,14 @@ namespace Signhost.APIClient.Rest.Tests
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 
-				getTransaction.Should().Throw<ErrorHandling.NotFoundException>().WithMessage("Not Found");
+				await getTransaction.Should().ThrowAsync<ErrorHandling.NotFoundException>().WithMessage("Not Found");
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_unkownerror_like_418_occures_then_we_should_get_a_SignhostException()
+		public async Task when_GetTransaction_is_called_and_unkownerror_like_418_occures_then_we_should_get_a_SignhostException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -179,7 +179,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.SignhostRestApiClientException>()
+				await getTransaction.Should().ThrowAsync<ErrorHandling.SignhostRestApiClientException>()
 					.WithMessage("*418*");
 			}
 
@@ -187,7 +187,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_GetTransaction_is_called_and_there_is_an_InternalServerError_then_we_should_get_a_InternalServerErrorException()
+		public async Task when_GetTransaction_is_called_and_there_is_an_InternalServerError_then_we_should_get_a_InternalServerErrorException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -199,14 +199,14 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.InternalServerErrorException>();
+				await getTransaction.Should().ThrowAsync<ErrorHandling.InternalServerErrorException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void When_GetTransaction_is_called_on_gone_transaction_we_shoud_get_a_GoneException()
+		public async Task When_GetTransaction_is_called_on_gone_transaction_we_shoud_get_a_GoneException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -217,14 +217,14 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.GoneException<Transaction>>();
+				await getTransaction.Should().ThrowAsync<ErrorHandling.GoneException<Transaction>>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void When_GetTransaction_is_called_and_gone_is_expected_we_should_get_a_transaction()
+		public async Task When_GetTransaction_is_called_and_gone_is_expected_we_should_get_a_transaction()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -235,7 +235,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionResponseAsync("transaction Id");
-				getTransaction.Should().NotThrow();
+				await getTransaction.Should().NotThrowAsync();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
@@ -289,7 +289,7 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public void when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
+		public async Task when_CreateTransaction_is_called_with_invalid_email_then_we_should_get_a_BadRequestException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -307,14 +307,14 @@ namespace Signhost.APIClient.Rest.Tests
 				testTransaction.Signers.Add(testSigner);
 
 				Func<Task> getTransaction = () => signhostApiClient.CreateTransactionAsync(testTransaction);
-				getTransaction.Should().Throw<ErrorHandling.BadRequestException>();
+				await getTransaction.Should().ThrowAsync<ErrorHandling.BadRequestException>();
 			}
 
 			mockHttp.VerifyNoOutstandingExpectation();
 		}
 
 		[Fact]
-		public void when_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
+		public async Task when_a_function_is_called_with_a_wrong_endpoint_we_should_get_a_SignhostRestApiClientException()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
@@ -325,7 +325,7 @@ namespace Signhost.APIClient.Rest.Tests
 				var signhostApiClient = new SignHostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-				getTransaction.Should().Throw<ErrorHandling.SignhostRestApiClientException>()
+				await getTransaction.Should().ThrowAsync<ErrorHandling.SignhostRestApiClientException>()
 					.WithMessage("Bad Gateway");
 			}
 
