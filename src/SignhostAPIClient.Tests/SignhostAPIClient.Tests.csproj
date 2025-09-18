@@ -1,38 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Label="Build">
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
-    <VersionSuffix>test</VersionSuffix>
-  </PropertyGroup>
-  <ItemGroup Label="Build">
-    <AdditionalFiles Include="../stylecop.json" />
-  </ItemGroup>
-  <ItemGroup Label="Package References">
-    <PackageReference Include="FluentAssertions" Version="5.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RichardSzalay.MockHttp" Version="1.5.*" />
-    <PackageReference Include="xunit" Version="2.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-  </ItemGroup>
-  <ItemGroup Label="Project References">
-    <ProjectReference Include="../SignhostAPIClient/SignhostAPIClient.csproj" />
-  </ItemGroup>
-  <PropertyGroup>
-    <RootNamespace>Signhost.APIClient.Rest.Tests</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="APIResponses.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="RequestBodies.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RequestBodies.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="RequestBodies.Designer.cs">
-      <DependentUpon>RequestBodies.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<PropertyGroup Label="Build">
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
+		<VersionSuffix>test</VersionSuffix>
+	</PropertyGroup>
+
+	<ItemGroup Label="Build">
+		<AdditionalFiles Include="../stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup Label="Package References">
+		<PackageReference Include="FluentAssertions" Version="5.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="RichardSzalay.MockHttp" Version="1.5.*" />
+		<PackageReference Include="xunit" Version="2.3.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+	</ItemGroup>
+
+	<ItemGroup Label="Project References">
+		<ProjectReference Include="../SignhostAPIClient/SignhostAPIClient.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<RootNamespace>Signhost.APIClient.Rest.Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="APIResponses.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="RequestBodies.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>RequestBodies.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="RequestBodies.Designer.cs">
+			<DependentUpon>RequestBodies.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 </Project>
