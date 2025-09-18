@@ -22,7 +22,7 @@ namespace Signhost.APIClient.Rest.Tests
 		};
 
 		[Fact]
-		public async void when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
+		public async Task when_AddOrReplaceFileMetaToTransaction_is_called_then_the_request_body_should_contain_the_serialized_file_meta()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 
