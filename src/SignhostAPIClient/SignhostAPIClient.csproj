@@ -51,7 +51,7 @@
 	<ItemGroup Label=".NET 4.61 Package References" Condition="'$(TargetFramework)' == 'net462'">
 		<Reference Include="System.Net" />
 		<Reference Include="System.Net.Http" />
-		<PackageReference Include="System.ValueTuple" Version="4.3.1" />
+		<PackageReference Include="System.ValueTuple" Version="4.6.1" />
 	</ItemGroup>
 
 	<ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
