@@ -8,9 +8,6 @@ jobs:
   build:
     runs-on: windows-latest
 
-    env:
-      SH_VERSION_SUFFIX: preview
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

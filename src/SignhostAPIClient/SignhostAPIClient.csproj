@@ -17,7 +17,6 @@
 		<VersionBuildNumber Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">$(APPVEYOR_BUILD_NUMBER)</VersionBuildNumber>
 		<VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
 		<VersionPrefix>4.0.$(VersionBuildNumber)</VersionPrefix>
-		<VersionSuffix Condition="'$(VersionSuffix)' == ''">$(SH_VERSION_SUFFIX)</VersionSuffix>
 		<Authors>Entrust</Authors>
 		<Product>Signhost</Product>
 		<Copyright>Copyright © Entrust</Copyright>
