@@ -417,12 +417,15 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		var result = await client
-			.GetStreamAsync(
-				"file".JoinPaths("receipt", transactionId))
+		var response = await client
+			.GetAsync(
+				"file".JoinPaths("receipt", transactionId),
+				cancellationToken)
+			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 
-		return result;
+		return await response.Content.ReadAsStreamAsync()
+			.ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />
@@ -454,12 +457,15 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 		}
 
-		var result = await client
-			.GetStreamAsync(
-				"transaction".JoinPaths(transactionId, "file", fileId))
+		var response = await client
+			.GetAsync(
+				"transaction".JoinPaths(transactionId, "file", fileId),
+				cancellationToken)
+			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 
-		return result;
+		return await response.Content.ReadAsStreamAsync()
+			.ConfigureAwait(false);
 	}
 
 	/// <inheritdoc/>
