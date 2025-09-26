@@ -20,7 +20,7 @@ namespace Signhost.APIClient.Rest
 		/// the hash value or the digest algorithm that is used
 		/// to set the <see cref="DigestHashValue"/>.
 		/// </summary>
-		public string DigestHashAlgorithm { get; set; } = "SHA-256";
+		public DigestHashAlgorithm DigestHashAlgorithm { get; set; } = DigestHashAlgorithm.SHA256;
 
 		/// <summary>
 		/// Gets or sets the hash digest value, you can set this yourself
