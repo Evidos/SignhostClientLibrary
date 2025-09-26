@@ -23,7 +23,10 @@ public static class StreamContentDigestOptionsExtensions
 		Stream fileStream,
 		FileDigestOptions options)
 	{
-		if (!options.UseFileDigesting || options.DigestHashAlgorithm == null) {
+		if (
+			!options.UseFileDigesting ||
+			options.DigestHashAlgorithm == DigestHashAlgorithm.None
+		) {
 			return content;
 		}
 
@@ -31,9 +34,20 @@ public static class StreamContentDigestOptionsExtensions
 
 		string base64Digest = Convert.ToBase64String(options.DigestHashValue);
 
-		content.Headers.Add("Digest", $"{options.DigestHashAlgorithm}={base64Digest}");
+		content.Headers.Add("Digest", $"{GetDigestHashAlgorithmName(options)}={base64Digest}");
 
 		return content;
+	}
+
+	private static string GetDigestHashAlgorithmName(FileDigestOptions options)
+	{
+		return options.DigestHashAlgorithm switch {
+			DigestHashAlgorithm.SHA256 => "SHA-256",
+			DigestHashAlgorithm.SHA512 => "SHA-512",
+
+			_ => throw new InvalidOperationException(
+				$"No hash algorithm name for '{options.DigestHashAlgorithm}'"),
+		};
 	}
 
 	private static void SetHashValue(
@@ -60,37 +74,16 @@ public static class StreamContentDigestOptionsExtensions
 	private static HashAlgorithm HashAlgorithmCreate(
 		FileDigestOptions options)
 	{
-		string algorithmName = options.DigestHashAlgorithm;
-		HashAlgorithm algorithm = null;
-
+		return options.DigestHashAlgorithm switch {
 #if NET462
-		algorithm = HashAlgorithm.Create(algorithmName);
+			DigestHashAlgorithm.SHA256 => HashAlgorithm.Create("SHA256"),
+			DigestHashAlgorithm.SHA512 => HashAlgorithm.Create("SHA512"),
 #else
-		algorithm = algorithmName switch {
-			"SHA1" or "SHA-1" => SHA1.Create(),
-			"SHA256" or "SHA-256" => SHA256.Create(),
-			"SHA384" or "SHA-384" => SHA384.Create(),
-			"SHA512" or "SHA-512" => SHA512.Create(),
-
-			_ => null,
+			DigestHashAlgorithm.SHA256 => SHA256.Create(),
+			DigestHashAlgorithm.SHA512 => SHA512.Create(),
+#endif
+			_ => throw new InvalidOperationException(
+				$"No hash algorithm for '{options.DigestHashAlgorithm}'"),
 		};
-#endif
-		if (algorithm == null && options.DigestHashValue == null) {
-			algorithm = DefaultHashAlgorithm();
-			options.DigestHashAlgorithm = algorithm.GetType().Name;
-		}
-
-		if (algorithm == null) {
-			throw new InvalidOperationException($"No hash algorithm for '{algorithmName}'");
-		}
-
-		return algorithm;
 	}
-
-	private static HashAlgorithm DefaultHashAlgorithm() =>
-#if NET462
-		HashAlgorithm.Create();
-#else
-		SHA256.Create();
-#endif
 }
