@@ -429,7 +429,7 @@ namespace Signhost.APIClient.Rest.Tests
 					new FileUploadOptions{
 					DigestOptions = new FileDigestOptions
 					{
-						DigestHashAlgorithm = "SHA-512"
+						DigestHashAlgorithm = DigestHashAlgorithm.SHA512,
 					}
 				});
 			}
@@ -443,7 +443,7 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Put, "http://localhost/api/transaction/transaction Id/file/file Id")
-				.WithHeaders("Digest", "SHA-1=AAEC")
+				.WithHeaders("Digest", "SHA-256=AAEC")
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
@@ -457,7 +457,7 @@ namespace Signhost.APIClient.Rest.Tests
 					{
 						DigestOptions = new FileDigestOptions
 						{
-							DigestHashAlgorithm = "SHA-1",
+							DigestHashAlgorithm = DigestHashAlgorithm.SHA256,
 							DigestHashValue = new byte[] { 0x00, 0x01, 0x02 }
 						}
 					});
