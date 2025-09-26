@@ -243,11 +243,20 @@ public class SignhostApiClient
 				nameof(transactionId));
 		}
 
-		var result = await client
-			.GetStreamAsync("file".JoinPaths("receipt", transactionId))
+		var response = await client
+			.GetAsync(
+				"file".JoinPaths("receipt", transactionId),
+				cancellationToken)
+			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 
-		return result;
+		return await response.Content
+#if NET8_0_OR_GREATER
+			.ReadAsStreamAsync(cancellationToken)
+#else
+			.ReadAsStreamAsync()
+#endif
+			.ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />
@@ -272,11 +281,20 @@ public class SignhostApiClient
 				nameof(fileId));
 		}
 
-		var result = await client
-			.GetStreamAsync("transaction".JoinPaths(transactionId, "file", fileId))
+		var response = await client
+			.GetAsync(
+				"transaction".JoinPaths(transactionId, "file", fileId),
+				cancellationToken)
+			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 
-		return result;
+		return await response.Content
+#if NET8_0_OR_GREATER
+			.ReadAsStreamAsync(cancellationToken)
+#else
+			.ReadAsStreamAsync()
+#endif
+			.ConfigureAwait(false);
 	}
 
 	/// <inheritdoc/>
