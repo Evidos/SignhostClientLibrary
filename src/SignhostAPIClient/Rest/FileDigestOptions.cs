@@ -1,7 +1,7 @@
 ﻿namespace Signhost.APIClient.Rest;
 
 /// <summary>
-/// File digest options for file uploads
+/// File digest options for file uploads.
 /// </summary>
 public class FileDigestOptions
 {
@@ -16,7 +16,7 @@ public class FileDigestOptions
 	/// the hash value or the digest algorithm that is used
 	/// to set the <see cref="DigestHashValue"/>.
 	/// </summary>
-	public string DigestHashAlgorithm { get; set; } = "SHA-256";
+	public DigestHashAlgorithm DigestHashAlgorithm { get; set; } = DigestHashAlgorithm.SHA256;
 
 	/// <summary>
 	/// Gets or sets the hash digest value, you can set this yourself
