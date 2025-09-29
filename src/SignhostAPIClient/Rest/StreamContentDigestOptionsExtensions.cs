@@ -23,7 +23,10 @@ namespace Signhost.APIClient.Rest
 			Stream fileStream,
 			FileDigestOptions options)
 		{
-			if (!options.UseFileDigesting || options.DigestHashAlgorithm == null) {
+			if (
+				!options.UseFileDigesting ||
+				options.DigestHashAlgorithm == DigestHashAlgorithm.None
+			) {
 				return content;
 			}
 
@@ -31,9 +34,20 @@ namespace Signhost.APIClient.Rest
 
 			string base64Digest = Convert.ToBase64String(options.DigestHashValue);
 
-			content.Headers.Add("Digest", $"{options.DigestHashAlgorithm}={base64Digest}");
+			content.Headers.Add("Digest", $"{GetDigestHashAlgorithmName(options)}={base64Digest}");
 
 			return content;
+		}
+
+		private static string GetDigestHashAlgorithmName(FileDigestOptions options)
+		{
+			return options.DigestHashAlgorithm switch {
+				DigestHashAlgorithm.SHA256 => "SHA-256",
+				DigestHashAlgorithm.SHA512 => "SHA-512",
+
+				_ => throw new InvalidOperationException(
+					$"No hash algorithm name for '{options.DigestHashAlgorithm}'"),
+			};
 		}
 
 		private static void SetHashValue(
@@ -60,48 +74,17 @@ namespace Signhost.APIClient.Rest
 		private static HashAlgorithm HashAlgorithmCreate(
 			FileDigestOptions options)
 		{
-			string algorithmName = options.DigestHashAlgorithm;
-			HashAlgorithm algorithm = null;
-
-#if NETSTANDARD1_4 || NETSTANDARD2_0
-			switch (algorithmName) {
-				case "SHA1":
-				case "SHA-1":
-					algorithm = SHA1.Create();
-					break;
-				case "SHA256":
-				case "SHA-256":
-					algorithm = SHA256.Create();
-					break;
-				case "SHA384":
-				case "SHA-384":
-					algorithm = SHA384.Create();
-					break;
-				case "SHA512":
-				case "SHA-512":
-					algorithm = SHA512.Create();
-					break;
-			}
+			return options.DigestHashAlgorithm switch {
+#if NETSTANDARD2_0 || NET8_0
+				DigestHashAlgorithm.SHA256 => SHA256.Create(),
+				DigestHashAlgorithm.SHA512 => SHA512.Create(),
 #else
-			algorithm = HashAlgorithm.Create(algorithmName);
+				DigestHashAlgorithm.SHA256 => HashAlgorithm.Create("SHA256"),
+				DigestHashAlgorithm.SHA512 => HashAlgorithm.Create("SHA512"),
 #endif
-			if (algorithm == null && options.DigestHashValue == null) {
-				algorithm = DefaultHashAlgorithm();
-				options.DigestHashAlgorithm = algorithm.GetType().Name;
-			}
-
-			if (algorithm == null) {
-				throw new InvalidOperationException($"No hash algorithm for '{algorithmName}'");
-			}
-
-			return algorithm;
+				_ => throw new InvalidOperationException(
+					$"No hash algorithm for '{options.DigestHashAlgorithm}'"),
+			};
 		}
-
-		private static HashAlgorithm DefaultHashAlgorithm() =>
-#if NETSTANDARD1_4 || NETSTANDARD2_0
-			SHA256.Create();
-#else
-			HashAlgorithm.Create();
-#endif
 	}
 }
