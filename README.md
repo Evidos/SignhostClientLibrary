@@ -9,6 +9,9 @@ Get it on NuGet:
 
 `PM> Install-Package EntrustSignhostClientLibrary`
 
+### Documentation
+For full API documentation, please visit [evidos.github.io](https://evidos.github.io).
+
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
