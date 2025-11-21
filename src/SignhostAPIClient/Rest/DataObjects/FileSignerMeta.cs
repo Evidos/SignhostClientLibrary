@@ -1,7 +1,6 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
+﻿namespace Signhost.APIClient.Rest.DataObjects;
+
+public class FileSignerMeta
 {
-	public class FileSignerMeta
-	{
-		public string[] FormSets { get; set; }
-	}
+	public string[] FormSets { get; set; }
 }
