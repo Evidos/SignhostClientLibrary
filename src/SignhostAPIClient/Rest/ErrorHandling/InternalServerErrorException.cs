@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
