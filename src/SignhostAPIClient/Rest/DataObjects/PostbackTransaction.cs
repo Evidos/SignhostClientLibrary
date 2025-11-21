@@ -1,11 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace Signhost.APIClient.Rest.DataObjects
+namespace Signhost.APIClient.Rest.DataObjects;
+
+public class PostbackTransaction
+	: Transaction
 {
-	public class PostbackTransaction
-		: Transaction
-	{
-		[JsonPropertyName("Checksum")]
-		public string Checksum { get; set; }
-	}
+	[JsonPropertyName("Checksum")]
+	public string Checksum { get; set; }
 }

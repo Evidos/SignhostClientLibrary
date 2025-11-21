@@ -4,76 +4,75 @@ using FluentAssertions;
 using System.Collections.Generic;
 using SignhostAPIClient.Tests.JSON;
 
-namespace Signhost.APIClient.Rest.Tests
+namespace Signhost.APIClient.Rest.Tests;
+
+public class SignhostApiReceiverTests
 {
-	public class SignhostApiReceiverTests
+	private SignhostApiReceiverSettings receiverSettings = new SignhostApiReceiverSettings("SharedSecret");
+
+	[Fact]
+	public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_body_then_true_is_returned()
 	{
-		private SignhostApiReceiverSettings receiverSettings = new SignhostApiReceiverSettings("SharedSecret");
+		// Arrange
+		IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
+		string body = JsonResources.MockPostbackValid;
 
-		[Fact]
-		public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_body_then_true_is_returned()
-		{
-			// Arrange
-			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
-			string body = JsonResources.MockPostbackValid;
+		// Act
+		SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
+		bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
 
-			// Act
-			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
-			bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+		// Assert
+		result.Should().BeTrue();
+	}
 
-			// Assert
-			result.Should().BeTrue();
-		}
+	[Fact]
+	public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_body_then_false_is_returned()
+	{
+		// Arrange
+		IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
+		string body = JsonResources.MockPostbackInvalid;
 
-		[Fact]
-		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_body_then_false_is_returned()
-		{
-			// Arrange
-			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
-			string body = JsonResources.MockPostbackInvalid;
+		// Act
+		SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
+		bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
 
-			// Act
-			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
-			bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+		// Assert
+		result.Should().BeFalse();
+	}
 
-			// Assert
-			result.Should().BeFalse();
-		}
+	[Fact]
+	public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_header_then_true_is_returned()
+	{
+		// Arrange
+		IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
+			{ "Content-Type", new[] { "application/json" }},
+			{"Checksum", new[] {"cdc09eee2ed6df2846dcc193aedfef59f2834f8d"}}
+		};
+		string body = JsonResources.MockPostbackValid;
 
-		[Fact]
-		public void when_IsPostbackChecksumValid_is_called_with_valid_postback_in_header_then_true_is_returned()
-		{
-			// Arrange
-			IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
-				{ "Content-Type", new[] { "application/json" }},
-				{"Checksum", new[] {"cdc09eee2ed6df2846dcc193aedfef59f2834f8d"}}
-			};
-			string body = JsonResources.MockPostbackValid;
+		// Act
+		SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
+		bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
 
-			// Act
-			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
-			bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
+		// Assert
+		result.Should().BeTrue();
+	}
 
-			// Assert
-			result.Should().BeTrue();
-		}
+	[Fact]
+	public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_header_then_false_is_returned()
+	{
+		// Arrange
+		IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
+			{ "Content-Type", new[] { "application/json" }},
+			{"Checksum", new[] {"70dda90616f744797972c0d2f787f86643a60c83"}}
+		};
+		string body = JsonResources.MockPostbackValid;
 
-		[Fact]
-		public void when_IsPostbackChecksumValid_is_called_with_invalid_postback_in_header_then_false_is_returned()
-		{
-			// Arrange
-			IDictionary<string, string[]> headers = new Dictionary<string, string[]> {
-				{ "Content-Type", new[] { "application/json" }},
-				{"Checksum", new[] {"70dda90616f744797972c0d2f787f86643a60c83"}}
-			};
-			string body = JsonResources.MockPostbackValid;
+		// Act
+		SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
+		bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
 
-			// Act
-			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
-			bool result = signhostApiReceiver.IsPostbackChecksumValid(headers, body, out Transaction transaction);
-
-			// Assert
-			result.Should().BeFalse();
-		}
+		// Assert
+		result.Should().BeFalse();
 	}
 }

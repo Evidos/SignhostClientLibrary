@@ -1,14 +1,13 @@
-namespace Signhost.APIClient.Rest.DataObjects
+namespace Signhost.APIClient.Rest.DataObjects;
+
+/// <summary>
+/// OpenID Connect identification.
+/// </summary>
+public class OidcVerification
+	: IVerification
 {
 	/// <summary>
-	/// OpenID Connect identification.
+	/// Gets or sets the OIDC provider name.
 	/// </summary>
-	public class OidcVerification
-		: IVerification
-	{
-		/// <summary>
-		/// Gets or sets the OIDC provider name.
-		/// </summary>
-		public string ProviderName { get; set; }
-	}
+	public string ProviderName { get; set; }
 }

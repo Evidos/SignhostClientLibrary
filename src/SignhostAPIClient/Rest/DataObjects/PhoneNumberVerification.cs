@@ -1,10 +1,9 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
-{
-	public class PhoneNumberVerification
-		: IVerification
-	{
-		public string Number { get; set; }
+﻿namespace Signhost.APIClient.Rest.DataObjects;
 
-		public bool? SecureDownload { get; set; }
-	}
+public class PhoneNumberVerification
+	: IVerification
+{
+	public string Number { get; set; }
+
+	public bool? SecureDownload { get; set; }
 }

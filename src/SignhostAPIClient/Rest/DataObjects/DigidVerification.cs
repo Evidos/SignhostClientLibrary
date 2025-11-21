@@ -1,10 +1,9 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
-{
-	public class DigidVerification
-		: IVerification
-	{
-		public string Bsn { get; set; }
+﻿namespace Signhost.APIClient.Rest.DataObjects;
 
-		public bool? SecureDownload { get; set; }
-	}
+public class DigidVerification
+	: IVerification
+{
+	public string Bsn { get; set; }
+
+	public bool? SecureDownload { get; set; }
 }
