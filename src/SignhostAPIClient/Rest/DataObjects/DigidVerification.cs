@@ -1,10 +1,7 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
-{
-	public class DigidVerification
-		: IVerification
-	{
-		public string Type => "DigiD";
+﻿namespace Signhost.APIClient.Rest.DataObjects;
 
-		public string Bsn { get; set; }
-	}
+public class DigidVerification
+	: IVerification
+{
+	public string Bsn { get; set; }
 }
