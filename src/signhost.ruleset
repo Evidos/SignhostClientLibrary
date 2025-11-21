@@ -6,7 +6,11 @@
  <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">  
  </Rules>
  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+   <Rule Id="SA0001" Action="None" /><!-- XML comment analysis disabled -->
+   <Rule Id="SA1001" Action="None" /><!-- Commas should not be preceded by whitespace. -->
+   <Rule Id="SA1009" Action="None" /><!-- Closing parenthesis must not be preceded by a space -->
    <Rule Id="SA1027" Action="None" /><!-- Tabs must not be used -->
+   <Rule Id="SA1402" Action="None" /><!-- File may only contain a single type -->
    <Rule Id="SA1633" Action="None" /><!-- FileMustHaveHeader -->
    <Rule Id="SA1652" Action="None" /><!-- Enable XML documentation output -->
    <Rule Id="SA1101" Action="None" /><!-- Prefix local calls with this -->
