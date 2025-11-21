@@ -47,11 +47,23 @@ namespace Signhost.APIClient.Rest.JsonConverters
 			=> throw new NotImplementedException();
 
 		private static Type GetUnderlyingType(Type type)
-			=> type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)
-				? Nullable.GetUnderlyingType(type)
-				: type;
+			=>
+#if TYPEINFO
+				type.GetTypeInfo().IsGenericType &&
+#else
+				type.IsGenericType &&
+#endif
+				type.GetGenericTypeDefinition() == typeof(Nullable<>)
+					? Nullable.GetUnderlyingType(type)
+					: type;
 
 		private static bool IsLevelEnum(Type type)
-			=> type.GetTypeInfo().IsEnum && type == typeof(Level);
+			=>
+#if TYPEINFO
+				type.GetTypeInfo().IsEnum &&
+#else
+				type.IsEnum &&
+#endif
+				type == typeof(Level);
 	}
 }
