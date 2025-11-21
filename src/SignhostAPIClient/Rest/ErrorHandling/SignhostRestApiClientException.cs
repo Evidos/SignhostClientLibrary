@@ -1,36 +1,35 @@
 using System;
 
-namespace Signhost.APIClient.Rest.ErrorHandling
+namespace Signhost.APIClient.Rest.ErrorHandling;
+
+[Serializable]
+public class SignhostRestApiClientException
+	: Exception
 {
-	[Serializable]
-	public class SignhostRestApiClientException
-		: Exception
+	public SignhostRestApiClientException()
+		 : base()
 	{
-		public SignhostRestApiClientException()
-			 : base()
-		{
-		}
+	}
 
-		public SignhostRestApiClientException(string message)
-			: base(message)
-		{
-		}
+	public SignhostRestApiClientException(string message)
+		: base(message)
+	{
+	}
 
-		public SignhostRestApiClientException(
-			string message,
-			Exception innerException)
-			: base(message, innerException)
-		{
-			HelpLink = "https://api.signhost.com/Help";
-		}
+	public SignhostRestApiClientException(
+		string message,
+		Exception innerException)
+		: base(message, innerException)
+	{
+		HelpLink = "https://api.signhost.com/Help";
+	}
 
 #if SERIALIZABLE
-		protected SignhostRestApiClientException(
-			SerializationInfo info,
-			StreamingContext context)
-			: base(info, context)
-		{
-		}
-#endif
+	protected SignhostRestApiClientException(
+		SerializationInfo info,
+		StreamingContext context)
+		: base(info, context)
+	{
 	}
+#endif
 }

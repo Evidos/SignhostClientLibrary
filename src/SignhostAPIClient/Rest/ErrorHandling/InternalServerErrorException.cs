@@ -1,48 +1,47 @@
 using System;
 using System.Net.Http.Headers;
 
-namespace Signhost.APIClient.Rest.ErrorHandling
+namespace Signhost.APIClient.Rest.ErrorHandling;
+
+[Serializable]
+public class InternalServerErrorException
+	: SignhostRestApiClientException
 {
-	[Serializable]
-	public class InternalServerErrorException
-		: SignhostRestApiClientException
+	public InternalServerErrorException()
+		: base()
 	{
-		public InternalServerErrorException()
-			: base()
-		{
-		}
+	}
 
-		public InternalServerErrorException(string message)
-			: base(message)
-		{
-		}
+	public InternalServerErrorException(string message)
+		: base(message)
+	{
+	}
 
-		public InternalServerErrorException(
-			string message, RetryConditionHeaderValue retryAfter)
-			: base(message)
-		{
-			HelpLink = "https://api.signhost.com/Help";
+	public InternalServerErrorException(
+		string message, RetryConditionHeaderValue retryAfter)
+		: base(message)
+	{
+		HelpLink = "https://api.signhost.com/Help";
 
-			if (retryAfter != null) {
-				if (retryAfter.Date != null) {
-					RetryAfter = retryAfter.Date;
-				}
+		if (retryAfter != null) {
+			if (retryAfter.Date != null) {
+				RetryAfter = retryAfter.Date;
+			}
 
-				if (retryAfter.Delta != null) {
-					RetryAfter = DateTime.Now + retryAfter.Delta;
-				}
+			if (retryAfter.Delta != null) {
+				RetryAfter = DateTime.Now + retryAfter.Delta;
 			}
 		}
+	}
 
 #if SERIALIZABLE
-		protected InternalServerErrorException(
-			SerializationInfo info,
-			StreamingContext context)
-			: base(info, context)
-		{
-		}
+	protected InternalServerErrorException(
+		SerializationInfo info,
+		StreamingContext context)
+		: base(info, context)
+	{
+	}
 #endif
 
-		private DateTimeOffset? RetryAfter { get; set; }
-	}
+	private DateTimeOffset? RetryAfter { get; set; }
 }
