@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup Label="Build">
-		<TargetFrameworks>netstandard2.0;netstandard1.4;net462</TargetFrameworks>
+		<TargetFrameworks>net10.0;net9.0;net8.0;netstandard2.0;net462</TargetFrameworks>
+		<LangVersion>10</LangVersion>
 		<CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
-		<DefineConstants Condition="'$(TargetFramework)' == 'net462'">SERIALIZABLE</DefineConstants>
-		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.4'">TYPEINFO</DefineConstants>
 		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">TYPEINFO</DefineConstants>
-		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">SERIALIZABLE</DefineConstants>
 		<RootNamespace>Signhost.APIClient</RootNamespace>
 	</PropertyGroup>
 
@@ -52,10 +50,5 @@
 		<Reference Include="System.Net" />
 		<Reference Include="System.Net.Http" />
 		<PackageReference Include="System.ValueTuple" Version="4.6.1" />
-	</ItemGroup>
-
-	<ItemGroup Label=".NET standard Package References" Condition="'$(TargetFramework)' == 'netstandard1.4'">
-		<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.*" />
-		<PackageReference Include="System.ValueTuple" Version="4.3.1" />
 	</ItemGroup>
 </Project>

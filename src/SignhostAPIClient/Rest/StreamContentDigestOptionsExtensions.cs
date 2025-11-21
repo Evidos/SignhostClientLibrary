@@ -63,27 +63,17 @@ namespace Signhost.APIClient.Rest
 			string algorithmName = options.DigestHashAlgorithm;
 			HashAlgorithm algorithm = null;
 
-#if NETSTANDARD1_4 || NETSTANDARD2_0
-			switch (algorithmName) {
-				case "SHA1":
-				case "SHA-1":
-					algorithm = SHA1.Create();
-					break;
-				case "SHA256":
-				case "SHA-256":
-					algorithm = SHA256.Create();
-					break;
-				case "SHA384":
-				case "SHA-384":
-					algorithm = SHA384.Create();
-					break;
-				case "SHA512":
-				case "SHA-512":
-					algorithm = SHA512.Create();
-					break;
-			}
-#else
+#if NET462
 			algorithm = HashAlgorithm.Create(algorithmName);
+#else
+			algorithm = algorithmName switch {
+				"SHA1" or "SHA-1" => SHA1.Create(),
+				"SHA256" or "SHA-256" => SHA256.Create(),
+				"SHA384" or "SHA-384" => SHA384.Create(),
+				"SHA512" or "SHA-512" => SHA512.Create(),
+
+				_ => null,
+			};
 #endif
 			if (algorithm == null && options.DigestHashValue == null) {
 				algorithm = DefaultHashAlgorithm();
@@ -98,10 +88,10 @@ namespace Signhost.APIClient.Rest
 		}
 
 		private static HashAlgorithm DefaultHashAlgorithm() =>
-#if NETSTANDARD1_4 || NETSTANDARD2_0
-			SHA256.Create();
-#else
+#if NET462
 			HashAlgorithm.Create();
+#else
+			SHA256.Create();
 #endif
 	}
 }

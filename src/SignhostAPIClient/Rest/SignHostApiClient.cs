@@ -22,7 +22,9 @@ namespace Signhost.APIClient.Rest
 		private const string ApiVersion = "v1";
 
 		private static readonly string Version = typeof(SignHostApiClient)
+#if TYPEINFO
 			.GetTypeInfo()
+#endif
 			.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
 			.Version;
 
