@@ -9,11 +9,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		: IVerification
 	{
 		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type => "CSC Qualified";
-
-		/// <summary>
 		/// Gets or sets the provider identifier.
 		/// </summary>
 		public string Provider { get; set; }

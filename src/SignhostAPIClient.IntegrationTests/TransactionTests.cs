@@ -10,7 +10,7 @@ namespace Signhost.APIClient.Rest.IntegrationTests;
 public class TransactionTests
 	: IDisposable
 {
-	private readonly SignHostApiClient client;
+	private readonly SignhostApiClient client;
 	private readonly TestConfiguration config;
 
 	public TransactionTests()
@@ -22,11 +22,11 @@ public class TransactionTests
 				"Integration tests are not configured");
 		}
 
-		var settings = new SignHostApiClientSettings(config.AppKey, config.UserToken) {
+		var settings = new SignhostApiClientSettings(config.AppKey, config.UserToken) {
 			Endpoint = config.ApiBaseUrl
 		};
 
-		client = new SignHostApiClient(settings);
+		client = new SignhostApiClient(settings);
 	}
 
 	[Fact]
@@ -123,7 +123,7 @@ public class TransactionTests
 		createdTransaction.Language.Should().Be("en-US");
 		createdTransaction.CreatedDateTime.Should().HaveValue();
 		createdTransaction.CreatedDateTime.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1));
-		createdTransaction.CancelledDateTime.Should().BeNull();
+		createdTransaction.CanceledDateTime.Should().BeNull();
 		createdTransaction.CancellationReason.Should().BeNull();
 
 		// Assert - Context

@@ -8,6 +8,7 @@ using FluentAssertions;
 using System.Collections.Generic;
 using RichardSzalay.MockHttp;
 using System.Net;
+using SignhostAPIClient.Tests.JSON;
 
 namespace Signhost.APIClient.Rest.Tests
 {
@@ -20,7 +21,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			// Arrange
 			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
-			string body = RequestBodies.MockPostbackValid;
+			string body = JsonResources.MockPostbackValid;
 
 			// Act
 			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
@@ -35,7 +36,7 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			// Arrange
 			IDictionary<string, string[]> headers = new Dictionary<string, string[]> { { "Content-Type", new[] { "application/json" } } };
-			string body = RequestBodies.MockPostbackInvalid;
+			string body = JsonResources.MockPostbackInvalid;
 
 			// Act
 			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
@@ -53,7 +54,7 @@ namespace Signhost.APIClient.Rest.Tests
 				{ "Content-Type", new[] { "application/json" }},
 				{"Checksum", new[] {"cdc09eee2ed6df2846dcc193aedfef59f2834f8d"}}
 			};
-			string body = RequestBodies.MockPostbackValid;
+			string body = JsonResources.MockPostbackValid;
 
 			// Act
 			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);
@@ -71,7 +72,7 @@ namespace Signhost.APIClient.Rest.Tests
 				{ "Content-Type", new[] { "application/json" }},
 				{"Checksum", new[] {"70dda90616f744797972c0d2f787f86643a60c83"}}
 			};
-			string body = RequestBodies.MockPostbackValid;
+			string body = JsonResources.MockPostbackValid;
 
 			// Act
 			SignhostApiReceiver signhostApiReceiver = new SignhostApiReceiver(receiverSettings);

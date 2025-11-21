@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
@@ -9,7 +9,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public ActivityType Code { get; set; }
 
-		[JsonProperty("Activity")]
+		[JsonPropertyName("Activity")]
 		public string ActivityValue { get; set; }
 
 		public string Info { get; set; }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Signhost.APIClient.Rest.JsonConverters;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
@@ -10,11 +12,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		: IVerification
 	{
 		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type { get; } = "eIDAS Login";
-
-		/// <summary>
 		/// Gets or sets the uid.
 		/// </summary>
 		public string Uid { get; set; }
@@ -22,6 +19,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// <summary>
 		/// Gets or sets the level.
 		/// </summary>
+		[JsonConverter(typeof(LevelEnumConverter))]
 		public Level? Level { get; set; }
 
 		/// <summary>

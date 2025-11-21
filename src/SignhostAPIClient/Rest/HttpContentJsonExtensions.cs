@@ -1,6 +1,6 @@
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest
 {
@@ -25,7 +25,7 @@ namespace Signhost.APIClient.Rest
 
 			var json = await httpContent.ReadAsStringAsync()
 				.ConfigureAwait(false);
-			return JsonConvert.DeserializeObject<T>(json);
+			return JsonSerializer.Deserialize<T>(json, SignhostJsonSerializerOptions.Default);
 		}
 	}
 }

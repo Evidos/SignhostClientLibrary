@@ -1,12 +1,8 @@
-using Newtonsoft.Json;
-using Signhost.APIClient.Rest.JsonConverters;
-
 namespace Signhost.APIClient.Rest.DataObjects
 {
 	/// <summary>
 	/// Level of Assurance.
 	/// </summary>
-	[JsonConverter(typeof(LevelEnumConverter))]
 	public enum Level
 	{
 		/// <summary>
