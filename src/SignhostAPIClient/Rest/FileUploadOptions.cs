@@ -1,14 +1,13 @@
-﻿namespace Signhost.APIClient.Rest
+﻿namespace Signhost.APIClient.Rest;
+
+/// <summary>
+/// Options to be used during a file upload
+/// </summary>
+public class FileUploadOptions
 {
 	/// <summary>
-	/// Options to be used during a file upload
+	/// Gets or sets the <see cref="FileDigestOptions"/>.
 	/// </summary>
-	public class FileUploadOptions
-	{
-		/// <summary>
-		/// Gets or sets the <see cref="FileDigestOptions"/>.
-		/// </summary>
-		public FileDigestOptions DigestOptions { get; set; }
-			= new FileDigestOptions();
-	}
+	public FileDigestOptions DigestOptions { get; set; }
+		= new FileDigestOptions();
 }

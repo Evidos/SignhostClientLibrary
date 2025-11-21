@@ -1,32 +1,27 @@
-using Newtonsoft.Json;
-using Signhost.APIClient.Rest.JsonConverters;
+namespace Signhost.APIClient.Rest.DataObjects;
 
-namespace Signhost.APIClient.Rest.DataObjects
+/// <summary>
+/// Level of Assurance.
+/// </summary>
+public enum Level
 {
 	/// <summary>
-	/// Level of Assurance.
+	/// Unknown.
 	/// </summary>
-	[JsonConverter(typeof(LevelEnumConverter))]
-	public enum Level
-	{
-		/// <summary>
-		/// Unknown.
-		/// </summary>
-		Unknown = 0,
+	Unknown = 0,
 
-		/// <summary>
-		/// Low.
-		/// </summary>
-		Low,
+	/// <summary>
+	/// Low.
+	/// </summary>
+	Low,
 
-		/// <summary>
-		/// Substantial.
-		/// </summary>
-		Substantial,
+	/// <summary>
+	/// Substantial.
+	/// </summary>
+	Substantial,
 
-		/// <summary>
-		/// High.
-		/// </summary>
-		High,
-	}
+	/// <summary>
+	/// High.
+	/// </summary>
+	High,
 }

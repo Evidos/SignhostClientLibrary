@@ -1,10 +1,7 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
-{
-	public class PhoneNumberVerification
-		: IVerification
-	{
-		public string Type => "PhoneNumber";
+﻿namespace Signhost.APIClient.Rest.DataObjects;
 
-		public string Number { get; set; }
-	}
+public class PhoneNumberVerification
+	: IVerification
+{
+	public string Number { get; set; }
 }

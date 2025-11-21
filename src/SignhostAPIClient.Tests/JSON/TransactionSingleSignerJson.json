@@ -1,0 +1,46 @@
+{
+	"Id":"50262c3f-9744-45bf-a4c6-8a3whatever",
+	"Status":5,
+	"CanceledDateTime":"2017-01-01T15:00:00.0000000+01:00",
+	"Files":{},
+	"Seal":false,
+	"Signers":[
+		{
+			"Id":"Signer1",
+			"Email":"test1@example.com",
+			"Verifications":[
+				{
+					"Type":"PhoneNumber",
+					"Number":"+31615123456"
+				}
+			],
+			"Mobile":"+31615087075",
+			"SignRequestMessage":"Hello 1st signer",
+			"Language":"nl-NL",
+			"Activities":[
+				{
+					"Id":"Activity1",
+					"Code":103,
+					"CreatedDateTime":"2017-05-31T22:15:17.6409005+02:00"
+				},
+				{
+					"Id":"Activity2",
+					"Code":105,
+					"Info":"592f2448347cd",
+					"CreatedDateTime":"2017-05-31T22:15:20.3284659+02:00"
+				},
+				{
+					"Id":"25dd4131-f1c4-4e4c-a407-c4164cfe4096",
+					"Code":105,
+					"Info":"592f244834807",
+					"CreatedDateTime":"2017-05-31T22:15:24.4379773+02:00"
+				}
+			]
+		}
+	],
+	"Receivers":[],
+	"Reference":"Contract #123",
+	"SignRequestMode":2,
+	"DaysToExpire":14,
+	"Context":null
+}
