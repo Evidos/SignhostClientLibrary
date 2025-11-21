@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Signhost.APIClient.Rest.DataObjects
+﻿namespace Signhost.APIClient.Rest.DataObjects
 {
 	/// <summary>
 	/// <see cref="Activity"/> type.

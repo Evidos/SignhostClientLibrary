@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using RichardSzalay.MockHttp;
 using System.Net;
 using SignhostAPIClient.Tests.JSON;
-using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.Tests
 {

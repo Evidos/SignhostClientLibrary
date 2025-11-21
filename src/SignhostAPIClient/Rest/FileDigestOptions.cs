@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-
-namespace Signhost.APIClient.Rest
+﻿namespace Signhost.APIClient.Rest
 {
 	/// <summary>
 	/// File digest options for file uploads

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.IO;
-using Xunit;
+﻿using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
 using FluentAssertions;
 using System.Collections.Generic;
-using RichardSzalay.MockHttp;
-using System.Net;
 using SignhostAPIClient.Tests.JSON;
 
 namespace Signhost.APIClient.Rest.Tests
