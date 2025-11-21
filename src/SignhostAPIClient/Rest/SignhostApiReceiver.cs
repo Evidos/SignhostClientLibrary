@@ -22,7 +22,9 @@ namespace Signhost.APIClient
 		/// Initializes a new instance of the <see cref="SignhostApiReceiver"/> class.
 		/// Set your SharedSecret by creating a <see cref="SignhostApiReceiverSettings"/>.
 		/// </summary>
-		/// <param name="receiverSettings"><see cref="SignhostApiReceiverSettings"/></param>
+		/// <param name="receiverSettings"><see cref="SignhostApiReceiverSettings"/>
+		/// Settings for the receiver.
+		/// </param>
 		public SignhostApiReceiver(SignhostApiReceiverSettings receiverSettings)
 		{
 			this.settings = receiverSettings;
@@ -64,10 +66,12 @@ namespace Signhost.APIClient
 			}
 		}
 
-	private PostbackTransaction DeserializeToPostbackTransaction(string body)
-	{
-		return JsonSerializer.Deserialize<PostbackTransaction>(body, SignhostJsonSerializerOptions.Default);
-	}		private string GetChecksumFromHeadersOrPostback(
+		private PostbackTransaction DeserializeToPostbackTransaction(string body)
+		{
+			return JsonSerializer.Deserialize<PostbackTransaction>(body, SignhostJsonSerializerOptions.Default);
+		}
+
+		private string GetChecksumFromHeadersOrPostback(
 			IDictionary<string, string[]> headers,
 			PostbackTransaction postback)
 		{

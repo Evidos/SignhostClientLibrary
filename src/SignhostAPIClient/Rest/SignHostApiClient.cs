@@ -35,7 +35,7 @@ namespace Signhost.APIClient.Rest
 		/// Initializes a new instance of the <see cref="SignhostApiClient"/> class.
 		/// Set your usertoken and APPKey by creating a <see cref="SignhostApiClientSettings"/>.
 		/// </summary>
-		/// <param name="settings"><see cref="SignhostApiClientSettings"/></param>
+		/// <param name="settings"><see cref="SignhostApiClientSettings"/>.</param>
 		public SignhostApiClient(ISignhostApiClientSettings settings)
 			: this(settings, new HttpClient())
 		{
@@ -45,7 +45,7 @@ namespace Signhost.APIClient.Rest
 		/// Initializes a new instance of the <see cref="SignhostApiClient"/> class.
 		/// Set your usertoken and APPKey by creating a <see cref="SignhostApiClientSettings"/>.
 		/// </summary>
-		/// <param name="settings"><see cref="SignhostApiClientSettings"/></param>
+		/// <param name="settings"><see cref="SignhostApiClientSettings"/>.</param>
 		/// <param name="httpClient"><see cref="HttpClient"/> to use for all http calls.</param>
 		public SignhostApiClient(
 			ISignhostApiClientSettings settings,
@@ -153,6 +153,7 @@ namespace Signhost.APIClient.Rest
 			return response.Value;
 		}
 
+		/// <inheritdoc />
 		public async Task DeleteTransactionAsync(
 			string transactionId,
 			CancellationToken cancellationToken = default)
