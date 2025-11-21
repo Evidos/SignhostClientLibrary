@@ -12,43 +12,43 @@ using Signhost.APIClient.Rest.ErrorHandling;
 namespace Signhost.APIClient.Rest
 {
 	/// <summary>
-	/// Implements the <see cref="ISignHostApiClient"/> interface which provides
+	/// Implements the <see cref="ISignhostApiClient"/> interface which provides
 	/// an signhost api client implementation.
 	/// </summary>
-	public class SignHostApiClient
-		: ISignHostApiClient
+	public class SignhostApiClient
+		: ISignhostApiClient
 		, IDisposable
 	{
 		private const string ApiVersion = "v1";
 
-		private static readonly string Version = typeof(SignHostApiClient)
+		private static readonly string Version = typeof(SignhostApiClient)
 #if TYPEINFO
 			.GetTypeInfo()
 #endif
 			.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
 			.Version;
 
-		private readonly ISignHostApiClientSettings settings;
+		private readonly ISignhostApiClientSettings settings;
 		private readonly HttpClient client;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
-		/// Set your usertoken and APPKey by creating a <see cref="SignHostApiClientSettings"/>.
+		/// Initializes a new instance of the <see cref="SignhostApiClient"/> class.
+		/// Set your usertoken and APPKey by creating a <see cref="SignhostApiClientSettings"/>.
 		/// </summary>
-		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
-		public SignHostApiClient(ISignHostApiClientSettings settings)
+		/// <param name="settings"><see cref="SignhostApiClientSettings"/></param>
+		public SignhostApiClient(ISignhostApiClientSettings settings)
 			: this(settings, new HttpClient())
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SignHostApiClient"/> class.
-		/// Set your usertoken and APPKey by creating a <see cref="SignHostApiClientSettings"/>.
+		/// Initializes a new instance of the <see cref="SignhostApiClient"/> class.
+		/// Set your usertoken and APPKey by creating a <see cref="SignhostApiClientSettings"/>.
 		/// </summary>
-		/// <param name="settings"><see cref="SignHostApiClientSettings"/></param>
+		/// <param name="settings"><see cref="SignhostApiClientSettings"/></param>
 		/// <param name="httpClient"><see cref="HttpClient"/> to use for all http calls.</param>
-		public SignHostApiClient(
-			ISignHostApiClientSettings settings,
+		public SignhostApiClient(
+			ISignhostApiClientSettings settings,
 			HttpClient httpClient)
 		{
 			this.settings = settings;
@@ -74,16 +74,6 @@ namespace Signhost.APIClient.Rest
 
 		private string AuthorizationHeader
 			=> $"APIKey {settings.UserToken}";
-
-		/// <summary>
-		/// Globally register an additional verification type.
-		/// </summary>
-		/// <typeparam name="T"><see cref="IVerification"/> to </typeparam>
-		public static void RegisterVerification<T>()
-			where T : IVerification
-		{
-			JsonConverters.JsonVerificationConverter.RegisterVerification<T>();
-		}
 
 		/// <inheritdoc />
 		public async Task<Transaction> CreateTransactionAsync(

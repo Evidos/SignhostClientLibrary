@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Signhost.APIClient.Rest
 {
@@ -40,7 +40,7 @@ namespace Signhost.APIClient.Rest
 
 		private static string ToJson(T value)
 		{
-			return JsonConvert.SerializeObject(value);
+			return JsonSerializer.Serialize(value, SignhostJsonSerializerOptions.Default);
 		}
 	}
 }

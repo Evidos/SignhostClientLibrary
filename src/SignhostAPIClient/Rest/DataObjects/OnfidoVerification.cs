@@ -10,11 +10,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		: IVerification
 	{
 		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type => "Onfido";
-
-		/// <summary>
 		/// Gets or sets the Onfido workflow identifier.
 		/// </summary>
 		public Guid? WorkflowId { get; set; }

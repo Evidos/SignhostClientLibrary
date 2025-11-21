@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Signhost.APIClient.Rest.DataObjects;
 using System;
 using System.Collections;
@@ -17,7 +17,7 @@ namespace Signhost.APIClient.Rest.Tests
 			const string json = "{\"Type\":\"eIDAS Login\",\"Level\":null}";
 
 			// Act
-			var eidasLogin = JsonConvert.DeserializeObject<EidasLoginVerification>(json);
+			var eidasLogin = JsonSerializer.Deserialize<EidasLoginVerification>(json, SignhostJsonSerializerOptions.Default);
 
 			// Assert
 			eidasLogin.Level.Should().Be(null);
@@ -30,7 +30,7 @@ namespace Signhost.APIClient.Rest.Tests
 			const string json = "{\"Type\":\"eIDAS Login\"}";
 
 			// Act
-			var eidasLogin = JsonConvert.DeserializeObject<EidasLoginVerification>(json);
+			var eidasLogin = JsonSerializer.Deserialize<EidasLoginVerification>(json, SignhostJsonSerializerOptions.Default);
 
 			// Assert
 			eidasLogin.Level.Should().Be(null);
@@ -43,7 +43,7 @@ namespace Signhost.APIClient.Rest.Tests
 			const string json = "{\"Type\":\"eIDAS Login\",\"Level\":\"foobar\"}";
 
 			// Act
-			var eidasLogin = JsonConvert.DeserializeObject<EidasLoginVerification>(json);
+			var eidasLogin = JsonSerializer.Deserialize<EidasLoginVerification>(json, SignhostJsonSerializerOptions.Default);
 
 			// Assert
 			eidasLogin.Level.Should().Be(Level.Unknown);
@@ -57,7 +57,7 @@ namespace Signhost.APIClient.Rest.Tests
 			string json = $"{{\"Type\":\"eIDAS Login\",\"Level\":\"{level}\"}}";
 
 			// Act
-			var eidasLogin = JsonConvert.DeserializeObject<EidasLoginVerification>(json);
+			var eidasLogin = JsonSerializer.Deserialize<EidasLoginVerification>(json, SignhostJsonSerializerOptions.Default);
 
 			// Assert
 			eidasLogin.Level.Should().Be(level);

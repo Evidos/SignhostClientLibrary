@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.DataObjects
 {
@@ -21,7 +21,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 		/// Don't use this setting unless you are really sure this is what you
 		/// want and know the side-effects.
 		/// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public bool? SetParaph { get; set; }
 	}
 }

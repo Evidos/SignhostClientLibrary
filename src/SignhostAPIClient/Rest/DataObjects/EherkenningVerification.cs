@@ -4,11 +4,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		: IVerification
 	{
 		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type => "eHerkenning";
-
-		/// <summary>
 		/// Gets or sets the Uid.
 		/// </summary>
 		public string Uid { get; set; }

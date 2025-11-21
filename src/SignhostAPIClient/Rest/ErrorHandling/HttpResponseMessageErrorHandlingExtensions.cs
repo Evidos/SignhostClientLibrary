@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
@@ -64,15 +65,10 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 				responseBody = await response.Content.ReadAsStringAsync()
 					.ConfigureAwait(false);
 
-				var error = JsonConvert.DeserializeAnonymousType(
-					responseBody,
-					new {
-						Type = string.Empty,
-						Message = string.Empty,
-					});
+				var error = JsonSerializer.Deserialize<ErrorResponse>(responseBody);
 
-				errorType = error.Type;
-				errorMessage = error.Message;
+				errorType = error?.Type ?? string.Empty;
+				errorMessage = error?.Message ?? "Unknown Signhost error";
 			}
 
 			// TO-DO: Use switch pattern in v5
@@ -115,6 +111,15 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 			}
 
 			throw exception;
+		}
+
+		private class ErrorResponse
+		{
+			[JsonPropertyName("type")]
+			public string Type { get; set; }
+
+			[JsonPropertyName("message")]
+			public string Message { get; set; }
 		}
 	}
 }

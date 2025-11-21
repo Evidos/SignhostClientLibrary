@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Signhost.APIClient.Rest;
 using Signhost.APIClient.Rest.DataObjects;
 
@@ -64,12 +64,10 @@ namespace Signhost.APIClient
 			}
 		}
 
-		private PostbackTransaction DeserializeToPostbackTransaction(string body)
-		{
-			return JsonConvert.DeserializeObject<PostbackTransaction>(body);
-		}
-
-		private string GetChecksumFromHeadersOrPostback(
+	private PostbackTransaction DeserializeToPostbackTransaction(string body)
+	{
+		return JsonSerializer.Deserialize<PostbackTransaction>(body, SignhostJsonSerializerOptions.Default);
+	}		private string GetChecksumFromHeadersOrPostback(
 			IDictionary<string, string[]> headers,
 			PostbackTransaction postback)
 		{

@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
+using System.Text.Json;
 using FluentAssertions;
-using Newtonsoft.Json;
 using Signhost.APIClient.Rest.DataObjects;
+using SignhostAPIClient.Tests.JSON;
 using Xunit;
 
 namespace Signhost.APIClient.Rest.Tests
@@ -12,8 +13,8 @@ namespace Signhost.APIClient.Rest.Tests
 		[Fact]
 		public void PostbackTransaction_should_get_serialized_correctly()
 		{
-			string json = RequestBodies.MockPostbackValid;
-			var postbackTransaction = JsonConvert.DeserializeObject<PostbackTransaction>(json);
+			string json = JsonResources.MockPostbackValid;
+			var postbackTransaction = JsonSerializer.Deserialize<PostbackTransaction>(json, SignhostJsonSerializerOptions.Default);
 
 			postbackTransaction.Id                    .Should().Be("b10ae331-af78-4e79-a39e-5b64693b6b68");
 			postbackTransaction.Status                .Should().Be(TransactionStatus.InProgress);
@@ -24,7 +25,7 @@ namespace Signhost.APIClient.Rest.Tests
 			postbackTransaction.DaysToExpire          .Should().Be(30);
 			postbackTransaction.SendEmailNotifications.Should().BeTrue();
 			postbackTransaction.CreatedDateTime       .Should().Be(DateTimeOffset.Parse("2016-08-31T21:22:56.2467731+02:00"));
-			postbackTransaction.CancelledDateTime     .Should().BeNull();
+			postbackTransaction.CanceledDateTime      .Should().BeNull();
 			(postbackTransaction.Context is null)     .Should().BeTrue();
 			postbackTransaction.Checksum              .Should().Be("cdc09eee2ed6df2846dcc193aedfef59f2834f8d");
 
@@ -53,19 +54,16 @@ namespace Signhost.APIClient.Rest.Tests
 
 			var phoneNumberVerification = verifications[0] as PhoneNumberVerification;
 			phoneNumberVerification       .Should().NotBeNull();
-			phoneNumberVerification.Type  .Should().Be("PhoneNumber");
 			phoneNumberVerification.Number.Should().Be("+31612345678");
 
 			var scribbleVerification = verifications[1] as ScribbleVerification;
 			scribbleVerification                     .Should().NotBeNull();
-			scribbleVerification.Type                .Should().Be("Scribble");
 			scribbleVerification.RequireHandsignature.Should().BeFalse();
 			scribbleVerification.ScribbleNameFixed   .Should().BeFalse();
 			scribbleVerification.ScribbleName        .Should().Be("John Doe");
 
 			var ipAddressVerification = verifications[2] as IPAddressVerification;
 			ipAddressVerification          .Should().NotBeNull();
-			ipAddressVerification.Type     .Should().Be("IPAddress");
 			ipAddressVerification.IPAddress.Should().Be("1.2.3.4");
 
 			var activities = signer.Activities;

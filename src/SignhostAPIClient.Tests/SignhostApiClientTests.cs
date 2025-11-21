@@ -8,16 +8,18 @@ using FluentAssertions;
 using System.Collections.Generic;
 using RichardSzalay.MockHttp;
 using System.Net;
+using SignhostAPIClient.Tests.JSON;
+using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.Tests
 {
-	public class SignHostApiClientTests
+	public class SignhostApiClientTests
 	{
-		private readonly SignHostApiClientSettings settings = new("AppKey", "Usertoken") {
+		private readonly SignhostApiClientSettings settings = new("AppKey", "Usertoken") {
 			Endpoint = "http://localhost/api/"
 		};
 
-		private readonly SignHostApiClientSettings oauthSettings = new("AppKey") {
+		private readonly SignhostApiClientSettings oauthSettings = new("AppKey") {
 			Endpoint = "http://localhost/api/"
 		};
 
@@ -27,11 +29,11 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 
 			mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/transactionId/file/fileId")
-				.WithContent(RequestBodies.AddOrReplaceFileMetaToTransaction)
+				.WithContent(JsonResources.AddOrReplaceFileMetaToTransaction)
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var fileSignerMeta = new FileSignerMeta
 				{
@@ -76,11 +78,11 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.GetTransaction));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.GetTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var result = await signhostApiClient.GetTransactionAsync("transaction Id");
 				result.Id.Should().Be("c487be92-0255-40c7-bd7d-20805a65e7d9");
@@ -95,11 +97,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.Unauthorized, new StringContent("{'message': 'unauthorized' }"));
+				.Respond(HttpStatusCode.Unauthorized, new StringContent("""
+				{
+					"message": "unauthorized"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<UnauthorizedAccessException>();
@@ -114,11 +120,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.BadRequest, new StringContent("{ 'message': 'Bad Request' }"));
+				.Respond(HttpStatusCode.BadRequest, new StringContent("""
+				{
+					"message": "Bad Request"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.BadRequestException>();
@@ -133,11 +143,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.PaymentRequired, new StringContent("{ 'type': 'https://api.signhost.com/problem/subscription/out-of-credits' }"));
+				.Respond(HttpStatusCode.PaymentRequired, new StringContent("""
+				{
+					"type": "https://api.signhost.com/problem/subscription/out-of-credits"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.OutOfCreditsException>();
@@ -152,11 +166,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.NotFound, new StringContent("{ 'Message': 'Not Found' }"));
+				.Respond(HttpStatusCode.NotFound, new StringContent("""
+				{
+					"message": "Not Found"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 
@@ -172,11 +190,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond((HttpStatusCode)418, new StringContent("{ 'message': '418 I\\'m a teapot' }"));
+				.Respond((HttpStatusCode)418, new StringContent("""
+				{
+					"message": "418 I'm a teapot"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.SignhostRestApiClientException>()
@@ -192,11 +214,15 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.InternalServerError, new StringContent("{ 'message': 'Internal Server Error' }"));
+				.Respond(HttpStatusCode.InternalServerError, new StringContent("""
+				{
+					"message": "Internal Server Error"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.InternalServerErrorException>();
@@ -211,10 +237,10 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.Gone, new StringContent(APIResponses.GetTransaction));
+				.Respond(HttpStatusCode.Gone, new StringContent(JsonResources.GetTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.GoneException<Transaction>>();
@@ -229,10 +255,10 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.Gone, new StringContent(APIResponses.GetTransaction));
+				.Respond(HttpStatusCode.Gone, new StringContent(JsonResources.GetTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionResponseAsync("transaction Id");
 				await getTransaction.Should().NotThrowAsync();
@@ -247,10 +273,10 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
-				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.AddTransaction));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.AddTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Signer testSigner = new Signer();
 				testSigner.Email = "firstname.lastname@gmail.com";
@@ -273,12 +299,12 @@ namespace Signhost.APIClient.Rest.Tests
 				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
 				.WithHeaders("X-Forwarded-For", "localhost")
 				.With(matcher => matcher.Headers.UserAgent.ToString().Contains("SignhostClientLibrary"))
-				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.AddTransaction));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.AddTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 				settings.AddHeader = (AddHeaders a) => a("X-Forwarded-For", "localhost");
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Transaction testTransaction = new Transaction();
 
@@ -295,10 +321,14 @@ namespace Signhost.APIClient.Rest.Tests
 			mockHttp
 				.Expect(HttpMethod.Post, "http://localhost/api/transaction")
 				.WithHeaders("Content-Type", "application/json")
-				.Respond(HttpStatusCode.BadRequest, new StringContent(" { 'message': 'Bad Request' }"));
+				.Respond(HttpStatusCode.BadRequest, new StringContent("""
+				{
+					"message": "Bad Request"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Signer testSigner = new Signer();
 				testSigner.Email = "firstname.lastnamegmail.com";
@@ -319,10 +349,14 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.BadGateway, new StringContent(" { 'Message': 'Bad Gateway' }"));
+				.Respond(HttpStatusCode.BadGateway, new StringContent("""
+				{
+					"message": "Bad Gateway"
+				}
+			"""));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
 				await getTransaction.Should().ThrowAsync<ErrorHandling.SignhostRestApiClientException>()
@@ -338,10 +372,10 @@ namespace Signhost.APIClient.Rest.Tests
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Delete, "http://localhost/api/transaction/transaction Id")
-				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.DeleteTransaction));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.DeleteTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.DeleteTransactionAsync("transaction Id");
 			}
@@ -357,10 +391,10 @@ namespace Signhost.APIClient.Rest.Tests
 				.Expect(HttpMethod.Delete, "http://localhost/api/transaction/transaction Id")
 				.WithHeaders("Content-Type", "application/json")
 				//.With(matcher => matcher.Content.ToString().Contains("'SendNotifications': true"))
-				.Respond(HttpStatusCode.OK, new StringContent(APIResponses.DeleteTransaction));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.DeleteTransaction));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.DeleteTransactionAsync(
 					"transaction Id",
@@ -381,7 +415,7 @@ namespace Signhost.APIClient.Rest.Tests
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				// Create a 0 sized file
 				using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
@@ -402,7 +436,7 @@ namespace Signhost.APIClient.Rest.Tests
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransaction(new MemoryStream(), "transaction Id", "file Id");
 			}
@@ -420,7 +454,7 @@ namespace Signhost.APIClient.Rest.Tests
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransactionAsync(
 					new MemoryStream(),
@@ -447,7 +481,7 @@ namespace Signhost.APIClient.Rest.Tests
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.AddOrReplaceFileToTransactionAsync(
 					new MemoryStream(),
@@ -475,7 +509,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				await signhostApiClient.StartTransactionAsync("transaction Id");
 			}
@@ -491,7 +525,7 @@ namespace Signhost.APIClient.Rest.Tests
 				.Respond(HttpStatusCode.OK);
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var receipt = await signhostApiClient.GetReceiptAsync("transaction ID");
 			}
@@ -508,7 +542,7 @@ namespace Signhost.APIClient.Rest.Tests
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var document = await signhostApiClient.GetDocumentAsync("transaction Id", "file Id");
 			}
@@ -521,11 +555,11 @@ namespace Signhost.APIClient.Rest.Tests
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction")
-				.Respond(HttpStatusCode.OK, new StringContent(RequestBodies.TransactionSingleSignerJson));
+				.Respond(HttpStatusCode.OK, new StringContent(JsonResources.TransactionSingleSignerJson));
 
 			using (var httpClient = mockHttp.ToHttpClient()) {
 
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var result = await signhostApiClient.CreateTransactionAsync(new Transaction
 				{
@@ -544,7 +578,7 @@ namespace Signhost.APIClient.Rest.Tests
 				});
 
 				result.Id.Should().Be("50262c3f-9744-45bf-a4c6-8a3whatever");
-				result.CancelledDateTime.Should().HaveYear(2017);
+				result.CanceledDateTime.Should().HaveYear(2017);
 				result.Status.Should().Be(TransactionStatus.WaitingForDocument);
 				result.Signers.Should().HaveCount(1);
 				result.Receivers.Should().HaveCount(0);
@@ -589,9 +623,9 @@ namespace Signhost.APIClient.Rest.Tests
 
 			var mockHttp = new MockHttpMessageHandler();
 			AddHeaders(mockHttp.Expect(HttpMethod.Post, "http://localhost/api/transaction"))
-				.Respond(new StringContent(RequestBodies.TransactionSingleSignerJson));
+				.Respond(new StringContent(JsonResources.TransactionSingleSignerJson));
 			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid"))
-				.Respond(HttpStatusCode.Accepted, new StringContent(RequestBodies.AddOrReplaceFileMetaToTransaction));
+				.Respond(HttpStatusCode.Accepted, new StringContent(JsonResources.AddOrReplaceFileMetaToTransaction));
 			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/file/somefileid"))
 				.Respond(HttpStatusCode.Created);
 			AddHeaders(mockHttp.Expect(HttpMethod.Put, "http://localhost/api/transaction/*/start"))
@@ -600,7 +634,7 @@ namespace Signhost.APIClient.Rest.Tests
 			using (var httpClient = mockHttp.ToHttpClient()) {
 				var clientSettings = isOauth ? oauthSettings : settings;
 				clientSettings.AddHeader = add => add("X-Custom", "test");
-				var signhostApiClient = new SignHostApiClient(clientSettings, httpClient);
+				var signhostApiClient = new SignhostApiClient(clientSettings, httpClient);
 
 				var result = await signhostApiClient.CreateTransactionAsync(new Transaction());
 				await signhostApiClient.AddOrReplaceFileMetaToTransactionAsync(new FileMeta(), result.Id, "somefileid");
@@ -615,42 +649,16 @@ namespace Signhost.APIClient.Rest.Tests
 		}
 
 		[Fact]
-		public async Task When_a_custom_verificationtype_is_provided_it_is_deserialized_correctly()
-		{
-			var mockHttp = new MockHttpMessageHandler();
-			mockHttp
-				.Expect(HttpMethod.Get, "http://localhost/api/transaction/c487be92-0255-40c7-bd7d-20805a65e7d9")
-				.Respond(new StringContent(APIResponses.GetTransactionCustomVerificationType));
-
-			SignHostApiClient.RegisterVerification<CustomVerification>();
-
-			using (var httpClient = mockHttp.ToHttpClient()) {
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
-
-				var result = await signhostApiClient.GetTransactionAsync("c487be92-0255-40c7-bd7d-20805a65e7d9");
-
-				result.Signers[0].Verifications.Should().HaveCount(3);
-				result.Signers[0].Verifications[0].Should().BeOfType<CustomVerification>();
-				result.Signers[0].Verifications[1].Should().BeOfType<IPAddressVerification>()
-					.Which.IPAddress.Should().Be("127.0.0.33");
-				result.Signers[0].Verifications[2].Should().BeOfType<PhoneNumberVerification>()
-					.Which.Number.Should().Be("123");
-			}
-		}
-
-		[Fact]
 		public async Task When_a_minimal_response_is_retrieved_list_and_dictionaries_are_not_null()
 		{
 			var mockHttp = new MockHttpMessageHandler();
 			mockHttp
 				.Expect(HttpMethod.Get, "http://localhost/api/transaction/c487be92-0255-40c7-bd7d-20805a65e7d9")
-				.Respond(new StringContent(APIResponses.MinimalTransactionResponse));
-
-			SignHostApiClient.RegisterVerification<CustomVerification>();
+				.Respond(new StringContent(JsonResources.MinimalTransactionResponse));
 
 			using (var httpClient = mockHttp.ToHttpClient())
 			{
-				var signhostApiClient = new SignHostApiClient(settings, httpClient);
+				var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 				var result = await signhostApiClient.GetTransactionAsync("c487be92-0255-40c7-bd7d-20805a65e7d9");
 
@@ -658,12 +666,6 @@ namespace Signhost.APIClient.Rest.Tests
 				result.Receivers.Should().BeEmpty();
 				result.Files.Should().BeEmpty();
 			}
-		}
-
-		public class CustomVerification
-			: IVerification
-		{
-			public string Type => "CustomVerificationType";
 		}
 	}
 }

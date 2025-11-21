@@ -6,8 +6,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 	public class IdinVerification
 		: IVerification
 	{
-		public string Type { get; } = "iDIN";
-
 		public string AccountHolderName { get; set; }
 
 		public string AccountHolderAddress1 { get; set; }

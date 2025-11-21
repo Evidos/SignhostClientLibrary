@@ -8,7 +8,7 @@ namespace Signhost.APIClient.Rest
 	/// <summary>
 	/// Interface abstracting the available Signhost API calls.
 	/// </summary>
-	public interface ISignHostApiClient
+	public interface ISignhostApiClient
 	{
 		/// <summary>
 		/// Creates a new transaction.

@@ -2,18 +2,18 @@
 
 namespace Signhost.APIClient.Rest
 {
-	public class SignHostApiClientSettings
-		: ISignHostApiClientSettings
+	public class SignhostApiClientSettings
+		: ISignhostApiClientSettings
 	{
 		public const string DefaultEndpoint = "https://api.signhost.com/api/";
 
-		public SignHostApiClientSettings(string appkey, string userToken)
+		public SignhostApiClientSettings(string appkey, string userToken)
 		{
 			APPKey = appkey;
 			UserToken = userToken;
 		}
 
-		public SignHostApiClientSettings(string appkey)
+		public SignhostApiClientSettings(string appkey)
 		{
 			APPKey = appkey;
 		}
