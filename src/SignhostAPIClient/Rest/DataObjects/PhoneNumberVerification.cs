@@ -3,8 +3,6 @@
 	public class PhoneNumberVerification
 		: IVerification
 	{
-		public string Type => "PhoneNumber";
-
 		public string Number { get; set; }
 	}
 }

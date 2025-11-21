@@ -6,9 +6,5 @@ namespace Signhost.APIClient.Rest.DataObjects
 	public class ItsmeSignVerification
 		: IVerification
 	{
-		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type => "itsme sign";
 	}
 }

@@ -7,7 +7,5 @@ namespace Signhost.APIClient.Rest.DataObjects
 	public class SigningCertificateVerification
 		: IVerification
 	{
-		/// <inheritdoc />
-		public string Type => "SigningCertificate";
 	}
 }

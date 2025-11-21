@@ -7,11 +7,6 @@ namespace Signhost.APIClient.Rest.DataObjects
 		: IVerification
 	{
 		/// <summary>
-		/// Gets the <see cref="IVerification.Type"/>.
-		/// </summary>
-		public string Type => "itsme Identification";
-
-		/// <summary>
 		/// Gets or sets the phonenumber.
 		/// </summary>
 		public string PhoneNumber { get; set; }

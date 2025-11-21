@@ -4,7 +4,7 @@ namespace Signhost.APIClient.Rest
 {
 	public delegate void AddHeaders(string name, string value);
 
-	public interface ISignHostApiClientSettings
+	public interface ISignhostApiClientSettings
 	{
 		/// <summary>
 		/// Gets the usertoken identifying an authorized user.

@@ -1,8 +1,9 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects
+﻿using System.Text.Json.Serialization;
+
+namespace Signhost.APIClient.Rest.DataObjects
 {
 	public class SurfnetVerification
 		: IVerification
 	{
-		public string Type => "SURFnet";
 	}
 }
