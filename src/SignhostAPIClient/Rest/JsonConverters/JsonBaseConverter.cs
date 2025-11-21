@@ -8,12 +8,12 @@ namespace Signhost.APIClient.Rest.JsonConverters
 	public abstract class JsonBaseConverter<T>
 		: JsonConverter
 	{
+		public override bool CanConvert(Type objectType)
+			=> typeof(T)
 #if TYPEINFO
-		public override bool CanConvert(Type objectType)
-			=> typeof(T).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+				.GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
 #else
-		public override bool CanConvert(Type objectType)
-			=> typeof(T).IsAssignableFrom(objectType);
+				.IsAssignableFrom(objectType);
 #endif
 
 		public override object ReadJson(
