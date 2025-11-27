@@ -437,7 +437,10 @@ public class SignhostApiClientTests
 
 			// Create a 0 sized file
 			using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
-				await signhostApiClient.AddOrReplaceFileToTransaction(file, "transaction Id", "file Id");
+				await signhostApiClient.AddOrReplaceFileToTransactionAsync(
+					file,
+					"transaction Id",
+					"file Id");
 			}
 		}
 
@@ -456,7 +459,10 @@ public class SignhostApiClientTests
 		using (var httpClient = mockHttp.ToHttpClient()) {
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
-			await signhostApiClient.AddOrReplaceFileToTransaction(new MemoryStream(), "transaction Id", "file Id");
+			await signhostApiClient.AddOrReplaceFileToTransactionAsync(
+				new MemoryStream(),
+				"transaction Id",
+				"file Id");
 		}
 
 		mockHttp.VerifyNoOutstandingExpectation();
@@ -657,7 +663,7 @@ public class SignhostApiClientTests
 			var result = await signhostApiClient.CreateTransactionAsync(new Transaction());
 			await signhostApiClient.AddOrReplaceFileMetaToTransactionAsync(new FileMeta(), result.Id, "somefileid");
 			using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
-				await signhostApiClient.AddOrReplaceFileToTransaction(file, result.Id, "somefileid");
+				await signhostApiClient.AddOrReplaceFileToTransactionAsync(file, result.Id, "somefileid");
 			}
 			await signhostApiClient.StartTransactionAsync(result.Id);
 		}
