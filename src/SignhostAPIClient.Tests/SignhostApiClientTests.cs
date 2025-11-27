@@ -292,10 +292,11 @@ public class SignhostApiClientTests
 		using (var httpClient = mockHttp.ToHttpClient()) {
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
-			Signer testSigner = new Signer();
-			testSigner.Email = "firstname.lastname@gmail.com";
+			var testSigner = new CreateSignerRequest {
+				Email = "firstname.lastname@gmail.com"
+			};
 
-			Transaction testTransaction = new Transaction();
+			var testTransaction = new CreateTransactionRequest();
 			testTransaction.Signers.Add(testSigner);
 
 			var result = await signhostApiClient.CreateTransactionAsync(testTransaction);
@@ -320,7 +321,7 @@ public class SignhostApiClientTests
 
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
-			Transaction testTransaction = new Transaction();
+			var testTransaction = new CreateTransactionRequest();
 
 			var result = await signhostApiClient.CreateTransactionAsync(testTransaction);
 		}
@@ -345,10 +346,11 @@ public class SignhostApiClientTests
 		using (var httpClient = mockHttp.ToHttpClient()) {
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
-			Signer testSigner = new Signer();
-			testSigner.Email = "firstname.lastnamegmail.com";
+			var testSigner = new CreateSignerRequest {
+				Email = "firstname.lastnamegmail.com"
+			};
 
-			Transaction testTransaction = new Transaction();
+			var testTransaction = new CreateTransactionRequest();
 			testTransaction.Signers.Add(testSigner);
 
 			Func<Task> getTransaction = () => signhostApiClient.CreateTransactionAsync(testTransaction);
@@ -585,20 +587,17 @@ public class SignhostApiClientTests
 
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
-			var result = await signhostApiClient.CreateTransactionAsync(new Transaction
-			{
-				Signers = new List<Signer>{
-					new Signer
-					{
-						Verifications = new List<IVerification>
-						{
-							new PhoneNumberVerification
-							{
+			var result = await signhostApiClient.CreateTransactionAsync(new CreateTransactionRequest {
+				Signers = [
+					new CreateSignerRequest {
+						Email = "test@example.com",
+						Verifications = [
+							new PhoneNumberVerification {
 								Number = "31615087075"
 							}
-						}
+						]
 					}
-				}
+				]
 			});
 
 			result.Id.Should().Be("50262c3f-9744-45bf-a4c6-8a3whatever");
@@ -660,7 +659,7 @@ public class SignhostApiClientTests
 			clientSettings.AddHeader = add => add("X-Custom", "test");
 			var signhostApiClient = new SignhostApiClient(clientSettings, httpClient);
 
-			var result = await signhostApiClient.CreateTransactionAsync(new Transaction());
+			var result = await signhostApiClient.CreateTransactionAsync(new CreateTransactionRequest());
 			await signhostApiClient.AddOrReplaceFileMetaToTransactionAsync(new FileMeta(), result.Id, "somefileid");
 			using (Stream file = System.IO.File.Create("unittestdocument.pdf")) {
 				await signhostApiClient.AddOrReplaceFileToTransactionAsync(file, result.Id, "somefileid");

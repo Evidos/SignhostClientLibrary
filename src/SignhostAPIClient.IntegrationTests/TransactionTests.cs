@@ -43,7 +43,7 @@ public class TransactionTests
 		var receiverName = "Jane Receiver";
 		var receiverReference = "RECEIVER-001";
 
-		var transaction = new Transaction {
+		var transaction = new CreateTransactionRequest {
 			Seal = false,
 			Reference = testReference,
 			PostbackUrl = testPostbackUrl,
@@ -55,7 +55,7 @@ public class TransactionTests
 				TestContext = "integration-test",
 			},
 			Signers = [
-				new Signer {
+				new CreateSignerRequest {
 					Id = "signer1",
 					Email = signerEmail,
 					Reference = signerReference,
@@ -88,7 +88,7 @@ public class TransactionTests
 				}
 			],
 			Receivers = [
-				new Receiver {
+				new CreateReceiverRequest {
 					Name = receiverName,
 					Email = receiverEmail,
 					Language = "en-US",

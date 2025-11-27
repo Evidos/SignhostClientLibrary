@@ -21,9 +21,9 @@ var settings = new SignhostApiClientSettings(
 
 var client = new SignhostApiClient(settings);
 
-var transaction = await client.CreateTransactionAsync(new Transaction {
-	Signers = new List<Signer> {
-		new Signer {
+var transaction = await client.CreateTransactionAsync(new CreateTransactionRequest {
+	Signers = new List<CreateSignerRequest> {
+		new CreateSignerRequest {
 			Email              = "john.doe@example.com",
 			SignRequestMessage = "Could you please sign this document?",
 			SendSignRequest    = true,
