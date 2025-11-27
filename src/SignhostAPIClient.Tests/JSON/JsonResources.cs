@@ -10,18 +10,13 @@ public static class JsonResources
 
 	public static string AddOrReplaceFileMetaToTransaction { get; } =
 		GetJson("AddOrReplaceFileMetaToTransaction");
-	public static string AddTransaction { get; } =
-		GetJson("AddTransaction");
-	public static string DeleteTransaction { get; } =
-		GetJson("DeleteTransaction");
-	public static string GetTransaction { get; } =
-		GetJson("GetTransaction");
+	public static string AddTransaction { get; } = GetJson("AddTransaction");
+	public static string DeleteTransaction { get; } = GetJson("DeleteTransaction");
+	public static string GetTransaction { get; } = GetJson("GetTransaction");
 	public static string MinimalTransactionResponse { get; } =
 		GetJson("MinimalTransactionResponse");
-	public static string MockPostbackInvalid { get; } =
-		GetJson("MockPostbackInvalid");
-	public static string MockPostbackValid { get; } =
-		GetJson("MockPostbackValid");
+	public static string MockPostbackInvalid { get; } = GetJson("MockPostbackInvalid");
+	public static string MockPostbackValid { get; } = GetJson("MockPostbackValid");
 
 	private static string GetJson(string fileName)
 	{

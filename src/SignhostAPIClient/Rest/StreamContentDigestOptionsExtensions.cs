@@ -68,9 +68,8 @@ public static class StreamContentDigestOptionsExtensions
 
 		long position = fileStream.Position;
 
-		using (var algo = HashAlgorithmCreate(options)) {
-			options.DigestHashValue = algo.ComputeHash(fileStream);
-		}
+		using var algo = HashAlgorithmCreate(options);
+		options.DigestHashValue = algo.ComputeHash(fileStream);
 
 		fileStream.Position = position;
 	}

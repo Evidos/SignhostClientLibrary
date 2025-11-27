@@ -11,12 +11,10 @@ public static class SignhostJsonSerializerOptions
 	/// <summary>
 	/// Gets the default JSON serializer options.
 	/// </summary>
-	public static JsonSerializerOptions Default { get; } = new JsonSerializerOptions
-	{
-		PropertyNameCaseInsensitive = true,
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-		Converters = {
-			new JsonStringEnumConverter(),
-		},
-	};
+	public static JsonSerializerOptions Default { get; } =
+		new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+			Converters = { new JsonStringEnumConverter() },
+		};
 }

@@ -56,12 +56,10 @@ public class CreateTransactionRequest
 	/// <summary>
 	/// Gets or sets the list of signers for the transaction.
 	/// </summary>
-	public IList<CreateSignerRequest> Signers { get; set; } =
-		new List<CreateSignerRequest>();
+	public IList<CreateSignerRequest> Signers { get; set; } = new List<CreateSignerRequest>();
 
 	/// <summary>
 	/// Gets or sets the list of receivers who get copies of completed documents.
 	/// </summary>
-	public IList<CreateReceiverRequest> Receivers { get; set; } =
-		new List<CreateReceiverRequest>();
+	public IList<CreateReceiverRequest> Receivers { get; set; } = new List<CreateReceiverRequest>();
 }

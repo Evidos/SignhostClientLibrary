@@ -1,4 +1,4 @@
-﻿namespace Signhost.APIClient.Rest;
+namespace Signhost.APIClient.Rest;
 
 /// <summary>
 /// Registers the necessary settings for the <see cref="SignhostApiReceiver"/> class.

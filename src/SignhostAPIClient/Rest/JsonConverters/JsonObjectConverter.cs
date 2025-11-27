@@ -16,7 +16,7 @@ public class JsonObjectConverter
 		return reader.TokenType switch
 		{
 			JsonTokenType.String => reader.GetString(),
-			JsonTokenType.Number => reader.TryGetInt64(out var value)
+			JsonTokenType.Number => reader.TryGetInt64(out long value)
 				? value
 				: reader.GetDouble(),
 			JsonTokenType.True or JsonTokenType.False => reader.GetBoolean(),
@@ -49,7 +49,8 @@ public class JsonObjectConverter
 			writer.WriteNumberValue(dec);
 		}
 		else {
-			throw new JsonException($"Field value must be string, number, or boolean, but got {value.GetType().Name}");
+			throw new JsonException(
+				$"Field value must be string, number, or boolean, but got {value.GetType().Name}");
 		}
 	}
 }

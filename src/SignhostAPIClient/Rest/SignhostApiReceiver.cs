@@ -28,7 +28,7 @@ public class SignhostApiReceiver
 	/// </param>
 	public SignhostApiReceiver(SignhostApiReceiverSettings receiverSettings)
 	{
-		this.settings = receiverSettings;
+		settings = receiverSettings;
 	}
 
 	/// <inheritdoc />
@@ -50,7 +50,8 @@ public class SignhostApiReceiver
 		if (parametersAreValid) {
 			calculatedChecksum = CalculateChecksumFromPostback(postback);
 			postbackTransaction = postback;
-		} else {
+		}
+		else {
 			return false;
 		}
 
@@ -59,18 +60,19 @@ public class SignhostApiReceiver
 
 	private string CalculateChecksumFromPostback(PostbackTransaction postback)
 	{
-		using (var sha1 = SHA1.Create()) {
-			var checksumBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(
-				$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
-			return BitConverter.ToString(checksumBytes)
-				.Replace("-", string.Empty)
-				.ToLower();
-		}
+		using var sha1 = SHA1.Create();
+		byte[] checksumBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(
+			$"{postback.Id}||{(int)postback.Status}|{settings.SharedSecret}"));
+		return BitConverter.ToString(checksumBytes)
+			.Replace("-", string.Empty)
+			.ToLower();
 	}
 
 	private PostbackTransaction? DeserializeToPostbackTransaction(string body)
 	{
-		return JsonSerializer.Deserialize<PostbackTransaction>(body, SignhostJsonSerializerOptions.Default);
+		return JsonSerializer.Deserialize<PostbackTransaction>(
+			body,
+			SignhostJsonSerializerOptions.Default);
 	}
 
 	private string GetChecksumFromHeadersOrPostback(
@@ -78,7 +80,7 @@ public class SignhostApiReceiver
 		PostbackTransaction postback)
 	{
 		if (
-			headers.TryGetValue("Checksum", out var postbackChecksumArray) &&
+			headers.TryGetValue("Checksum", out string[]? postbackChecksumArray) &&
 			postbackChecksumArray is not null
 		) {
 			return postbackChecksumArray.First();

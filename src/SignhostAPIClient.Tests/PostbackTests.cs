@@ -107,7 +107,7 @@ public class PostbackTests
 		links.Should().HaveCount(1);
 
 		var link = links.Single();
-		link.Rel .Should().Be("file");
+		link.Rel.Should().Be("file");
 		link.Type.Should().Be("application/pdf");
 		link.Link.Should().Be("https://api.signhost.com/api/transaction/b10ae331-af78-4e79-a39e-5b64693b6b68/file/file1");
 	}

@@ -1,4 +1,4 @@
-﻿namespace Signhost.APIClient.Rest;
+namespace Signhost.APIClient.Rest;
 
 /// <summary>
 /// File digest options for file uploads.

@@ -23,18 +23,15 @@ public class Transaction
 	/// </summary>
 	public string? CancellationReason { get; set; }
 
-	public IDictionary<string, FileEntry> Files { get; set; } =
-		new Dictionary<string, FileEntry>();
+	public IDictionary<string, FileEntry> Files { get; set; } = new Dictionary<string, FileEntry>();
 
 	public TransactionStatus Status { get; set; }
 
 	public bool Seal { get; set; }
 
-	public IList<Signer> Signers { get; set; }
-		= new List<Signer>();
+	public IList<Signer> Signers { get; set; } = new List<Signer>();
 
-	public IList<Receiver> Receivers { get; set; }
-		= new List<Receiver>();
+	public IList<Receiver> Receivers { get; set; } = new List<Receiver>();
 
 	public string? Reference { get; set; }
 

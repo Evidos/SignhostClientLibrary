@@ -1,4 +1,4 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects;
+namespace Signhost.APIClient.Rest.DataObjects;
 
 public enum TransactionStatus
 {

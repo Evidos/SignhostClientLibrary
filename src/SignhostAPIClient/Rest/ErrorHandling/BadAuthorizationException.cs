@@ -7,7 +7,7 @@ public class BadAuthorizationException
 	: SignhostRestApiClientException
 {
 	public BadAuthorizationException()
-		 : base("API call returned a 401 error code. Please check your request headers.")
+		: base("API call returned a 401 error code. Please check your request headers.")
 	{
 		HelpLink = "https://api.signhost.com/Help";
 	}

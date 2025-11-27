@@ -61,8 +61,7 @@ public class Signer
 
 	public string ReceiptUrl { get; set; } = default!;
 
-	public IList<Activity> Activities { get; set; } =
-		new List<Activity>();
+	public IList<Activity> Activities { get; set; } = new List<Activity>();
 
 	public dynamic? Context { get; set; }
 }

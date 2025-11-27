@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.DataObjects;
