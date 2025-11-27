@@ -76,9 +76,7 @@ public class SignhostApiClient
 		CreateTransactionRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		if (request is null) {
-			throw new ArgumentNullException(nameof(request));
-		}
+		ArgumentNullException.ThrowIfNull(request);
 
 		var result = await client
 			.PostAsync(
@@ -99,9 +97,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
@@ -142,9 +138,7 @@ public class SignhostApiClient
 		DeleteTransactionOptions? options = default,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
@@ -171,21 +165,15 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		if (fileMeta is null) {
-			throw new ArgumentNullException("fileMeta");
-		}
+		ArgumentNullException.ThrowIfNull(fileMeta);
 
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId is null) {
-			throw new ArgumentNullException(nameof(fileId));
-		}
+		ArgumentNullException.ThrowIfNull(fileId);
 
 		if (string.IsNullOrWhiteSpace(fileId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
@@ -208,21 +196,15 @@ public class SignhostApiClient
 		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
-		if (fileStream is null) {
-			throw new ArgumentNullException(nameof(fileStream));
-		}
+		ArgumentNullException.ThrowIfNull(fileStream);
 
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId is null) {
-			throw new ArgumentNullException(nameof(fileId));
-		}
+		ArgumentNullException.ThrowIfNull(fileId);
 
 		if (string.IsNullOrWhiteSpace(fileId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
@@ -253,9 +235,7 @@ public class SignhostApiClient
 		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
-		if (filePath is null) {
-			throw new ArgumentNullException(nameof(filePath));
-		}
+		ArgumentNullException.ThrowIfNull(filePath);
 
 		using (Stream fileStream = System.IO.File.Open(
 				filePath,
@@ -278,9 +258,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
@@ -300,9 +278,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
@@ -322,17 +298,13 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId is null) {
-			throw new ArgumentNullException(nameof(transactionId));
-		}
+		ArgumentNullException.ThrowIfNull(transactionId);
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId is null) {
-			throw new ArgumentNullException(nameof(fileId));
-		}
+		ArgumentNullException.ThrowIfNull(fileId);
 
 		if (string.IsNullOrWhiteSpace(fileId)) {
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
