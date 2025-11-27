@@ -2,9 +2,9 @@
 
 public class FileLink
 {
-	public string Rel { get; set; }
+	public string Rel { get; set; } = default!;
 
-	public string Type { get; set; }
+	public string Type { get; set; } = default!;
 
-	public string Link { get; set; }
+	public string Link { get; set; } = default!;
 }

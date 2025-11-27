@@ -36,5 +36,5 @@ public class SignhostRestApiClientException
 	/// <summary>
 	/// Gets or sets the response body returned from the Signhost REST API.
 	/// </summary>
-	public string ResponseBody { get; set; }
+	public string? ResponseBody { get; set; }
 }

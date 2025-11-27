@@ -1,38 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Signhost.APIClient.Rest.DataObjects;
 
 public class Signer
 {
-	public Signer()
-	{
-	}
-
-	[JsonConstructor]
-	private Signer(IReadOnlyList<Activity> activities)
-	{
-		Activities = activities;
-	}
-
-	public string Id { get; set; }
+	public string? Id { get; set; }
 
 	public DateTimeOffset? Expires { get; set; }
 
-	public string Email { get; set; }
+	public string Email { get; set; } = default!;
 
-	public string IntroText { get; set; }
+	public string? IntroText { get; set; }
 
-	public string SignRequestSubject { get; set; }
+	public string? SignRequestSubject { get; set; }
 
-	public string SignRequestMessage { get; set; }
+	public string? SignRequestMessage { get; set; }
 
-	public IList<IVerification> Authentications { get; set; }
-		= new List<IVerification>();
+	public IList<IVerification> Authentications { get; set; } = default!;
 
-	public IList<IVerification> Verifications { get; set; }
-		= new List<IVerification>();
+	public IList<IVerification> Verifications { get; set; } = default!;
 
 	public bool SendSignRequest { get; set; }
 
@@ -40,29 +27,25 @@ public class Signer
 
 	public int? DaysToRemind { get; set; }
 
-	public string Language { get; set; }
+	public string? Language { get; set; }
 
-	public string ScribbleName { get; set; }
+	public string? Reference { get; set; }
 
-	public bool ScribbleNameFixed { get; set; }
+	public string? ReturnUrl { get; set; }
 
-	public string Reference { get; set; }
+	public string? RejectReason { get; set; }
 
-	public string ReturnUrl { get; set; }
-
-	public string RejectReason { get; set; }
-
-	public string SignUrl { get; set; }
+	public string SignUrl { get; set; } = default!;
 
 	public bool AllowDelegation { get; set; }
 
-	public string DelegateSignUrl { get; set; }
+	public string? DelegateSignUrl { get; set; }
 
-	public string DelegateReason { get; set; }
+	public string? DelegateReason { get; set; }
 
-	public string DelegateSignerEmail { get; set; }
+	public string? DelegateSignerEmail { get; set; }
 
-	public string DelegateSignerName { get; set; }
+	public string? DelegateSignerName { get; set; }
 
 	public DateTimeOffset? SignedDateTime { get; set; }
 
@@ -74,12 +57,12 @@ public class Signer
 
 	public DateTimeOffset? ModifiedDateTime { get; set; }
 
-	public string ShowUrl { get; set; }
+	public string ShowUrl { get; set; } = default!;
 
-	public string ReceiptUrl { get; set; }
+	public string ReceiptUrl { get; set; } = default!;
 
-	public IReadOnlyList<Activity> Activities { get; private set; } =
-		new List<Activity>().AsReadOnly();
+	public IList<Activity> Activities { get; set; } =
+		new List<Activity>();
 
-	public dynamic Context { get; set; }
+	public dynamic? Context { get; set; }
 }

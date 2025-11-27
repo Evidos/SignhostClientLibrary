@@ -41,8 +41,6 @@ public class PostbackTests
 		signer.SignRequestMessage  .Should().Be("Hello, could you please sign this document? Best regards, John Doe");
 		signer.DaysToRemind        .Should().Be(15);
 		signer.Language            .Should().Be("en-US");
-		signer.ScribbleName        .Should().Be("John Doe");
-		signer.ScribbleNameFixed   .Should().BeFalse();
 		signer.Reference           .Should().Be("Client #123");
 		signer.ReturnUrl           .Should().Be("https://signhost.com");
 		signer.RejectReason        .Should().BeNull();

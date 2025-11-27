@@ -2,7 +2,7 @@
 
 public class Location
 {
-	public string Search { get; set; }
+	public string? Search { get; set; }
 
 	public int? Occurence { get; set; }
 

@@ -2,5 +2,5 @@
 
 public class FileSignerMeta
 {
-	public string[] FormSets { get; set; }
+	public string[] FormSets { get; set; } = default!;
 }

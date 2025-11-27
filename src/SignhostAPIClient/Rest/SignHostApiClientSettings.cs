@@ -18,11 +18,11 @@ public class SignhostApiClientSettings
 		APPKey = appkey;
 	}
 
-	public string UserToken { get; set; }
+	public string? UserToken { get; set; }
 
 	public string APPKey { get; private set; }
 
 	public string Endpoint { get; set; } = DefaultEndpoint;
 
-	public Action<AddHeaders> AddHeader { get; set; }
+	public Action<AddHeaders>? AddHeader { get; set; }
 }

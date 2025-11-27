@@ -31,6 +31,10 @@ public static class StreamContentDigestOptionsExtensions
 		}
 
 		SetHashValue(fileStream, options);
+		if (options.DigestHashValue is null) {
+			throw new InvalidOperationException(
+				"Digest hash value is not set after calculating it.");
+		}
 
 		string base64Digest = Convert.ToBase64String(options.DigestHashValue);
 
@@ -54,7 +58,7 @@ public static class StreamContentDigestOptionsExtensions
 		Stream fileStream,
 		FileDigestOptions options)
 	{
-		if (options.DigestHashValue != null) {
+		if (options.DigestHashValue is not null) {
 			return;
 		}
 

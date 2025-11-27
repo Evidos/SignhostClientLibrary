@@ -11,5 +11,5 @@ public class DeleteTransactionOptions
 	/// <summary>
 	/// Gets or sets the reason of cancellation.
 	/// </summary>
-	public string Reason { get; set; }
+	public string? Reason { get; set; }
 }

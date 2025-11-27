@@ -121,7 +121,6 @@ public class TransactionTests
 		createdTransaction.SendEmailNotifications.Should().BeFalse();
 		createdTransaction.SignRequestMode.Should().Be(2);
 		createdTransaction.Language.Should().Be("en-US");
-		createdTransaction.CreatedDateTime.Should().HaveValue();
 		createdTransaction.CreatedDateTime.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1));
 		createdTransaction.CanceledDateTime.Should().BeNull();
 		createdTransaction.CancellationReason.Should().BeNull();

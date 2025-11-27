@@ -26,7 +26,7 @@ public class GoneException<TResult>
 	{
 	}
 
-	public GoneException(string message, TResult result)
+	public GoneException(string message, TResult? result)
 		: base(message)
 	{
 		Result = result;
@@ -57,5 +57,5 @@ public class GoneException<TResult>
 	/// Please note that this no longer contains the full transaction
 	/// details as most data is removed.
 	/// </summary>
-	public TResult Result { get; private set; }
+	public TResult? Result { get; private set; }
 }

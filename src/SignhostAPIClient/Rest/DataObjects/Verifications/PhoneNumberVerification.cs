@@ -3,7 +3,7 @@
 public class PhoneNumberVerification
 	: IVerification
 {
-	public string Number { get; set; }
+	public string Number { get; set; } = default!;
 
 	public bool? SecureDownload { get; set; }
 }

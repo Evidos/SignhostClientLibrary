@@ -9,5 +9,5 @@ public class OidcVerification
 	/// <summary>
 	/// Gets or sets the OIDC provider name.
 	/// </summary>
-	public string ProviderName { get; set; }
+	public string? ProviderName { get; set; }
 }
