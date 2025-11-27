@@ -53,6 +53,7 @@ jobs:
 
       - name: Test with Coverage
         run: dotnet test --no-build src/SignhostAPIClient.Tests/SignhostAPIClient.Tests.csproj --collect:"XPlat Code Coverage" -c Release
+        # Note: Integration tests are excluded from CI/CD as they require live credentials
 
       - name: Pack
         run: dotnet pack src/SignhostAPIClient/SignhostAPIClient.csproj /p:Version=${{ env.LATEST_VERSION }}

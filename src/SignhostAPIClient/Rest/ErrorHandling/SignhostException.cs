@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
+	// TO-DO: Remove in v5
 	[Serializable]
 	[Obsolete("Unused will be removed")]
 	public class SignhostException

@@ -25,7 +25,14 @@ namespace Signhost.APIClient.Rest
 			if (HttpStatusCode == HttpStatusCode.Gone) {
 				throw new ErrorHandling.GoneException<TValue>(
 					httpResponse.ReasonPhrase,
-					Value);
+					Value)
+				{
+					// TO-DO: Make async in v5
+					ResponseBody = httpResponse.Content.ReadAsStringAsync()
+						.ConfigureAwait(false)
+						.GetAwaiter()
+						.GetResult(),
+				};
 			}
 		}
 	}

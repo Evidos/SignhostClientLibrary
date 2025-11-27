@@ -12,6 +12,9 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 	/// </summary>
 	public static class HttpResponseMessageErrorHandlingExtensions
 	{
+		private const string OutOfCreditsApiProblemType =
+			"https://api.signhost.com/problem/subscription/out-of-credits";
+
 		/// <summary>
 		/// Throws an exception if the <see cref="HttpResponseMessage.StatusCode"/>
 		/// has an error code.
@@ -55,13 +58,14 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 
 			string errorType = string.Empty;
 			string errorMessage = "Unknown Signhost error";
+			string responseBody = string.Empty;
 
 			if (response.Content != null) {
-				string responsejson = await response.Content.ReadAsStringAsync()
+				responseBody = await response.Content.ReadAsStringAsync()
 					.ConfigureAwait(false);
 
 				var error = JsonConvert.DeserializeAnonymousType(
-					responsejson,
+					responseBody,
 					new {
 						Type = string.Empty,
 						Message = string.Empty,
@@ -71,33 +75,46 @@ namespace Signhost.APIClient.Rest.ErrorHandling
 				errorMessage = error.Message;
 			}
 
+			// TO-DO: Use switch pattern in v5
+			Exception exception = null;
 			switch (response.StatusCode) {
 				case HttpStatusCode.Unauthorized:
-					throw new System.UnauthorizedAccessException(
+					exception = new UnauthorizedAccessException(
 						errorMessage);
-				case HttpStatusCode.BadRequest:
-					throw new BadRequestException(
-						errorMessage);
-				case HttpStatusCode.PaymentRequired
-				when errorType == "https://api.signhost.com/problem/subscription/out-of-credits":
-					if (string.IsNullOrEmpty(errorMessage)) {
-						errorMessage = "The credit bundle has been exceeded.";
-					}
+					break;
 
-					throw new OutOfCreditsException(
+				case HttpStatusCode.BadRequest:
+					exception = new BadRequestException(
 						errorMessage);
+					break;
+
+				case HttpStatusCode.PaymentRequired
+				when errorType == OutOfCreditsApiProblemType:
+					exception = new OutOfCreditsException(
+						errorMessage);
+					break;
+
 				case HttpStatusCode.NotFound:
-					throw new NotFoundException(
+					exception = new NotFoundException(
 						errorMessage);
+					break;
+
 				case HttpStatusCode.InternalServerError:
-					throw new InternalServerErrorException(
+					exception = new InternalServerErrorException(
 						errorMessage, response.Headers.RetryAfter);
+					break;
+
 				default:
-					throw new SignhostRestApiClientException(
+					exception = new SignhostRestApiClientException(
 						errorMessage);
+					break;
 			}
 
-			System.Diagnostics.Debug.Fail("Should not be reached");
+			if (exception is SignhostRestApiClientException signhostException) {
+				signhostException.ResponseBody = responseBody;
+			}
+
+			throw exception;
 		}
 	}
 }

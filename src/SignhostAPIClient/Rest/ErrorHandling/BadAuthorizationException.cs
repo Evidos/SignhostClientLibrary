@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Signhost.APIClient.Rest.ErrorHandling
 {
+	// TO-DO: Use this instead of Unauthorized exception in v5
 	[Serializable]
 	public class BadAuthorizationException
 		: SignhostRestApiClientException

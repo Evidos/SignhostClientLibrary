@@ -64,6 +64,20 @@ namespace Signhost.APIClient.Rest.DataObjects
 
 		public string DelegateSignerName { get; set; }
 
+		public DateTimeOffset? SignedDateTime { get; set; }
+
+		public DateTimeOffset? RejectDateTime { get; set; }
+
+		public DateTimeOffset? CreatedDateTime { get; set; }
+
+		public DateTimeOffset? SignerDelegationDateTime { get; set; }
+
+		public DateTimeOffset? ModifiedDateTime { get; set; }
+
+		public string ShowUrl { get; set; }
+
+		public string ReceiptUrl { get; set; }
+
 		public IReadOnlyList<Activity> Activities { get; private set; } =
 			new List<Activity>().AsReadOnly();
 
