@@ -146,7 +146,8 @@ public class SignhostApiClient
 			cancellationToken)
 			.ConfigureAwait(false);
 
-		response.EnsureAvailableStatusCode();
+		await response.EnsureAvailableStatusCodeAsync(cancellationToken)
+			.ConfigureAwait(false);
 
 		return response.Value ?? throw new InvalidOperationException(
 			"Failed to deserialize the transaction.");
