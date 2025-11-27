@@ -7,6 +7,7 @@ namespace Signhost.APIClient.Rest.DataObjects
 	/// <summary>
 	/// <see cref="Activity"/> type.
 	/// </summary>
+	// TO-DO: Remove unused activity types in v5.
 	public enum ActivityType
 	{
 		/// <summary>
