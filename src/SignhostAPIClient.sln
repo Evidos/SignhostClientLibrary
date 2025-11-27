@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignhostAPIClient", "Signho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignhostAPIClient.Tests", "SignhostAPIClient.Tests\SignhostAPIClient.Tests.csproj", "{0A2CF5DE-060C-4C92-8F15-7AA26268511D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignhostAPIClient.IntegrationTests", "SignhostAPIClient.IntegrationTests\SignhostAPIClient.IntegrationTests.csproj", "{B8F3E9A1-3C4D-4E5F-9A2B-1D3E4F5A6B7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0A2CF5DE-060C-4C92-8F15-7AA26268511D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A2CF5DE-060C-4C92-8F15-7AA26268511D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A2CF5DE-060C-4C92-8F15-7AA26268511D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F3E9A1-3C4D-4E5F-9A2B-1D3E4F5A6B7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F3E9A1-3C4D-4E5F-9A2B-1D3E4F5A6B7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F3E9A1-3C4D-4E5F-9A2B-1D3E4F5A6B7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F3E9A1-3C4D-4E5F-9A2B-1D3E4F5A6B7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
