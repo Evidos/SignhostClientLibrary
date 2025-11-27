@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Signhost.APIClient.Rest;
 
@@ -17,18 +19,21 @@ public class ApiResponse<TValue>
 
 	public HttpStatusCode HttpStatusCode => httpResponse.StatusCode;
 
-	public void EnsureAvailableStatusCode()
+	public async Task EnsureAvailableStatusCodeAsync(
+		CancellationToken cancellationToken = default)
 	{
 		if (HttpStatusCode == HttpStatusCode.Gone) {
 			throw new ErrorHandling.GoneException<TValue>(
 				httpResponse.ReasonPhrase ?? "No reason phrase provided",
 				Value)
 			{
-				// TO-DO: Make async in v5
-				ResponseBody = httpResponse.Content.ReadAsStringAsync()
-					.ConfigureAwait(false)
-					.GetAwaiter()
-					.GetResult(),
+				ResponseBody = await httpResponse.Content
+#if NETFRAMEWORK || NETSTANDARD2_0
+					.ReadAsStringAsync()
+#else
+					.ReadAsStringAsync(cancellationToken)
+#endif
+					.ConfigureAwait(false),
 			};
 		}
 	}
