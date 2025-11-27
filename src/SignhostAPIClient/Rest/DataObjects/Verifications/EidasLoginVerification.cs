@@ -14,7 +14,7 @@ public class EidasLoginVerification
 	/// <summary>
 	/// Gets or sets the uid.
 	/// </summary>
-	public string Uid { get; set; }
+	public string? Uid { get; set; }
 
 	/// <summary>
 	/// Gets or sets the level.
@@ -25,12 +25,12 @@ public class EidasLoginVerification
 	/// <summary>
 	/// Gets or sets the first name.
 	/// </summary>
-	public string FirstName { get; set; }
+	public string? FirstName { get; set; }
 
 	/// <summary>
 	/// Gets or sets the last name.
 	/// </summary>
-	public string LastName { get; set; }
+	public string? LastName { get; set; }
 
 	/// <summary>
 	/// Gets or sets the date of birth.
@@ -40,5 +40,5 @@ public class EidasLoginVerification
 	/// <summary>
 	/// Gets or sets the eIDAS attributes.
 	/// </summary>
-	public IDictionary<string, string> Attributes { get; set; }
+	public IDictionary<string, string>? Attributes { get; set; }
 }

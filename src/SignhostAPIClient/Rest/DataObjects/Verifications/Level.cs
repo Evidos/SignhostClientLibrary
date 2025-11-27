@@ -1,7 +1,7 @@
 namespace Signhost.APIClient.Rest.DataObjects;
 
 /// <summary>
-/// Level of Assurance.
+/// Level of Assurance of eIDAS Login verification.
 /// </summary>
 public enum Level
 {

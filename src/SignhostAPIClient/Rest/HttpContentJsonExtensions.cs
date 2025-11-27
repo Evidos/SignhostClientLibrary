@@ -16,11 +16,11 @@ internal static class HttpContentJsonExtensions
 	/// <param name="httpContent"><see cref="HttpContent"/> to read.</param>
 	/// <returns>A deserialized value of <see cref="T"/>
 	/// or default(T) if no content is available.</returns>
-	internal static async Task<T> FromJsonAsync<T>(
+	internal static async Task<T?> FromJsonAsync<T>(
 		this HttpContent httpContent)
 	{
-		if (httpContent == null) {
-			return default(T);
+		if (httpContent is null) {
+			return default;
 		}
 
 		var json = await httpContent.ReadAsStringAsync()

@@ -61,7 +61,7 @@ public static class HttpResponseMessageErrorHandlingExtensions
 		string errorMessage = "Unknown Signhost error";
 		string responseBody = string.Empty;
 
-		if (response.Content != null) {
+		if (response.Content is not null) {
 			responseBody = await response.Content.ReadAsStringAsync()
 				.ConfigureAwait(false);
 
@@ -72,39 +72,20 @@ public static class HttpResponseMessageErrorHandlingExtensions
 		}
 
 		// TO-DO: Use switch pattern in v5
-		Exception exception = null;
-		switch (response.StatusCode) {
-			case HttpStatusCode.Unauthorized:
-				exception = new UnauthorizedAccessException(
-					errorMessage);
-				break;
+		Exception exception = response.StatusCode switch {
+			HttpStatusCode.Unauthorized => new UnauthorizedAccessException(errorMessage),
+			HttpStatusCode.BadRequest => new BadRequestException(errorMessage),
+			HttpStatusCode.NotFound => new NotFoundException(errorMessage),
 
-			case HttpStatusCode.BadRequest:
-				exception = new BadRequestException(
-					errorMessage);
-				break;
+			HttpStatusCode.InternalServerError =>
+				new InternalServerErrorException(errorMessage, response.Headers.RetryAfter),
 
-			case HttpStatusCode.PaymentRequired
-			when errorType == OutOfCreditsApiProblemType:
-				exception = new OutOfCreditsException(
-					errorMessage);
-				break;
+			HttpStatusCode.PaymentRequired
+			when errorType == OutOfCreditsApiProblemType =>
+				new OutOfCreditsException(errorMessage),
 
-			case HttpStatusCode.NotFound:
-				exception = new NotFoundException(
-					errorMessage);
-				break;
-
-			case HttpStatusCode.InternalServerError:
-				exception = new InternalServerErrorException(
-					errorMessage, response.Headers.RetryAfter);
-				break;
-
-			default:
-				exception = new SignhostRestApiClientException(
-					errorMessage);
-				break;
-		}
+			_ => new SignhostRestApiClientException(errorMessage),
+		};
 
 		if (exception is SignhostRestApiClientException signhostException) {
 			signhostException.ResponseBody = responseBody;
@@ -116,9 +97,9 @@ public static class HttpResponseMessageErrorHandlingExtensions
 	private class ErrorResponse
 	{
 		[JsonPropertyName("type")]
-		public string Type { get; set; }
+		public string Type { get; set; } = string.Empty;
 
 		[JsonPropertyName("message")]
-		public string Message { get; set; }
+		public string Message { get; set; } = string.Empty;
 	}
 }

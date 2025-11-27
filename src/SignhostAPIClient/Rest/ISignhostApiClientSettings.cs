@@ -9,7 +9,7 @@ public interface ISignhostApiClientSettings
 	/// <summary>
 	/// Gets the usertoken identifying an authorized user.
 	/// </summary>
-	string UserToken { get; }
+	string? UserToken { get; }
 
 	/// <summary>
 	/// Gets the app key of your applications.
@@ -21,5 +21,5 @@ public interface ISignhostApiClientSettings
 	/// </summary>
 	string Endpoint { get; }
 
-	Action<AddHeaders> AddHeader { get; }
+	Action<AddHeaders>? AddHeader { get; }
 }

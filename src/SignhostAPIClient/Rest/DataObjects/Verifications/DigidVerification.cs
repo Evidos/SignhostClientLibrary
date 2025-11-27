@@ -3,7 +3,9 @@
 public class DigidVerification
 	: IVerification
 {
-	public string Bsn { get; set; }
+	public string? Bsn { get; set; }
+
+	public string? Betrouwbaarheidsniveau { get; set; }
 
 	public bool? SecureDownload { get; set; }
 }

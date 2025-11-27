@@ -21,12 +21,8 @@ public class SignhostApiClient
 {
 	private const string ApiVersion = "v1";
 
-	private static readonly string Version = typeof(SignhostApiClient)
-#if TYPEINFO
-		.GetTypeInfo()
-#endif
-		.Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
-		.Version;
+	private static readonly string Version = GetVersion()
+		?? throw new InvalidOperationException("Unknown assembly version.");
 
 	private readonly ISignhostApiClientSettings settings;
 	private readonly HttpClient client;
@@ -86,7 +82,7 @@ public class SignhostApiClient
 		Transaction transaction,
 		CancellationToken cancellationToken = default)
 	{
-		if (transaction == null) {
+		if (transaction is null) {
 			throw new ArgumentNullException(nameof(transaction));
 		}
 
@@ -99,7 +95,9 @@ public class SignhostApiClient
 			.ConfigureAwait(false);
 
 		return await result.Content.FromJsonAsync<Transaction>()
-			.ConfigureAwait(false);
+			.ConfigureAwait(false)
+			?? throw new InvalidOperationException(
+				"Failed to deserialize the transaction.");
 	}
 
 	/// <inheritdoc />
@@ -113,7 +111,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -150,7 +148,8 @@ public class SignhostApiClient
 
 		response.EnsureAvailableStatusCode();
 
-		return response.Value;
+		return response.Value ?? throw new InvalidOperationException(
+			"Failed to deserialize the transaction.");
 	}
 
 	/// <inheritdoc />
@@ -174,10 +173,10 @@ public class SignhostApiClient
 	/// <inheritdoc />
 	public async Task DeleteTransactionAsync(
 		string transactionId,
-		DeleteTransactionOptions options,
+		DeleteTransactionOptions? options,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -185,7 +184,7 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (options == null) {
+		if (options is null) {
 			options = new DeleteTransactionOptions();
 		}
 
@@ -217,11 +216,11 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		if (fileMeta == null) {
+		if (fileMeta is null) {
 			throw new ArgumentNullException("fileMeta");
 		}
 
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -229,7 +228,7 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId == null) {
+		if (fileId is null) {
 			throw new ArgumentNullException(nameof(fileId));
 		}
 
@@ -251,7 +250,7 @@ public class SignhostApiClient
 	Stream fileStream,
 	string transactionId,
 	string fileId,
-	FileUploadOptions uploadOptions)
+	FileUploadOptions? uploadOptions)
 		=> await AddOrReplaceFileToTransactionAsync(
 			fileStream,
 			transactionId,
@@ -264,14 +263,14 @@ public class SignhostApiClient
 		Stream fileStream,
 		string transactionId,
 		string fileId,
-		FileUploadOptions uploadOptions,
+		FileUploadOptions? uploadOptions,
 		CancellationToken cancellationToken = default)
 	{
-		if (fileStream == null) {
+		if (fileStream is null) {
 			throw new ArgumentNullException(nameof(fileStream));
 		}
 
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -279,7 +278,7 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId == null) {
+		if (fileId is null) {
 			throw new ArgumentNullException(nameof(fileId));
 		}
 
@@ -287,7 +286,7 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
 		}
 
-		if (uploadOptions == null) {
+		if (uploadOptions is null) {
 			uploadOptions = new FileUploadOptions();
 		}
 
@@ -322,7 +321,7 @@ public class SignhostApiClient
 		string filePath,
 		string transactionId,
 		string fileId,
-		FileUploadOptions uploadOptions)
+		FileUploadOptions? uploadOptions)
 		=> await AddOrReplaceFileToTransactionAsync(
 			filePath,
 			transactionId,
@@ -335,10 +334,10 @@ public class SignhostApiClient
 		string filePath,
 		string transactionId,
 		string fileId,
-		FileUploadOptions uploadOptions,
+		FileUploadOptions? uploadOptions,
 		CancellationToken cancellationToken = default)
 	{
-		if (filePath == null) {
+		if (filePath is null) {
 			throw new ArgumentNullException(nameof(filePath));
 		}
 
@@ -382,7 +381,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -409,7 +408,7 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -438,7 +437,7 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		if (transactionId == null) {
+		if (transactionId is null) {
 			throw new ArgumentNullException(nameof(transactionId));
 		}
 
@@ -446,7 +445,7 @@ public class SignhostApiClient
 			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
 		}
 
-		if (fileId == null) {
+		if (fileId is null) {
 			throw new ArgumentNullException(nameof(fileId));
 		}
 
@@ -479,4 +478,12 @@ public class SignhostApiClient
 			client?.Dispose();
 		}
 	}
+
+	private static string? GetVersion()
+		=> typeof(SignhostApiClient)
+#if TYPEINFO
+			.GetTypeInfo()
+#endif
+			?.Assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()
+			?.Version;
 }

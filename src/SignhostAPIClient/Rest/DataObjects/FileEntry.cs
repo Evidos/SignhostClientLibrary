@@ -4,7 +4,7 @@ namespace Signhost.APIClient.Rest.DataObjects;
 
 public class FileEntry
 {
-	public IList<FileLink> Links { get; set; }
+	public IList<FileLink> Links { get; set; } = default!;
 
-	public string DisplayName { get; set; }
+	public string? DisplayName { get; set; }
 }

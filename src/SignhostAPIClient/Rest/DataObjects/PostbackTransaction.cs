@@ -6,5 +6,5 @@ public class PostbackTransaction
 	: Transaction
 {
 	[JsonPropertyName("Checksum")]
-	public string Checksum { get; set; }
+	public string Checksum { get; set; } = default!;
 }

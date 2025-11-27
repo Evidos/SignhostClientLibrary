@@ -7,5 +7,5 @@ public class ScribbleVerification
 
 	public bool ScribbleNameFixed { get; set; }
 
-	public string ScribbleName { get; set; }
+	public string? ScribbleName { get; set; }
 }

@@ -5,7 +5,7 @@ namespace Signhost.APIClient.Rest.DataObjects;
 public class SurfnetVerification
 	: IVerification
 {
-	public string Uid { get; set; }
+	public string? Uid { get; set; }
 
-	public IDictionary<string, string> Attributes { get; set; }
+	public IDictionary<string, string>? Attributes { get; set; }
 }

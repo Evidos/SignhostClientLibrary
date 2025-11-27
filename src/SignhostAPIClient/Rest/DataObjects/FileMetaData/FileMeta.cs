@@ -7,13 +7,15 @@ public class FileMeta
 {
 	public int? DisplayOrder { get; set; }
 
-	public string DisplayName { get; set; }
+	public string? DisplayName { get; set; }
 
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
-	public IDictionary<string, FileSignerMeta> Signers { get; set; }
+	public IDictionary<string, FileSignerMeta> Signers { get; set; } =
+		new Dictionary<string, FileSignerMeta>();
 
-	public IDictionary<string, IDictionary<string, Field>> FormSets { get; set; }
+	public IDictionary<string, IDictionary<string, Field>> FormSets { get; set; } =
+		new Dictionary<string, IDictionary<string, Field>>();
 
 	/// <summary>
 	/// Gets or sets whether to use the scribble signature as a paraph

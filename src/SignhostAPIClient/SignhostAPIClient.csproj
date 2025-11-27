@@ -5,6 +5,7 @@
 		<CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
 		<DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">TYPEINFO</DefineConstants>
 		<RootNamespace>Signhost.APIClient</RootNamespace>
+		<nullable>enable</nullable>
 	</PropertyGroup>
 
 	<PropertyGroup>

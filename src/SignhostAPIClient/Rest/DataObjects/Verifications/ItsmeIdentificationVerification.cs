@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Signhost.APIClient.Rest.DataObjects;
 
 /// <summary>
@@ -9,5 +11,7 @@ public class ItsmeIdentificationVerification
 	/// <summary>
 	/// Gets or sets the phonenumber.
 	/// </summary>
-	public string PhoneNumber { get; set; }
+	public string PhoneNumber { get; set; } = default!;
+
+	public IDictionary<string, object>? Attributes { get; set; }
 }

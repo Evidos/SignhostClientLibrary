@@ -9,5 +9,5 @@ public class IPAddressVerification
 	/// <summary>
 	/// Gets or sets the IP Address used by the signer while signing the documents.
 	/// </summary>
-	public string IPAddress { get; set; }
+	public string? IPAddress { get; set; }
 }

@@ -22,5 +22,5 @@ public class FileDigestOptions
 	/// Gets or sets the hash digest value, you can set this yourself
 	/// if you know the digest value in advance.
 	/// </summary>
-	public byte[] DigestHashValue { get; set; }
+	public byte[]? DigestHashValue { get; set; }
 }

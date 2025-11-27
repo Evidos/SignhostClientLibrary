@@ -207,7 +207,7 @@ public interface ISignhostApiClient
 	/// <returns>A Task.</returns>
 	Task DeleteTransactionAsync(
 		string transactionId,
-		DeleteTransactionOptions options = default,
+		DeleteTransactionOptions? options = default,
 		CancellationToken cancellationToken = default);
 
 	/// <summary>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Signhost.APIClient.Rest.DataObjects;
 
 namespace Signhost.APIClient.Rest;
@@ -18,5 +19,5 @@ public interface ISignhostApiReceiver
 	bool IsPostbackChecksumValid(
 		IDictionary<string, string[]> headers,
 		string body,
-		out Transaction postbackTransaction);
+		[NotNullWhen(true)] out Transaction? postbackTransaction);
 }

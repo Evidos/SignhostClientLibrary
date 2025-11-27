@@ -18,18 +18,18 @@ public class InternalServerErrorException
 	}
 
 	public InternalServerErrorException(
-		string message, RetryConditionHeaderValue retryAfter)
+		string message, RetryConditionHeaderValue? retryAfter)
 		: base(message)
 	{
 		HelpLink = "https://api.signhost.com/Help";
 
-		if (retryAfter != null) {
-			if (retryAfter.Date != null) {
+		if (retryAfter is not null) {
+			if (retryAfter.Date is not null) {
 				RetryAfter = retryAfter.Date;
 			}
 
-			if (retryAfter.Delta != null) {
-				RetryAfter = DateTime.Now + retryAfter.Delta;
+			if (retryAfter.Delta is not null) {
+				RetryAfter = DateTimeOffset.Now + retryAfter.Delta;
 			}
 		}
 	}

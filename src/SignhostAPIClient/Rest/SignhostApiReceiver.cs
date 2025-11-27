@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -34,17 +35,18 @@ public class SignhostApiReceiver
 	public bool IsPostbackChecksumValid(
 		IDictionary<string, string[]> headers,
 		string body,
-		out Transaction postbackTransaction)
+		[NotNullWhen(true)] out Transaction? postbackTransaction)
 	{
 		postbackTransaction = null;
-		string postbackChecksum;
-		string calculatedChecksum;
-		PostbackTransaction postback;
+		var postback = DeserializeToPostbackTransaction(body);
+		if (postback is null) {
+			return false;
+		}
 
-		postback = DeserializeToPostbackTransaction(body);
-		postbackChecksum = GetChecksumFromHeadersOrPostback(headers, postback);
+		string postbackChecksum = GetChecksumFromHeadersOrPostback(headers, postback);
 		bool parametersAreValid = HasValidChecksumProperties(postbackChecksum, postback);
 
+		string calculatedChecksum;
 		if (parametersAreValid) {
 			calculatedChecksum = CalculateChecksumFromPostback(postback);
 			postbackTransaction = postback;
@@ -66,7 +68,7 @@ public class SignhostApiReceiver
 		}
 	}
 
-	private PostbackTransaction DeserializeToPostbackTransaction(string body)
+	private PostbackTransaction? DeserializeToPostbackTransaction(string body)
 	{
 		return JsonSerializer.Deserialize<PostbackTransaction>(body, SignhostJsonSerializerOptions.Default);
 	}
@@ -75,8 +77,10 @@ public class SignhostApiReceiver
 		IDictionary<string, string[]> headers,
 		PostbackTransaction postback)
 	{
-		string[] postbackChecksumArray;
-		if (headers.TryGetValue("Checksum", out postbackChecksumArray)) {
+		if (
+			headers.TryGetValue("Checksum", out var postbackChecksumArray) &&
+			postbackChecksumArray is not null
+		) {
 			return postbackChecksumArray.First();
 		}
 		else {
