@@ -22,7 +22,7 @@ internal class LevelEnumConverter
 		}
 
 		if (reader.TokenType == JsonTokenType.String) {
-			var value = reader.GetString() ?? string.Empty;
+			string value = reader.GetString() ?? string.Empty;
 			if (Enum.TryParse<Level>(value, out var level)) {
 				return level;
 			}

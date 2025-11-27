@@ -7,7 +7,7 @@ public class NotFoundException
 	: SignhostRestApiClientException
 {
 	public NotFoundException()
-		 : base()
+		: base()
 	{
 	}
 

@@ -23,6 +23,10 @@ public static class StreamContentDigestOptionsExtensions
 		Stream fileStream,
 		FileDigestOptions options)
 	{
+		content.ThrowIfNullOrEmpty(nameof(content));
+		fileStream.ThrowIfNullOrEmpty(nameof(fileStream));
+		options.ThrowIfNullOrEmpty(nameof(options));
+
 		if (
 			!options.UseFileDigesting ||
 			options.DigestHashAlgorithm == DigestHashAlgorithm.None
@@ -50,7 +54,7 @@ public static class StreamContentDigestOptionsExtensions
 			DigestHashAlgorithm.SHA512 => "SHA-512",
 
 			_ => throw new InvalidOperationException(
-				$"No hash algorithm name for '{options.DigestHashAlgorithm}'"),
+				$"No hash algorithm name for '{options.DigestHashAlgorithm}'."),
 		};
 	}
 
@@ -68,9 +72,8 @@ public static class StreamContentDigestOptionsExtensions
 
 		long position = fileStream.Position;
 
-		using (var algo = HashAlgorithmCreate(options)) {
-			options.DigestHashValue = algo.ComputeHash(fileStream);
-		}
+		using var algo = HashAlgorithmCreate(options);
+		options.DigestHashValue = algo.ComputeHash(fileStream);
 
 		fileStream.Position = position;
 	}
@@ -87,7 +90,7 @@ public static class StreamContentDigestOptionsExtensions
 			DigestHashAlgorithm.SHA512 => SHA512.Create(),
 #endif
 			_ => throw new InvalidOperationException(
-				$"No hash algorithm for '{options.DigestHashAlgorithm}'"),
+				$"No hash algorithm for '{options.DigestHashAlgorithm}'."),
 		};
 	}
 }

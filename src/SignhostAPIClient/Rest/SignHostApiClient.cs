@@ -47,49 +47,44 @@ public class SignhostApiClient
 		ISignhostApiClientSettings settings,
 		HttpClient httpClient)
 	{
+		settings.ThrowIfNullOrEmpty(nameof(settings));
+		httpClient.ThrowIfNullOrEmpty(nameof(httpClient));
+
 		this.settings = settings;
-		this.client = httpClient;
-		this.client.BaseAddress = new Uri(
+		client = httpClient;
+		client.BaseAddress = new Uri(
 			settings.Endpoint + (settings.Endpoint.EndsWith("/") ? string.Empty : "/"));
-		this.client.DefaultRequestHeaders.UserAgent.Add(
-			new System.Net.Http.Headers.ProductInfoHeaderValue(
-				"SignhostClientLibrary",
-				Version));
-		this.client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
+		client.DefaultRequestHeaders.UserAgent.Add(
+			new ProductInfoHeaderValue("SignhostClientLibrary", Version));
+		client.DefaultRequestHeaders.Add("Application", ApplicationHeader);
 
 		if (!string.IsNullOrWhiteSpace(settings.UserToken)) {
-			this.client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
+			client.DefaultRequestHeaders.Add("Authorization", AuthorizationHeader);
 		}
 
-		this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
-		settings.AddHeader?.Invoke(this.client.DefaultRequestHeaders.Add);
+		client.DefaultRequestHeaders.Accept.Add(
+			MediaTypeWithQualityHeaderValue.Parse($"application/vnd.signhost.{ApiVersion}+json"));
+		settings.AddHeader?.Invoke(client.DefaultRequestHeaders.Add);
 	}
 
-	private string ApplicationHeader
-		=> $"APPKey {settings.APPKey}";
+	private string ApplicationHeader => $"APPKey {settings.APPKey}";
 
-	private string AuthorizationHeader
-		=> $"APIKey {settings.UserToken}";
+	private string AuthorizationHeader => $"APIKey {settings.UserToken}";
 
 	/// <inheritdoc />
 	public async Task<Transaction> CreateTransactionAsync(
 		CreateTransactionRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(request);
+		request.ThrowIfNullOrEmpty(nameof(request));
 
 		var result = await client
-			.PostAsync(
-				"transaction",
-				JsonContent.From(request),
-				cancellationToken)
+			.PostAsync("transaction", JsonContent.From(request), cancellationToken)
 			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 
-		return await result.Content.FromJsonAsync<Transaction>()
-			.ConfigureAwait(false)
-			?? throw new InvalidOperationException(
-				"Failed to deserialize the transaction.");
+		return await result.Content.FromJsonAsync<Transaction>().ConfigureAwait(false)
+			?? throw new InvalidOperationException("Failed to deserialize the transaction.");
 	}
 
 	/// <inheritdoc />
@@ -97,20 +92,13 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(transactionId);
-
-		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
-		}
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
 
 		var result = await client
-			.GetAsync(
-				"transaction".JoinPaths(transactionId),
-				cancellationToken)
+			.GetAsync("transaction".JoinPaths(transactionId), cancellationToken)
 			.EnsureSignhostSuccessStatusCodeAsync(HttpStatusCode.Gone)
 			.ConfigureAwait(false);
-		var transaction = await result.Content.FromJsonAsync<Transaction>()
-			.ConfigureAwait(false);
+		var transaction = await result.Content.FromJsonAsync<Transaction>().ConfigureAwait(false);
 
 		return new ApiResponse<Transaction>(result, transaction);
 	}
@@ -120,16 +108,13 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		var response = await GetTransactionResponseAsync(
-			transactionId,
-			cancellationToken)
+		var response = await GetTransactionResponseAsync(transactionId, cancellationToken)
 			.ConfigureAwait(false);
 
-		await response.EnsureAvailableStatusCodeAsync(cancellationToken)
-			.ConfigureAwait(false);
+		await response.EnsureAvailableStatusCodeAsync(cancellationToken).ConfigureAwait(false);
 
-		return response.Value ?? throw new InvalidOperationException(
-			"Failed to deserialize the transaction.");
+		return response.Value
+			?? throw new InvalidOperationException("Failed to deserialize the transaction.");
 	}
 
 	/// <inheritdoc />
@@ -138,22 +123,17 @@ public class SignhostApiClient
 		DeleteTransactionOptions? options = default,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(transactionId);
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
+		options ??= new DeleteTransactionOptions();
 
-		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
-		}
+		var request = new HttpRequestMessage(
+			HttpMethod.Delete,
+			"transaction".JoinPaths(transactionId)) {
+			Content = JsonContent.From(options),
+		};
 
-		if (options is null) {
-			options = new DeleteTransactionOptions();
-		}
-
-		var request = new HttpRequestMessage(HttpMethod.Delete, "transaction".JoinPaths(transactionId));
-		request.Content = JsonContent.From(options);
 		await client
-			.SendAsync(
-				request,
-				cancellationToken)
+			.SendAsync(request, cancellationToken)
 			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 	}
@@ -165,19 +145,9 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(fileMeta);
-
-		ArgumentNullException.ThrowIfNull(transactionId);
-
-		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
-		}
-
-		ArgumentNullException.ThrowIfNull(fileId);
-
-		if (string.IsNullOrWhiteSpace(fileId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
-		}
+		fileMeta.ThrowIfNullOrEmpty(nameof(fileMeta));
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
+		fileId.ThrowIfNullOrEmpty(nameof(fileId));
 
 		await client
 			.PutAsync(
@@ -196,26 +166,15 @@ public class SignhostApiClient
 		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(fileStream);
+		fileStream.ThrowIfNullOrEmpty(nameof(fileStream));
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
+		fileId.ThrowIfNullOrEmpty(nameof(fileId));
 
-		ArgumentNullException.ThrowIfNull(transactionId);
+		uploadOptions ??= new FileUploadOptions();
 
-		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
-		}
-
-		ArgumentNullException.ThrowIfNull(fileId);
-
-		if (string.IsNullOrWhiteSpace(fileId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
-		}
-
-		if (uploadOptions is null) {
-			uploadOptions = new FileUploadOptions();
-		}
-
-		var content = new StreamContent(fileStream)
-			.WithDigest(fileStream, uploadOptions.DigestOptions);
+		var content = new StreamContent(fileStream).WithDigest(
+			fileStream,
+			uploadOptions.DigestOptions);
 		content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
 
 		await client
@@ -235,22 +194,21 @@ public class SignhostApiClient
 		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(filePath);
+		filePath.ThrowIfNullOrEmpty(nameof(filePath));
 
-		using (Stream fileStream = System.IO.File.Open(
-				filePath,
-				FileMode.Open,
-				FileAccess.Read,
-				FileShare.Delete | FileShare.Read))
-		{
-			await AddOrReplaceFileToTransactionAsync(
-					fileStream,
-					transactionId,
-					fileId,
-					uploadOptions,
-					cancellationToken)
-				.ConfigureAwait(false);
-		}
+		using Stream fileStream = File.Open(
+			filePath,
+			FileMode.Open,
+			FileAccess.Read,
+			FileShare.Delete | FileShare.Read);
+
+		await AddOrReplaceFileToTransactionAsync(
+				fileStream,
+				transactionId,
+				fileId,
+				uploadOptions,
+				cancellationToken)
+			.ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />
@@ -258,17 +216,16 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(transactionId);
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			throw new ArgumentException(
+				"Cannot be empty or contain only whitespaces.",
+				nameof(transactionId));
 		}
 
 		await client
-			.PutAsync(
-				"transaction".JoinPaths(transactionId, "start"),
-				null,
-				cancellationToken)
+			.PutAsync("transaction".JoinPaths(transactionId, "start"), null, cancellationToken)
 			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 	}
@@ -278,15 +235,16 @@ public class SignhostApiClient
 		string transactionId,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(transactionId);
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			throw new ArgumentException(
+				"Cannot be empty or contain only whitespaces.",
+				nameof(transactionId));
 		}
 
 		var result = await client
-			.GetStreamAsync(
-				"file".JoinPaths("receipt", transactionId))
+			.GetStreamAsync("file".JoinPaths("receipt", transactionId))
 			.ConfigureAwait(false);
 
 		return result;
@@ -298,21 +256,24 @@ public class SignhostApiClient
 		string fileId,
 		CancellationToken cancellationToken = default)
 	{
-		ArgumentNullException.ThrowIfNull(transactionId);
+		transactionId.ThrowIfNullOrEmpty(nameof(transactionId));
 
 		if (string.IsNullOrWhiteSpace(transactionId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(transactionId));
+			throw new ArgumentException(
+				"Cannot be empty or contain only whitespaces.",
+				nameof(transactionId));
 		}
 
-		ArgumentNullException.ThrowIfNull(fileId);
+		fileId.ThrowIfNullOrEmpty(nameof(fileId));
 
 		if (string.IsNullOrWhiteSpace(fileId)) {
-			throw new ArgumentException("Cannot be empty or contain only whitespaces.", nameof(fileId));
+			throw new ArgumentException(
+				"Cannot be empty or contain only whitespaces.",
+				nameof(fileId));
 		}
 
 		var result = await client
-			.GetStreamAsync(
-				"transaction".JoinPaths(transactionId, "file", fileId))
+			.GetStreamAsync("transaction".JoinPaths(transactionId, "file", fileId))
 			.ConfigureAwait(false);
 
 		return result;

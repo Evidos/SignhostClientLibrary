@@ -1,4 +1,4 @@
-﻿namespace Signhost.APIClient.Rest.DataObjects;
+namespace Signhost.APIClient.Rest.DataObjects;
 
 /// <summary>
 /// <see cref="Activity"/> type codes as defined in the Signhost API.

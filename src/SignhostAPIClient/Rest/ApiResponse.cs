@@ -11,8 +11,10 @@ public class ApiResponse<TValue>
 
 	public ApiResponse(HttpResponseMessage httpResponse, TValue? value)
 	{
+		httpResponse.ThrowIfNullOrEmpty(nameof(httpResponse));
+
 		this.httpResponse = httpResponse;
-		this.Value = value;
+		Value = value;
 	}
 
 	public TValue? Value { get; private set; }
@@ -25,8 +27,7 @@ public class ApiResponse<TValue>
 		if (HttpStatusCode == HttpStatusCode.Gone) {
 			throw new ErrorHandling.GoneException<TValue>(
 				httpResponse.ReasonPhrase ?? "No reason phrase provided",
-				Value)
-			{
+				Value) {
 				ResponseBody = await httpResponse.Content
 #if NETFRAMEWORK || NETSTANDARD2_0
 					.ReadAsStringAsync()

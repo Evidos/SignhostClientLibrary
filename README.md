@@ -17,7 +17,7 @@ The following code is an example of how to create and start a sign transaction w
 ```c#
 var settings = new SignhostApiClientSettings(
 	"AppName appkey",
-	"apikey or usertoken"));
+	"apikey or usertoken");
 
 var client = new SignhostApiClient(settings);
 

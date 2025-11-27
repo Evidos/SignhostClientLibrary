@@ -11,14 +11,14 @@ public class FieldValueTests
 	public void Given_a_field_with_string_value_When_serialized_Then_value_is_json_string()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.SingleLine,
 			Value = "John Smith",
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":\"John Smith\"");
@@ -28,14 +28,14 @@ public class FieldValueTests
 	public void Given_a_field_with_numeric_integer_value_When_serialized_Then_value_is_json_number()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.Number,
 			Value = 42,
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":42");
@@ -46,14 +46,14 @@ public class FieldValueTests
 	public void Given_a_field_with_numeric_double_value_When_serialized_Then_value_is_json_number()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.Number,
 			Value = 3.14,
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":3.14");
@@ -64,14 +64,14 @@ public class FieldValueTests
 	public void Given_a_field_with_boolean_true_value_When_serialized_Then_value_is_json_boolean()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.Check,
 			Value = true,
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":true");
@@ -82,14 +82,14 @@ public class FieldValueTests
 	public void Given_a_field_with_boolean_false_value_When_serialized_Then_value_is_json_boolean()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.Check,
 			Value = false,
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":false");
@@ -100,24 +100,41 @@ public class FieldValueTests
 	public void Given_a_field_with_null_value_When_serialized_Then_value_is_json_null()
 	{
 		// Arrange
-		var field = new Field {
+		Field field = new() {
 			Type = FileFieldType.Signature,
 			Value = null,
-			Location = new Location { PageNumber = 1 }
+			Location = new() { PageNumber = 1 },
 		};
 
 		// Act
-		var json = JsonSerializer.Serialize(field);
+		string json = JsonSerializer.Serialize(field);
 
 		// Assert
 		json.Should().Contain("\"Value\":null");
 	}
 
 	[Fact]
+	public void Given_a_field_with_invalid_object_value_When_serialized_Then_throws_json_exception()
+	{
+		// Arrange
+		Field field = new() {
+			Type = FileFieldType.SingleLine,
+			Value = new { Name = "Test" },
+			Location = new() { PageNumber = 1 },
+		};
+
+		// Act
+		var act = () => JsonSerializer.Serialize(field);
+
+		// Assert
+		act.Should().Throw<JsonException>();
+	}
+
+	[Fact]
 	public void Given_json_with_string_value_When_deserialized_Then_field_value_is_string()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""SingleLine"",
 			""Value"": ""Test Name"",
 			""Location"": { ""PageNumber"": 1 }
@@ -135,7 +152,7 @@ public class FieldValueTests
 	public void Given_json_with_number_integer_value_When_deserialized_Then_field_value_is_numeric()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""Number"",
 			""Value"": 123,
 			""Location"": { ""PageNumber"": 1 }
@@ -153,7 +170,7 @@ public class FieldValueTests
 	public void Given_json_with_number_decimal_value_When_deserialized_Then_field_value_is_double()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""Number"",
 			""Value"": 45.67,
 			""Location"": { ""PageNumber"": 1 }
@@ -171,7 +188,7 @@ public class FieldValueTests
 	public void Given_json_with_boolean_true_value_When_deserialized_Then_field_value_is_boolean_true()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""Check"",
 			""Value"": true,
 			""Location"": { ""PageNumber"": 1 }
@@ -189,7 +206,7 @@ public class FieldValueTests
 	public void Given_json_with_boolean_false_value_When_deserialized_Then_field_value_is_boolean_false()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""Check"",
 			""Value"": false,
 			""Location"": { ""PageNumber"": 1 }
@@ -207,7 +224,7 @@ public class FieldValueTests
 	public void Given_json_with_null_value_When_deserialized_Then_field_value_is_null()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""Signature"",
 			""Value"": null,
 			""Location"": { ""PageNumber"": 1 }
@@ -222,27 +239,10 @@ public class FieldValueTests
 	}
 
 	[Fact]
-	public void Given_a_field_with_invalid_object_value_When_serialized_Then_throws_json_exception()
-	{
-		// Arrange
-		var field = new Field {
-			Type = FileFieldType.SingleLine,
-			Value = new { Name = "Test" },
-			Location = new Location { PageNumber = 1 }
-		};
-
-		// Act
-		var act = () => JsonSerializer.Serialize(field);
-
-		// Assert
-		act.Should().Throw<JsonException>();
-	}
-
-	[Fact]
 	public void Given_json_with_object_value_When_deserialized_Then_throws_json_exception()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""SingleLine"",
 			""Value"": { ""nested"": ""object"" },
 			""Location"": { ""PageNumber"": 1 }
@@ -259,7 +259,7 @@ public class FieldValueTests
 	public void Given_json_with_array_value_When_deserialized_Then_throws_json_exception()
 	{
 		// Arrange
-		var json = @"{
+		string json = @"{
 			""Type"": ""SingleLine"",
 			""Value"": [1, 2, 3],
 			""Location"": { ""PageNumber"": 1 }

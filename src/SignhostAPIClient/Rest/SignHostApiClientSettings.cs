@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Signhost.APIClient.Rest;
 
@@ -9,12 +9,17 @@ public class SignhostApiClientSettings
 
 	public SignhostApiClientSettings(string appkey, string userToken)
 	{
+		appkey.ThrowIfNullOrEmpty(nameof(appkey));
+		userToken.ThrowIfNullOrEmpty(nameof(userToken));
+
 		APPKey = appkey;
 		UserToken = userToken;
 	}
 
 	public SignhostApiClientSettings(string appkey)
 	{
+		appkey.ThrowIfNullOrEmpty(nameof(appkey));
+
 		APPKey = appkey;
 	}
 

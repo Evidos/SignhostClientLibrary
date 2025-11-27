@@ -7,7 +7,7 @@ public class SignhostRestApiClientException
 	: Exception
 {
 	public SignhostRestApiClientException()
-		 : base()
+		: base()
 	{
 	}
 
