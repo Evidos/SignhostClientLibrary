@@ -41,7 +41,7 @@ public class SignhostApiClientTests
 
 			var field = new Field
 			{
-				Type = "Check",
+				Type = FileFieldType.Check,
 				Value = "I agree",
 				Location = new Location
 				{

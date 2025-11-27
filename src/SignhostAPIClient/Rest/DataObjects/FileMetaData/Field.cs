@@ -2,8 +2,7 @@
 
 public class Field
 {
-	// TO-DO: Make enum in v5.
-	public string Type { get; set; } = default!;
+	public FileFieldType Type { get; set; }
 
 	// TO-DO: Can be boolean, number, string, should be fixed in v5.
 	public string? Value { get; set; }
