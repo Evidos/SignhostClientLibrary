@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.IO;
 using Xunit;
 using Signhost.APIClient.Rest.DataObjects;
+using Signhost.APIClient.Rest.ErrorHandling;
 using FluentAssertions;
 using System.Collections.Generic;
 using RichardSzalay.MockHttp;
@@ -107,7 +108,7 @@ public class SignhostApiClientTests
 			var signhostApiClient = new SignhostApiClient(settings, httpClient);
 
 			Func<Task> getTransaction = () => signhostApiClient.GetTransactionAsync("transaction Id");
-			await getTransaction.Should().ThrowAsync<UnauthorizedAccessException>();
+			await getTransaction.Should().ThrowAsync<BadAuthorizationException>();
 		}
 
 		mockHttp.VerifyNoOutstandingExpectation();

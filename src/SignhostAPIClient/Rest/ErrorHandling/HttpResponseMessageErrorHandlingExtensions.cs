@@ -24,7 +24,7 @@ public static class HttpResponseMessageErrorHandlingExtensions
 	/// <returns>Returns <see cref="HttpResponseMessage"/> if the call is succesful.</returns>
 	/// <param name="expectedStatusCodes">List of <see cref="HttpStatusCode"/> which should
 	/// not be handled as an error.</param>
-	/// <exception cref="UnauthorizedAccessException">
+	/// <exception cref="BadAuthorizationException">
 	/// When the api authentication failed.
 	/// </exception>
 	/// <exception cref="BadRequestException">
@@ -71,9 +71,8 @@ public static class HttpResponseMessageErrorHandlingExtensions
 			errorMessage = error?.Message ?? "Unknown Signhost error";
 		}
 
-		// TO-DO: Use switch pattern in v5
-		Exception exception = response.StatusCode switch {
-			HttpStatusCode.Unauthorized => new UnauthorizedAccessException(errorMessage),
+		SignhostRestApiClientException exception = response.StatusCode switch {
+			HttpStatusCode.Unauthorized => new BadAuthorizationException(errorMessage),
 			HttpStatusCode.BadRequest => new BadRequestException(errorMessage),
 			HttpStatusCode.NotFound => new NotFoundException(errorMessage),
 
@@ -87,9 +86,7 @@ public static class HttpResponseMessageErrorHandlingExtensions
 			_ => new SignhostRestApiClientException(errorMessage),
 		};
 
-		if (exception is SignhostRestApiClientException signhostException) {
-			signhostException.ResponseBody = responseBody;
-		}
+		exception.ResponseBody = responseBody;
 
 		throw exception;
 	}
