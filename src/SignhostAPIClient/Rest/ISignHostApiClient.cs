@@ -13,11 +13,11 @@ public interface ISignhostApiClient
 	/// <summary>
 	/// Creates a new transaction.
 	/// </summary>
-	/// <param name="transaction">A transaction model.</param>
+	/// <param name="request">A transaction creation request.</param>
 	/// <param name="cancellationToken">A cancellation token.</param>
 	/// <returns>A transaction object.</returns>
 	Task<Transaction> CreateTransactionAsync(
-		Transaction transaction,
+		CreateTransactionRequest request,
 		CancellationToken cancellationToken = default);
 
 	/// <summary>

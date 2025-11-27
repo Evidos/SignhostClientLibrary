@@ -73,17 +73,17 @@ public class SignhostApiClient
 
 	/// <inheritdoc />
 	public async Task<Transaction> CreateTransactionAsync(
-		Transaction transaction,
+		CreateTransactionRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		if (transaction is null) {
-			throw new ArgumentNullException(nameof(transaction));
+		if (request is null) {
+			throw new ArgumentNullException(nameof(request));
 		}
 
 		var result = await client
 			.PostAsync(
 				"transaction",
-				JsonContent.From(transaction),
+				JsonContent.From(request),
 				cancellationToken)
 			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
