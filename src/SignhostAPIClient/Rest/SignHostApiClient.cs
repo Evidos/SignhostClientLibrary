@@ -73,12 +73,6 @@ public class SignhostApiClient
 
 	/// <inheritdoc />
 	public async Task<Transaction> CreateTransactionAsync(
-		Transaction transaction)
-		=> await CreateTransactionAsync(transaction, default)
-			.ConfigureAwait(false);
-
-	/// <inheritdoc />
-	public async Task<Transaction> CreateTransactionAsync(
 		Transaction transaction,
 		CancellationToken cancellationToken = default)
 	{
@@ -99,12 +93,6 @@ public class SignhostApiClient
 			?? throw new InvalidOperationException(
 				"Failed to deserialize the transaction.");
 	}
-
-	/// <inheritdoc />
-	public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(
-		string transactionId)
-		=> await GetTransactionResponseAsync(transactionId, default)
-			.ConfigureAwait(false);
 
 	/// <inheritdoc />
 	public async Task<ApiResponse<Transaction>> GetTransactionResponseAsync(
@@ -132,11 +120,6 @@ public class SignhostApiClient
 	}
 
 	/// <inheritdoc />
-	public async Task<Transaction> GetTransactionAsync(string transactionId)
-		=> await GetTransactionAsync(transactionId, default)
-			.ConfigureAwait(false);
-
-	/// <inheritdoc />
 	public async Task<Transaction> GetTransactionAsync(
 		string transactionId,
 		CancellationToken cancellationToken = default)
@@ -156,25 +139,7 @@ public class SignhostApiClient
 	/// <inheritdoc />
 	public async Task DeleteTransactionAsync(
 		string transactionId,
-		CancellationToken cancellationToken = default)
-		=> await DeleteTransactionAsync(
-			transactionId,
-			default,
-			cancellationToken).ConfigureAwait(false);
-
-	/// <inheritdoc />
-	public async Task DeleteTransactionAsync(
-		string transactionId,
-		DeleteTransactionOptions options)
-		=> await DeleteTransactionAsync(
-			transactionId,
-			options,
-			default).ConfigureAwait(false);
-
-	/// <inheritdoc />
-	public async Task DeleteTransactionAsync(
-		string transactionId,
-		DeleteTransactionOptions? options,
+		DeleteTransactionOptions? options = default,
 		CancellationToken cancellationToken = default)
 	{
 		if (transactionId is null) {
@@ -198,17 +163,6 @@ public class SignhostApiClient
 			.EnsureSignhostSuccessStatusCodeAsync()
 			.ConfigureAwait(false);
 	}
-
-	/// <inheritdoc />
-	public async Task AddOrReplaceFileMetaToTransactionAsync(
-		FileMeta fileMeta,
-		string transactionId,
-		string fileId)
-		=> await AddOrReplaceFileMetaToTransactionAsync(
-			fileMeta,
-			transactionId,
-			fileId,
-			default).ConfigureAwait(false);
 
 	/// <inheritdoc />
 	public async Task AddOrReplaceFileMetaToTransactionAsync(
@@ -248,23 +202,10 @@ public class SignhostApiClient
 
 	/// <inheritdoc />
 	public async Task AddOrReplaceFileToTransactionAsync(
-	Stream fileStream,
-	string transactionId,
-	string fileId,
-	FileUploadOptions? uploadOptions)
-		=> await AddOrReplaceFileToTransactionAsync(
-			fileStream,
-			transactionId,
-			fileId,
-			uploadOptions,
-			default).ConfigureAwait(false);
-
-	/// <inheritdoc />
-	public async Task AddOrReplaceFileToTransactionAsync(
 		Stream fileStream,
 		string transactionId,
 		string fileId,
-		FileUploadOptions? uploadOptions,
+		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
 		if (fileStream is null) {
@@ -304,38 +245,12 @@ public class SignhostApiClient
 			.ConfigureAwait(false);
 	}
 
-	/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(Stream, string, string, FileUploadOptions)" />
-	public Task AddOrReplaceFileToTransaction(
-		Stream fileStream,
-		string transactionId,
-		string fileId)
-	{
-		return AddOrReplaceFileToTransactionAsync(
-			fileStream,
-			transactionId,
-			fileId,
-			null);
-	}
-
 	/// <inheritdoc />
 	public async Task AddOrReplaceFileToTransactionAsync(
 		string filePath,
 		string transactionId,
 		string fileId,
-		FileUploadOptions? uploadOptions)
-		=> await AddOrReplaceFileToTransactionAsync(
-			filePath,
-			transactionId,
-			fileId,
-			uploadOptions,
-			default).ConfigureAwait(false);
-
-	/// <inheritdoc />
-	public async Task AddOrReplaceFileToTransactionAsync(
-		string filePath,
-		string transactionId,
-		string fileId,
-		FileUploadOptions? uploadOptions,
+		FileUploadOptions? uploadOptions = default,
 		CancellationToken cancellationToken = default)
 	{
 		if (filePath is null) {
@@ -357,25 +272,6 @@ public class SignhostApiClient
 				.ConfigureAwait(false);
 		}
 	}
-
-	/// <inheritdoc cref="AddOrReplaceFileToTransactionAsync(string, string, string, FileUploadOptions)" />
-	public Task AddOrReplaceFileToTransaction(
-		string filePath,
-		string transactionId,
-		string fileId)
-	{
-		return AddOrReplaceFileToTransactionAsync(
-			filePath,
-			transactionId,
-			fileId,
-			null);
-	}
-
-	/// <inheritdoc />
-	public async Task StartTransactionAsync(
-		string transactionId)
-		=> await StartTransactionAsync(transactionId, default)
-			.ConfigureAwait(false);
 
 	/// <inheritdoc />
 	public async Task StartTransactionAsync(
@@ -400,11 +296,6 @@ public class SignhostApiClient
 	}
 
 	/// <inheritdoc />
-	public async Task<Stream> GetReceiptAsync(string transactionId)
-		=> await GetReceiptAsync(transactionId, default)
-			.ConfigureAwait(false);
-
-	/// <inheritdoc />
 	public async Task<Stream> GetReceiptAsync(
 		string transactionId,
 		CancellationToken cancellationToken = default)
@@ -424,13 +315,6 @@ public class SignhostApiClient
 
 		return result;
 	}
-
-	/// <inheritdoc />
-	public async Task<Stream> GetDocumentAsync(
-		string transactionId,
-		string fileId)
-		=> await GetDocumentAsync(transactionId, fileId, default)
-			.ConfigureAwait(false);
 
 	/// <inheritdoc />
 	public async Task<Stream> GetDocumentAsync(
