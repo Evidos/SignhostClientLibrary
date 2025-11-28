@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Signhost.APIClient.Rest.DataObjects;
@@ -253,6 +255,191 @@ public class TransactionTests
 		finalReceiver.Email.Should().Be(receiverEmail);
 		finalReceiver.Name.Should().Be(receiverName);
 		finalReceiver.Reference.Should().Be(receiverReference);
+	}
+
+	[Fact]
+	public async Task Given_complex_file_metadata_When_added_to_transaction_Then_all_properties_are_accepted()
+	{
+		// Arrange - Create a simple transaction
+		string testReference = $"MetadataTest-{DateTime.UtcNow:yyyyMMddHHmmss}";
+		CreateTransactionRequest transaction = new() {
+			Reference = testReference,
+			SendEmailNotifications = false,
+			Signers = [
+				new() {
+					Id = "signer1",
+					Email = "test@example.com",
+					SendSignRequest = false,
+				},
+				new() {
+					Id = "signer2",
+					Email = "test2@example.com",
+					SendSignRequest = false,
+				}
+			]
+		};
+
+		var createdTransaction = await client.CreateTransactionAsync(transaction);
+		createdTransaction.Should().NotBeNull();
+
+		// Arrange - Create a very complex FileMeta
+		FileMeta fileMeta = new() {
+			DisplayOrder = 1,
+			DisplayName = "Complex Test Document",
+			Description = "This is a test document with complex metadata",
+			SetParaph = true,
+			Signers = new Dictionary<string, FileSignerMeta> {
+				["signer1"] = new() {
+					FormSets = ["FormSet1", "FormSet2"],
+				},
+				["signer2"] = new() {
+					FormSets = ["FormSet2", "FormSet3"],
+				},
+			},
+			FormSets = new Dictionary<string, IDictionary<string, Field>> {
+				["FormSet1"] = new Dictionary<string, Field> {
+					// Test all FileFieldType enum values
+					["SealField"] = new Field {
+						Type = FileFieldType.Seal,
+						Value = null,
+						Location = new Location {
+							Search = "seal_placeholder",
+							Occurence = 1,
+							PageNumber = 1,
+						},
+					},
+					["SignatureField"] = new Field {
+						Type = FileFieldType.Signature,
+						Value = null,
+						Location = new Location {
+							Top = 100,
+							Left = 50,
+							Width = 200,
+							Height = 60,
+							PageNumber = 1,
+						},
+					},
+					["CheckField"] = new Field {
+						Type = FileFieldType.Check,
+						Value = "I agree to the terms",
+						Location = new Location {
+							Search = "checkbox_location",
+							Occurence = 1,
+						},
+					},
+				},
+				["FormSet2"] = new Dictionary<string, Field> {
+					// Test different value types: string, number, boolean, null
+					["RadioFieldString"] = new Field {
+						Type = FileFieldType.Radio,
+						Value = "Option A",
+						Location = new Location {
+							Top = 200,
+							Left = 100,
+							Right = 300,
+							Bottom = 220,
+							PageNumber = 2,
+						},
+					},
+					["SingleLineFieldString"] = new Field {
+						Type = FileFieldType.SingleLine,
+						Value = "John Doe",
+						Location = new Location {
+							Search = "name_field",
+							Width = 150,
+							Height = 20,
+						}
+					},
+					["NumberFieldInteger"] = new Field {
+						Type = FileFieldType.Number,
+						Value = 42,
+						Location = new Location {
+							Top = 300,
+							Left = 50,
+							PageNumber = 2,
+						},
+					},
+					["NumberFieldDecimal"] = new Field {
+						Type = FileFieldType.Number,
+						Value = 123.45,
+						Location = new Location {
+							Top = 320,
+							Left = 50,
+							Width = 100,
+							Height = 20,
+							PageNumber = 2,
+						},
+					},
+					["DateField"] = new Field {
+						Type = FileFieldType.Date,
+						Value = "2025-11-28",
+						Location = new Location {
+							Search = "date_placeholder",
+							Occurence = 2,
+							PageNumber = 3,
+						},
+					},
+				},
+				["FormSet3"] = new Dictionary<string, Field> {
+					// Test boolean values and all Location properties
+					["CheckFieldTrue"] = new Field {
+						Type = FileFieldType.Check,
+						Value = true,
+						Location = new Location {
+							Top = 400,
+							Right = 200,
+							Bottom = 420,
+							Left = 50,
+							PageNumber = 3,
+						},
+					},
+					["CheckFieldFalse"] = new Field {
+						Type = FileFieldType.Check,
+						Value = false,
+						Location = new Location {
+							Top = 450,
+							Right = 200,
+							Bottom = 470,
+							Left = 50,
+							Width = 150,
+							Height = 20,
+							PageNumber = 3,
+						},
+					},
+					["SingleLineFieldNull"] = new Field {
+						Type = FileFieldType.SingleLine,
+						Value = null,
+						Location = new Location {
+							Search = "optional_field",
+							Occurence = 1,
+							Top = 500,
+							Left = 50,
+							Width = 200,
+							Height = 25,
+							PageNumber = 4,
+						},
+					},
+					["RadioFieldNumber"] = new Field {
+						Type = FileFieldType.Radio,
+						Value = 1,
+						Location = new Location {
+							PageNumber = 4,
+							Top = 550,
+							Left = 50,
+						},
+					},
+				},
+			},
+		};
+
+		// Act
+		Func<Task> act = () => client.AddOrReplaceFileMetaToTransactionAsync(
+			fileMeta,
+			createdTransaction.Id,
+			"test-document.pdf");
+
+		// Assert
+		await act.Should().NotThrowAsync();
 	}
 
 	public void Dispose()
