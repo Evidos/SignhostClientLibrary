@@ -104,11 +104,6 @@ _TeamCity*
 # DotCover is a Code Coverage Tool
 *.dotCover
 
-# NCrunch
-_NCrunch_*
-.*crunch*.local.xml
-*.v3.ncrunchsolution.user
-
 # MightyMoose
 *.mm.*
 AutoTest.Net/

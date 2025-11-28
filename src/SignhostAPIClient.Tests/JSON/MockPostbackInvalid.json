@@ -1,0 +1,76 @@
+{
+	"Id":"b10ae331-af78-4e79-a39e-5b64693b6b68",
+	"Status":20,
+	"Seal":true,
+	"Signers":[
+		{
+			"Id":"fa95495d-6c59-48e0-962a-a4552f8d6b85",
+			"Expires":null,
+			"Email":"user@example.com",
+			"Mobile":"+31612345678",
+			"Iban":null,
+			"BSN":null,
+			"RequireScribbleName":false,
+			"RequireScribble":true,
+			"RequireEmailVerification":true,
+			"RequireSmsVerification":true,
+			"RequireIdealVerification":false,
+			"RequireDigidVerification":false,
+			"RequireKennisnetVerification":false,
+			"RequireSurfnetVerification":false,
+			"SendSignRequest":true,
+			"SendSignConfirmation":null,
+			"SignRequestMessage":"Hello, could you please sign this document? Best regards, John Doe",
+			"DaysToRemind":15,
+			"Language":"en-US",
+			"ScribbleName":"John Doe",
+			"ScribbleNameFixed":false,
+			"Reference":"Client #123",
+			"ReturnUrl":"https://signhost.com",
+			"Activities":[
+				{
+					"Id":"bcba44a9-c201-4494-9920-2c1f7baebcf0",
+					"Code":103,
+					"Activity":"Opened",
+					"CreatedDateTime":"2016-06-15T23:33:04.1965465+02:00"
+				},
+				{
+					"Id":"de94cf6e-e1a3-4c33-93bf-2013b036daaf",
+					"Code":203,
+					"Activity":"Signed",
+					"CreatedDateTime":"2016-06-15T23:38:04.1965465+02:00"
+				}
+			],
+			"RejectReason":null,
+			"SignUrl":"https://view.signhost.com/sign/d3c93bd6-f1ce-48e7-8c9c-c2babfdd4034",
+			"SignedDateTime":null,
+			"RejectDateTime":null,
+			"CreatedDateTime":"2016-06-15T23:33:04.1965465+02:00",
+			"ModifiedDateTime":"2016-06-15T23:33:04.1965465+02:00",
+			"Context":null
+		}
+	],
+	"Receivers":[
+		{
+			"Id":"97ed6b54-b6d1-46ed-88c1-79779c3b47b1",
+			"Name":"John Doe",
+			"Email":"user@example.com",
+			"Language":"en-US",
+			"Message":"Hello, please find enclosed the digital signed document. Best regards, John Doe",
+			"Reference":null,
+			"Activities":null,
+			"CreatedDateTime":"2016-06-15T23:33:04.1965465+02:00",
+			"ModifiedDateTime":"2016-06-15T23:33:04.1965465+02:00",
+			"Context":null
+		}
+	],
+	"Reference":"Contract #123",
+	"PostbackUrl":"https://example.com/postback.php",
+	"SignRequestMode":2,
+	"DaysToExpire":30,
+	"SendEmailNotifications":true,
+	"CreatedDateTime":"2016-08-31T21:22:56.2467731+02:00",
+	"ModifiedDateTime":"2016-08-31T21:22:56.2467731+02:00",
+	"CanceledDateTime":null,
+	"Context":null
+}
