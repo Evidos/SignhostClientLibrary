@@ -1,0 +1,1361 @@
+components:
+  schemas:
+    CreateTransactionRequest:
+      type: object
+      description: |
+        Transaction creation data including signers, receivers, files, and configuration.
+        This is the request body for creating a new transaction.
+      example:
+        Seal: false
+        Reference: "CONTRACT-2024-001"
+        PostbackUrl: "https://example.com/webhook/signhost"
+        DaysToExpire: 30
+        SendEmailNotifications: true
+        SignRequestMode: 2
+        Language: "en-US"
+        Context:
+          department: "HR"
+          contract_type: "employment"
+        Signers:
+          - Email: "john.doe@example.com"
+            SendSignRequest: true
+            SignRequestMessage: "Please review and sign the attached employment contract."
+            Language: "en-US"
+        Receivers:
+          - Email: "hr@example.com"
+            Message: "The employment contract has been signed and is attached."
+            Language: "en-US"
+      properties:
+        Seal:
+          type: boolean
+          description: |
+            Whether to seal the transaction (no signers required). When true, 
+            the transaction is automatically completed without requiring signatures.
+          example: false
+          default: false
+        Reference:
+          type: string
+          description: Custom reference identifier for the transaction
+          example: "CONTRACT-2024-001"
+        PostbackUrl:
+          type: string
+          format: uri
+          description: URL to receive status notifications about the transaction
+          example: "https://example.com/webhook/signhost"
+        DaysToExpire:
+          type: integer
+          description: |
+            Number of days until the transaction expires. If 0, uses organization default.
+            Maximum value depends on organization settings.
+          example: 30
+          default: 30
+          minimum: 0
+          maximum: 90
+        SendEmailNotifications:
+          type: boolean
+          description: Whether to send email notifications to signers and receivers
+          example: true
+          default: true
+        SignRequestMode:
+          type: integer
+          description: |
+            Mode for sign request delivery:
+            - 0: No sign requests
+            - 1: Send immediately
+            - 2: Send when ready (default when signers have SendSignRequest enabled)
+          enum: [0, 1, 2]
+          default: 2
+          example: 2
+        Language:
+          type: string
+          description: Language code for transaction interface and emails
+          default: "nl-NL"
+          example: "en-US"
+          enum:
+            - de-DE
+            - en-US
+            - es-ES
+            - fr-FR
+            - it-IT
+            - pl-PL
+            - nl-NL
+        Context:
+          type: object
+          description: |
+            Custom JSON object for additional transaction data. 
+            Only JSON objects are allowed (no arrays or primitives).
+          additionalProperties: true
+          example:
+            department: "HR"
+            contract_type: "employment"
+        Signers:
+          type: array
+          description: List of signers for the transaction
+          items:
+            $ref: "#/components/schemas/CreateSignerRequest"
+        Receivers:
+          type: array
+          description: List of receivers who get copies of completed documents
+          items:
+            $ref: "#/components/schemas/CreateReceiverRequest"
+      required:
+        - Seal
+    Transaction:
+      type: object
+      description: |
+        Complete transaction data returned when retrieving or creating a transaction.
+        Includes all configuration, current status, and file information.
+      properties:
+        Id:
+          type: string
+          format: uuid
+          description: Unique transaction identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        Seal:
+          type: boolean
+          description: Whether the transaction is sealed (no signers required)
+          example: false
+        Reference:
+          type: string
+          description: Custom reference identifier
+          example: "CONTRACT-2024-001"
+        PostbackUrl:
+          type: string
+          format: uri
+          description: Webhook URL for status notifications
+          example: "https://example.com/webhook/signhost"
+        DaysToExpire:
+          type: integer
+          description: Days until the transaction expires.
+          format: int32
+          example: 30
+        SendEmailNotifications:
+          type: boolean
+          description: Send e-mail notifications to the sender.
+          example: true
+        SignRequestMode:
+          type: integer
+          description: |
+            Sign request delivery mode
+              - 1: Send immediately
+              - 2: Send sequentially when ready (default when signers have SendSignRequest enabled)
+            **Note:** Ignored if `SendSignRequest` is set to false.
+          format: int32
+          enum:
+            - 1
+            - 2
+          example: 1
+        Language:
+          type: string
+          description: |
+            Language code for the Sender email notifications, and transaction receipt.
+          example: "en-US"
+          enum:
+            - de-DE
+            - en-US
+            - es-ES
+            - fr-FR
+            - it-IT
+            - pl-PL
+            - nl-NL
+        Status:
+          type: integer
+          description: |
+            Current transaction status:
+              - 5: Waiting For Document - Transaction created, documents being processed/prepared
+              - 10: Waiting For Signer - Documents ready, waiting for signers to sign
+              - 20: In Progress - A signer is currently in the process of signing
+              - 30: Signed - All signers have successfully signed the transaction
+              - 40: Rejected - One or more signers rejected the transaction
+              - 50: Expired - Transaction expired before all signers could complete
+              - 60: Cancelled - Transaction was cancelled by the creator
+              - 70: Failed - Transaction failed due to system errors or validation issues
+          format: int32
+          example: 30
+          enum:
+            - 5
+            - 10
+            - 20
+            - 30
+            - 40
+            - 50
+            - 60
+            - 70
+        Context:
+          type: object
+          description: |
+            Custom JSON object for additional transaction metadata that was provided during creation.
+          additionalProperties: true
+        CreatedDateTime:
+          type: string
+          format: date-time
+          description: When the transaction was created
+          example: "2025-07-23T18:09:22.1276241+02:00"
+        ModifiedDateTime:
+          type: string
+          format: date-time
+          description: When the transaction was last modified
+          example: "2025-07-23T18:09:28.3503174+02:00"
+        CanceledDateTime:
+          type: string
+          format: date-time
+          description: When the transaction was cancelled, if applicable
+          example: "2025-07-23T18:09:28.3503174+02:00"
+        Files:
+          type: object
+          description: |
+            Files attached to the transaction as a key-value mapping.
+            Key is the file ID, value is the file information.
+          additionalProperties:
+            $ref: "#/components/schemas/FileEntry"
+        Signers:
+          type: array
+          description: |
+            List of signers attached to this transaction, including their configuration, 
+            current status, verification methods, and signing progress. Each signer represents 
+            an individual who needs to sign the document or has already completed the signing process.
+          items:
+            $ref: "#/components/schemas/Signer"
+        Receivers:
+          type: array
+          description: |
+            List of receivers who will receive copies of the completed signed documents.
+            Receivers are notified via email once the transaction is successfully completed
+            and all required signatures have been obtained.
+          items:
+            $ref: "#/components/schemas/Receiver"
+        CancelationReason:
+          type: string
+          description: >
+            The reason for the cancellation of the transaction, if applicable.
+            This is provided when the transaction is cancelled via the DELETE endpoint.
+          example: "Transaction cancelled by the user due to a change in requirements."
+    CreateSignerRequest:
+      type: object
+      description: |
+        Request object for creating a new signer in a transaction. Defines the signer's identity, 
+        authentication/verification requirements, notification preferences, and signing behavior. 
+
+        **Key Requirements:**
+        - Email address is mandatory
+        - Either Authentications or Verifications must be provided (or both)
+        - Signers with AllowDelegation enabled cannot have Authentications
+        - SendSignRequest determines if sign request emails are sent automatically
+      properties:
+        Id:
+          type: string
+          description: Signer identifier (can be provided or generated)
+          example: "signer1"
+        Expires:
+          type: string
+          format: date-time
+          description: When the signer's access expires
+          example: "2024-02-15T10:30:00Z"
+        Email:
+          type: string
+          format: email
+          description: Signer's email address
+          example: "john.doe@example.com"
+        Authentications:
+          type: array
+          description: >
+            List of authentications that the signer has to authenticate
+            with.
+
+            The order in which the authentications are provided determine
+            in which order the signer will have to perform the specified
+            method.
+
+
+            Authentications must be performed before the document(s) can
+            be viewed.
+
+
+            When the authentication SecureDownload is configured, the
+            download url for a signer is authenticated with the same
+            method as the signing url.
+
+
+            The download url is returned in the response, and (optionally)
+            emailed to the signer.
+
+
+            You **must** explicitly specify the API-version when using
+            this feature.
+
+            This is done with the header: 'Accept: application/vnd.signhost.v1+json'.
+          items:
+            $ref: "#/components/schemas/SignerAuthentication"
+        Verifications:
+          type: array
+          description: >
+            List of verifications that the signer has to verify with.
+
+
+            The order in which the verifications are provided determine in
+            which order the signer will have to perform the specified
+            method.
+
+
+            Verifications must be performed before the document(s) can be
+            signed.
+
+
+            **Critical Requirement:** You **must** use one of the following verification methods as the **last** verification in the list:
+
+            - Consent
+
+            - PhoneNumber
+
+            - Scribble
+
+            - CSC Qualified*
+
+
+            **Important Notes:**
+
+            - CSC Qualified **must always be the final verification** if used
+
+            - The other three methods (Consent, PhoneNumber, Scribble) can be succeeded by other verification methods
+
+
+            Common mistake: Providing only authentication methods (e.g., iDIN) without including one of these required final verification methods.
+          items:
+            $ref: "#/components/schemas/SignerVerification"
+        SendSignRequest:
+          type: boolean
+          description: Whether to send sign request to this signer's email address
+          default: true
+          example: true
+        SendSignConfirmation:
+          type: boolean
+          description: >
+            Whether to send a confirmation email to the signer after signing. 
+
+            Default value is the value of `SendSignRequest`
+          example: true
+        SignRequestSubject:
+          type: string
+          description: |
+            The subject of the sign request email in plain text.
+            Maximum of 64 characters allowed.
+
+            If omitted, the default subject will be used.
+          example: "Please sign the employment contract"
+        SignRequestMessage:
+          type: string
+          description: >
+            The message of the sign request email in plain text. HTML is
+            not allowed.
+
+            Newlines can be created by including a `\n`.
+
+            Required if `SendSignRequest` is true.
+          example: "Please review and sign the attached employment contract."
+        DaysToRemind:
+          type: integer
+          description: |
+            Number of days between automatic reminder emails sent to this signer.
+
+            - Set to `-1` to disable reminders entirely for this signer
+            - Set to `0` to use your organization's default reminder interval
+            - Set to a positive number (e.g., `3`, `7`) to send reminders every N days
+
+            **Note:** Reminders are only sent if `SendSignRequest` is `true` and the signer hasn't completed signing yet.
+          format: int32
+          minimum: -1
+          example: 3
+          default: 7
+        Language:
+          type: string
+          description: Language for signer interface and emails
+          example: "en-US"
+          default: "nl-NL"
+          enum:
+            - de-DE
+            - en-US
+            - es-ES
+            - fr-FR
+            - it-IT
+            - pl-PL
+            - nl-NL
+        Reference:
+          type: string
+          description: Custom reference for this signer
+          example: "EMPLOYEE-001"
+        IntroText:
+          type: string
+          description: >
+            Custom introduction text shown to the signer during the signing proces.
+
+            This will be shown on the first screen to the signer and supports limited markdown markup.
+
+            The following markup is supported:
+
+            - `\# Headings`
+
+            - `\*Emphasis\*` / `\_Emphasis\_`
+
+            - `\*\*Strong\*\*` / `\_\_Strong\_\_`
+
+            - `1. Ordered` and `- Unordered` lists
+          example: "Please review and sign this employment contract carefully."
+        ReturnUrl:
+          type: string
+          format: uri
+          description: URL to redirect signer after signing
+          example: "https://example.com/signed"
+          default: "https://signhost.com"
+        AllowDelegation:
+          type: boolean
+          description: |
+            Whether this signer can delegate signing to another person.
+            Cannot be used together with `Authentications`.
+          default: false
+          example: false
+        Context:
+          type: object
+          description: Custom signer data (dynamic JSON object)
+          additionalProperties: true
+      required:
+        - Email
+    Signer:
+      type: object
+      description: Signer information with current status (based on SignerGetDto which extends SignerBaseDto)
+      properties:
+        # Properties from SignerBaseDto
+        Id:
+          type: string
+          description: Unique signer identifier
+          example: "signer1"
+        Expires:
+          type: string
+          format: date-time
+          description: When the signer's access expires
+          example: "2024-02-15T10:30:00Z"
+        Email:
+          type: string
+          format: email
+          description: Signer's email address
+          example: "john.doe@example.com"
+        Authentications:
+          type: array
+          description: Authentication methods for this signer
+          items:
+            $ref: "#/components/schemas/SignerAuthentication"
+        Verifications:
+          type: array
+          description: Verification methods for this signer
+          items:
+            $ref: "#/components/schemas/SignerVerification"
+        SendSignRequest:
+          type: boolean
+          description: Whether to send sign request to this signer
+          default: true
+          example: true
+        SendSignConfirmation:
+          type: boolean
+          description: Whether to send a confirmation email after signing
+          example: true
+        SignRequestSubject:
+          type: string
+          description: Custom subject for sign request email
+          example: "Please sign the employment contract"
+        SignRequestMessage:
+          type: string
+          description: Custom message for sign request email
+          example: "Please review and sign the attached employment contract."
+        DaysToRemind:
+          type: integer
+          description: |
+            Number of days between automatic reminder emails sent to this signer.
+
+            - Set to `-1` to disable reminders entirely for this signer
+            - Set to `0` to use your organization's default reminder interval
+            - Set to a positive number (e.g., `3`, `7`) to send reminders every N days
+
+            **Note:** Reminders are only sent if `SendSignRequest` is `true` and the signer hasn't completed signing yet.
+          format: int32
+          minimum: -1
+          example: 3
+          default: 7
+        Language:
+          type: string
+          description: Language for signer interface and emails
+          example: "en-US"
+          enum:
+            - de-DE
+            - en-US
+            - es-ES
+            - fr-FR
+            - it-IT
+            - pl-PL
+            - nl-NL
+        Reference:
+          type: string
+          description: Custom reference for this signer
+          example: "EMPLOYEE-001"
+        IntroText:
+          type: string
+          description: Custom introduction text shown to the signer
+          example: "Please review and sign this employment contract carefully."
+        ReturnUrl:
+          type: string
+          format: uri
+          description: URL to redirect signer after signing
+          example: "https://example.com/signed"
+        AllowDelegation:
+          type: boolean
+          description: Whether this signer can delegate signing to another person
+          example: false
+        Context:
+          type: object
+          description: Custom signer data (dynamic JSON object)
+          additionalProperties: true
+        # Additional properties from SignerGetDto
+        Activities:
+          type: array
+          description: Activities/events for this signer
+          items:
+            $ref: "#/components/schemas/Activity"
+        RejectReason:
+          type: string
+          description: Reason provided if the signer rejected the transaction
+          example: "Contract terms not acceptable"
+        DelegateReason:
+          type: string
+          description: Reason provided for delegation
+          example: "Unable to sign personally"
+        DelegateSignerEmail:
+          type: string
+          format: email
+          description: Email of the delegate signer
+          example: "delegate@example.com"
+        DelegateSignerName:
+          type: string
+          description: Name of the delegate signer
+          example: "Jane Smith"
+        DelegateSignUrl:
+          type: string
+          format: uri
+          description: URL for delegate to sign
+          example: "https://view.signhost.com/sign/delegate123"
+        SignedDateTime:
+          type: string
+          format: date-time
+          description: When the signer completed signing
+          example: "2024-01-15T16:45:00Z"
+        RejectDateTime:
+          type: string
+          format: date-time
+          description: When the signer rejected the transaction
+          example: "2024-01-15T16:30:00Z"
+        CreatedDateTime:
+          type: string
+          format: date-time
+          description: When the signer was added
+          example: "2024-01-15T10:30:00Z"
+        SignerDelegationDateTime:
+          type: string
+          format: date-time
+          description: When the signer delegated to another person
+          example: "2024-01-15T12:00:00Z"
+        ModifiedDateTime:
+          type: string
+          format: date-time
+          description: When the signer was last modified
+          example: "2024-01-15T14:20:00Z"
+        ShowUrl:
+          type: string
+          format: uri
+          description: >
+            A unique URL per signer that provides the secure download flow
+            for the signer.
+
+            Available if any of the authentications `SecureDownload` field is set to true.
+        ReceiptUrl:
+          type: string
+          format: uri
+          description: >
+            A unique URL per signer that provides the receipt download flow
+            for the signer.
+
+            Available if any of the authentications `SecureDownload` field is set to true.
+    CreateReceiverRequest:
+      type: object
+      description: Receiver configuration for getting copies of signed documents
+      properties:
+        Name:
+          type: string
+          description: Receiver's name
+          example: "HR Department"
+        Email:
+          type: string
+          format: email
+          description: Receiver's email address
+          example: "hr@example.com"
+        Language:
+          type: string
+          description: Language for receiver communications
+          example: "en-US"
+          default: "nl-NL"
+          enum:
+            - de-DE
+            - en-US
+            - es-ES
+            - fr-FR
+            - it-IT
+            - pl-PL
+            - nl-NL
+        Subject:
+          type: string
+          description: >
+            Custom subject for notification email. Maximum of 64 characters allowed. Omitting this parameter will enable the default subject.
+          example: "Signed contract received"
+        Message:
+          type: string
+          description: >
+            Custom message for notification email.  Newlines can 
+            be created by including a `\n` in the message. HTML is not allowed.
+          example: "The employment contract has been signed and is attached."
+        Reference:
+          type: string
+          description: Custom reference for this receiver
+          example: "HR-COPY"
+        Context:
+          type: object
+          description: Custom receiver data (JSON object only)
+          additionalProperties: true
+      required:
+        - Email
+        - Message
+    Receiver:
+      type: object
+      description: Receiver information (based on ReceiverGetDto which extends ReceiverBaseDto)
+      properties:
+        Name:
+          type: string
+          description: Receiver's name
+          example: "HR Department"
+        Email:
+          type: string
+          format: email
+          description: Receiver's email address
+          example: "hr@example.com"
+        Language:
+          type: string
+          description: Language for receiver communications
+          example: "en-US"
+        Subject:
+          type: string
+          description: Custom subject for notification email
+          example: "Signed contract received"
+        Message:
+          type: string
+          description: Custom message for notification email
+          example: "The employment contract has been signed and is attached."
+        Reference:
+          type: string
+          description: Custom reference for this receiver
+          example: "HR-COPY"
+        Context:
+          type: object
+          description: Custom receiver data (dynamic JSON object)
+          additionalProperties: true
+        Id:
+          type: string
+          format: uuid
+          description: Unique receiver identifier
+          example: "880e8400-e29b-41d4-a716-446655440003"
+        Activities:
+          type: array
+          description: Activities/events for this receiver
+          items:
+            $ref: "#/components/schemas/Activity"
+        CreatedDateTime:
+          type: string
+          format: date-time
+          description: When the receiver was added
+          example: "2024-01-15T10:30:00Z"
+        ModifiedDateTime:
+          type: string
+          format: date-time
+          description: When the receiver was last modified
+          example: "2024-01-15T14:20:00Z"
+    SignerAuthentication:
+      type: object
+      description: |
+        Authentication methods used to verify signer identity before document access.
+        These methods must be completed before the signer can view documents.
+
+        **Important:** The "Type" property is case-sensitive and must be capitalized.
+
+      discriminator:
+        propertyName: Type
+      oneOf:
+        - $ref: "#/components/schemas/SignerPhoneNumberIdentification"
+        - $ref: "#/components/schemas/SignerDigidIdentification"
+    SignerVerification:
+      type: object
+      description: |
+        Verification methods used to confirm signer identity before document signing.
+        These methods must be completed before the signer can sign documents.
+
+        **Important:** The "Type" property is case-sensitive and must be capitalized.
+
+        **Critical Requirement:** You **must** use one of the following verification methods as the **last** verification in your verifications list:
+
+        - Consent
+        - PhoneNumber
+        - Scribble
+        - CSC Qualified*
+
+        **Rules for CSC Qualified:**
+
+        - This method **must always be the absolute final verification** - nothing can come after it
+
+        **Rules for Consent, PhoneNumber, and Scribble:**
+
+        - These three can be used as the final verification method
+        - They are commonly used when you want additional verification steps before the final consent/signature
+
+        **Common Mistakes:**
+
+        - Using only authentication methods (e.g., iDIN) without a final verification method
+        - Placing verifications after CSC Qualified
+
+        **Valid Examples:**
+
+        - `[Consent]` ✓
+        - `[iDIN, Consent]` ✓
+        - `[iDIN, PhoneNumber]` ✓
+        - `[iDIN, CSC Qualified]` ✓
+        - `[CSC Qualified, Consent]` ✗ (Nothing can come after CSC Qualified)
+        - `[iDIN]` ✗ (Missing required final verification)
+
+      discriminator:
+        propertyName: Type
+      oneOf:
+        - $ref: "#/components/schemas/SignerScribbleVerification"
+        - $ref: "#/components/schemas/SignerEmailVerification"
+        - $ref: "#/components/schemas/SignerPhoneNumberIdentification"
+        - $ref: "#/components/schemas/SignerDigidIdentification"
+        - $ref: "#/components/schemas/SignerIDealVerification"
+        - $ref: "#/components/schemas/SignerSurfnetVerification"
+        - $ref: "#/components/schemas/SignerIDINVerification"
+        - $ref: "#/components/schemas/SignerIPAddressVerification"
+        - $ref: "#/components/schemas/SignerEHerkenningVerification"
+        - $ref: "#/components/schemas/SignerEidasLoginVerification"
+        - $ref: "#/components/schemas/SignerItsmeIdentificationVerification"
+        - $ref: "#/components/schemas/SignerConsentVerification"
+        - $ref: "#/components/schemas/SignerCscVerification"
+        - $ref: "#/components/schemas/SignerOidcIdentification"
+        - $ref: "#/components/schemas/SignerOnfidoIdentification"
+    SignerScribbleVerification:
+      type: object
+      description: Handwritten signature verification
+      properties:
+        Type:
+          type: string
+          enum: [Scribble]
+        RequireHandsignature:
+          type: boolean
+          description: Whether a hand-drawn signature is required
+          example: true
+        ScribbleName:
+          type: string
+          description: Name to appear in signature
+          example: "John Doe"
+        ScribbleNameFixed:
+          type: boolean
+          description: Whether the name cannot be changed
+          example: false
+    SignerEmailVerification:
+      type: object
+      description: Email address verification
+      properties:
+        Type:
+          type: string
+          enum: [Email]
+        Email:
+          type: string
+          format: email
+          description: Email address to verify
+          example: "john.doe@example.com"
+    SignerPhoneNumberIdentification:
+      type: object
+      description: SMS phone number verification
+      properties:
+        Type:
+          type: string
+          enum: [PhoneNumber]
+        Number:
+          type: string
+          description: Phone number for SMS verification
+          example: "+31612345678"
+        SecureDownload:
+          type: boolean
+          description: Whether this verification enables secure file downloads
+          example: false
+    SignerDigidIdentification:
+      type: object
+      description: Dutch DigiD verification
+      properties:
+        Type:
+          type: string
+          enum: [DigiD]
+        Bsn:
+          type: string
+          description: Dutch social security number
+          example: "123456789"
+        Betrouwbaarheidsniveau:
+          type: string
+          description: DigiD trust level (reliability level)
+          example: "10"
+          readOnly: true
+        SecureDownload:
+          type: boolean
+          description: Whether this verification enables secure file downloads
+          example: false
+    SignerIDealVerification:
+      type: object
+      description: iDEAL bank verification
+      properties:
+        Type:
+          type: string
+          enum: [iDeal]
+        Iban:
+          type: string
+          description: IBAN for verification
+          example: "NL91ABNA0417164300"
+    SignerSurfnetVerification:
+      type: object
+      description: SURFnet academic verification
+      properties:
+        Type:
+          type: string
+          enum: [SURFnet]
+        Uid:
+          type: string
+          description: SURFnet user identifier
+          example: "john.doe@university.edu"
+          readOnly: true
+        Attributes:
+          type: object
+          description: Additional SURFnet attributes
+          readOnly: true
+          additionalProperties:
+            type: string
+    SignerIDINVerification:
+      type: object
+      description: iDIN bank identification verification
+      properties:
+        Type:
+          type: string
+          enum: [iDIN]
+        AccountHolderName:
+          type: string
+          description: Account holder's name
+          example: "J. Doe"
+          readOnly: true
+        AccountHolderAddress1:
+          type: string
+          description: Account holder's primary address
+          example: "Main Street 123"
+          readOnly: true
+        AccountHolderAddress2:
+          type: string
+          description: Account holder's secondary address
+          example: "Apt 4B"
+          readOnly: true
+        AccountHolderDateOfBirth:
+          type: string
+          description: Account holder's date of birth
+          example: "1985-03-15"
+          readOnly: true
+        Attributes:
+          type: object
+          description: Raw iDIN attributes (availability not guaranteed)
+          readOnly: true
+          additionalProperties:
+            type: string
+    SignerIPAddressVerification:
+      type: object
+      description: IP address verification
+      properties:
+        Type:
+          type: string
+          enum: [IPAddress]
+        IPAddress:
+          type: string
+          description: IP address for verification
+          example: "192.168.1.1"
+    SignerEHerkenningVerification:
+      type: object
+      description: eHerkenning business identity verification
+      properties:
+        Type:
+          type: string
+          enum: [eHerkenning]
+        Uid:
+          type: string
+          description: eHerkenning user identifier
+          example: "12345678"
+          readOnly: true
+        EntityConcernIdKvkNr:
+          type: string
+          description: KvK (Chamber of Commerce) number
+          example: "12345678"
+    SignerEidasLoginVerification:
+      type: object
+      description: eIDAS electronic identification verification
+      properties:
+        Type:
+          type: string
+          enum: [eIDAS Login]
+        Uid:
+          type: string
+          description: eIDAS user identifier
+          example: "eidas-uid-123"
+          readOnly: true
+        Level:
+          type: string
+          description: eIDAS assurance level
+          example: "substantial"
+          readOnly: true
+        FirstName:
+          type: string
+          description: First name from eIDAS
+          example: "John"
+          readOnly: true
+        LastName:
+          type: string
+          description: Last name from eIDAS
+          example: "Doe"
+          readOnly: true
+        DateOfBirth:
+          type: string
+          description: Date of birth from eIDAS
+          example: "1985-03-15"
+          readOnly: true
+        Attributes:
+          type: object
+          description: Raw eIDAS attributes (availability not guaranteed)
+          readOnly: true
+          additionalProperties:
+            type: string
+    SignerItsmeIdentificationVerification:
+      type: object
+      description: itsme identification verification
+      properties:
+        Type:
+          type: string
+          enum: [itsme Identification]
+        PhoneNumber:
+          type: string
+          description: Phone number for itsme verification
+          example: "+32470123456"
+        Attributes:
+          type: object
+          description: Raw itsme attributes (availability not guaranteed)
+          additionalProperties: true
+          readOnly: true
+    SignerConsentVerification:
+      type: object
+      description: Consent-based verification
+      properties:
+        Type:
+          type: string
+          enum: [Consent]
+    SignerCscVerification:
+      type: object
+      description: Cloud Signature Consortium (CSC) verification
+      properties:
+        Type:
+          type: string
+          enum: [CSC Qualified]
+        Provider:
+          type: string
+          description: Provider identifier
+          example: "csc-provider"
+          readOnly: true
+        Issuer:
+          type: string
+          description: Certificate issuer
+          example: "CSC CA"
+          readOnly: true
+        Subject:
+          type: string
+          description: Certificate subject
+          example: "CN=John Doe"
+          readOnly: true
+        Thumbprint:
+          type: string
+          description: Certificate thumbprint
+          example: "1234567890abcdef"
+          readOnly: true
+        AdditionalUserData:
+          type: object
+          description: Additional user data
+          readOnly: true
+          additionalProperties:
+            type: string
+    SignerOidcIdentification:
+      type: object
+      description: OpenID Connect identification
+      properties:
+        Type:
+          type: string
+          enum: [OpenID Providers]
+        ProviderName:
+          type: string
+          description: OIDC provider name
+          example: "google"
+    SignerOnfidoIdentification:
+      type: object
+      description: Onfido identity verification
+      properties:
+        Type:
+          type: string
+          enum: [Onfido]
+        WorkflowId:
+          type: string
+          format: uuid
+          description: Onfido workflow identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        WorkflowRunId:
+          type: string
+          format: uuid
+          description: Onfido workflow run identifier
+          example: "660e8400-e29b-41d4-a716-446655440001"
+          readOnly: true
+        Version:
+          type: integer
+          description: Onfido API version
+          example: 1
+          readOnly: true
+        Attributes:
+          type: object
+          description: Raw Onfido attributes (availability not guaranteed)
+          additionalProperties: true
+          readOnly: true
+    FileEntry:
+      type: object
+      description: |
+        File information and metadata associated with a transaction. Contains details about uploaded documents
+        including display properties, download links, and current processing status. Files are referenced by
+        their unique identifier within the transaction and can include PDFs, receipts, and other document types.
+      properties:
+        Links:
+          type: array
+          description: Related links for the file (download, etc.)
+          items:
+            $ref: "#/components/schemas/Link"
+        DisplayName:
+          type: string
+          description: Display name for the file
+          example: "Employment Contract.pdf"
+    Link:
+      type: object
+      description: URI link with relationship and type information
+      properties:
+        Rel:
+          type: string
+          description: Relationship type of the link
+        Type:
+          type: string
+          description: MIME type or content type of the linked resource. Include this in the `Accept` header when requesting the file.
+          example: "application/pdf"
+        Link:
+          type: string
+          format: uri
+          description: The actual URI/URL of the linked resource
+          example: "https://api.signhost.com/api/file/download/abc123"
+    Activity:
+      type: object
+      description: Activity/event information for a signer (based on ActivityGetDto)
+      properties:
+        Id:
+          type: string
+          format: uuid
+          description: Unique activity identifier
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        Code:
+          type: integer
+          example: 101
+          description: >
+            Activity code indicating the type of activity. Possible values include:
+
+            * 101 -  Invitation sent
+
+            * 103 -  Opened
+
+            * 104 -  Reminder sent
+
+            * 105 -  Document opened, Info property contains the file id of the opened document.
+
+            * 202 -  Rejected
+
+            * 203 -  Signed
+
+            * 204 -  Signer delegated
+
+            * 301 -  Signed document sent
+
+            * 302 -  Signed document opened
+
+            * 303 -  Signed document downloaded
+
+            * 401 -  Receipt sent
+
+            * 402 -  Receipt opened
+
+            * 403 -  Receipt downloaded
+          enum:
+            - 101
+            - 103
+            - 104
+            - 105
+            - 202
+            - 203
+            - 204
+            - 301
+            - 302
+            - 303
+            - 401
+            - 402
+            - 403
+        Activity:
+          type: string
+          description: Activity description
+          example: "DocumentSigned"
+        Info:
+          type: string
+          description: Additional activity information
+          example: "Document signed successfully"
+        CreatedDateTime:
+          type: string
+          format: date-time
+          description: When the activity occurred
+          example: "2024-01-15T16:45:00Z"
+    FileMetadata:
+      type: object
+      description: |
+        Comprehensive metadata information for a file in a transaction. This metadata defines how the file should be displayed, 
+        processed, and what form fields and signing areas it contains. The metadata can be uploaded before or after the actual PDF file.
+      properties:
+        DisplayName:
+          type: [string, "null"]
+          description: |
+            Human-readable display name for the file that will be shown to users in the signing interface. 
+            If not provided, the fileId will be used as the display name.
+          example: "Employment Contract - John Doe"
+        DisplayOrder:
+          type: [integer, "null"]
+          description: |
+            Numeric value determining the order in which files are displayed and processed when multiple files 
+            are present in a transaction. Lower numbers appear first. If not specified, a timestamp-based order is used.
+          example: 1
+        Description:
+          type: [string, "null"]
+          description: |
+            Detailed description of the file's purpose and contents. This helps users understand what they are signing 
+            and may be displayed in the signing interface or audit logs.
+          example: "Main employment contract document containing terms of employment, salary details, and company policies"
+        SetParaph:
+          type: [boolean, "null"]
+          description: |
+            Indicates whether a paraph (initial) should be set on each page of the document in addition to the main signature. 
+            When true, signers will be required to initial every page. Defaults to false if not specified.
+          example: false
+        Signers:
+          type: object
+          description: |
+            Dictionary mapping signer identifiers to their specific configuration for this file. Each signer can have 
+            different form sets and signing requirements for the same document. The key is the signer identifier.
+          additionalProperties:
+            $ref: "#/components/schemas/FileSignerData"
+          example:
+            "signer1":
+              FormSets: ["employee_signature_set", "emergency_contact_info"]
+            "signer2":
+              FormSets: ["manager_approval_set"]
+        FormSets:
+          type: object
+          description: |
+            Nested dictionary structure defining form fields and signing areas within the document. The outer key represents 
+            the form set name, and the inner key represents individual field identifiers within that set. Form sets allow 
+            grouping related fields together for organization and signer assignment.
+
+            The following characters are allowed as a key / field name: `a-z A-Z 0-9 _`.
+
+            Map of pdf field definitions.
+
+          additionalProperties:
+            type: object
+            description: "Collection of fields within a specific form set"
+            additionalProperties:
+              $ref: "#/components/schemas/FileField"
+          example:
+            "employee_signature_set":
+              "signature_field":
+                Type: "Signature"
+                Location:
+                  PageNumber: 2
+                  Top: 500
+                  Left: 100
+                  Width: 200
+                  Height: 50
+              "date_field":
+                Type: "Date"
+                Location:
+                  PageNumber: 2
+                  Top: 600
+                  Left: 100
+                  Width: 150
+                  Height: 30
+    FileSignerData:
+      type: object
+      description: |
+        Configuration data specific to a signer for a particular file. This determines which form sets 
+        the signer needs to complete when signing the document.
+      properties:
+        FormSets:
+          type: array
+          description: |
+            Array of form set identifiers that this signer is responsible for completing. Each form set 
+            contains related fields that the signer must fill out or sign. Multiple signers can be assigned 
+            to the same form set, or each signer can have unique form sets.
+          items:
+            type: string
+          example: ["employee_details", "signature_block", "emergency_contacts"]
+    FileField:
+      type: object
+      description: |
+        Represents an individual form field or signing area within a document. Fields define where and how 
+        users interact with the document during the signing process.
+      required:
+        - Type
+        - Location
+      properties:
+        Type:
+          $ref: "#/components/schemas/FileFieldType"
+        Location:
+          $ref: "#/components/schemas/FileFieldLocation"
+        Value:
+          description: |
+            The value content for the field. The type and format depend on the field type:
+            - Signature/Seal fields: Usually null or empty until signed
+            - Text fields (SingleLine): String values
+            - Number fields: Numeric values
+            - Date fields: Date string in appropriate format
+            - Check/Radio fields: Boolean values or selection identifiers
+          oneOf:
+            - type: string
+              description: "Text content for text-based fields"
+            - type: number
+              description: "Numeric content for number fields"
+            - type: boolean
+              description: "Boolean value for checkbox fields"
+            - type: object
+              description: "Complex objects for specialized field types"
+          example: "John Smith"
+    FileFieldType:
+      type: string
+      description: |
+        Specifies the type of interaction or data entry required for this field. Different types have 
+        different behaviors and validation rules in the signing interface.
+      enum:
+        - "Seal"
+        - "Signature"
+        - "Check"
+        - "Radio"
+        - "SingleLine"
+        - "Number"
+        - "Date"
+      example: "Signature"
+      x-enum-descriptions:
+        Seal: "Official seal or stamp area, typically for organizational authentication"
+        Signature: "Digital signature field where users draw or type their signature"
+        Check: "Checkbox for boolean yes/no selections"
+        Radio: "Radio button for single selection from multiple options"
+        SingleLine: "Single-line text input field for names, addresses, etc."
+        Number: "Numeric input field with validation for numerical data"
+        Date: "Date picker or date input field with date format validation"
+    FileFieldLocation:
+      type: object
+      description: |
+        Defines the precise positioning and sizing of a field within the PDF document. Fields can be positioned 
+        using absolute coordinates or by searching for specific text anchors within the document.
+      properties:
+        PageNumber:
+          type: [integer, "null"]
+          description: |
+            The page number where this field should be placed (1-based indexing). If not specified, 
+            the field may be positioned based on search criteria across all pages.
+          example: 1
+        Search:
+          type: [string, "null"]
+          description: |
+            Text string to search for in the document to anchor the field position. When specified, 
+            the field will be positioned relative to this text rather than using absolute coordinates.
+          example: "Signature:"
+        Occurence:
+          type: [integer, "null"]
+          description: |
+            When using search text positioning, specifies which occurrence of the search text to use 
+            if the text appears multiple times on the page or document (1-based indexing).
+          example: 1
+        Top:
+          type: [integer, "null"]
+          description: |
+            Vertical position from the top of the page in pixels or points. Used for absolute positioning 
+            or as an offset when combined with search positioning.
+          example: 100
+        Right:
+          type: [integer, "null"]
+          description: |
+            Horizontal position from the right edge of the page in pixels or points. Typically used 
+            for right-aligned field positioning.
+          example: 300
+        Bottom:
+          type: [integer, "null"]
+          description: |
+            Vertical position from the bottom of the page in pixels or points. Can be used instead of 
+            or in combination with the top property for precise vertical positioning.
+          example: 150
+        Left:
+          type: [integer, "null"]
+          description: |
+            Horizontal position from the left edge of the page in pixels or points. The most common 
+            way to specify horizontal field positioning.
+          example: 50
+        Width:
+          type: [integer, "null"]
+          description: |
+            Width of the field in pixels or points. Determines how much horizontal space the field 
+            occupies and affects text wrapping for text fields.
+
+            For signature and seal fields we suggest a width of 140.
+          example: 200
+        Height:
+          type: [integer, "null"]
+          description: |
+            Height of the field in pixels or points. Determines how much vertical space the field 
+            occupies and affects text size and line spacing for text fields.
+
+            For signature and seal fields we suggest a height of 70.
+          example: 50
+    TransactionDeleteOptions:
+      type: object
+      description: Options for cancelling a transaction
+      properties:
+        Reason:
+          type: string
+          description: Reason for cancelling the transaction
+          example: "Contract terms changed"
+        SendNotifications:
+          type: boolean
+          description: Whether to notify signers about the cancellation. Note that this only applies when SendSignRequest has been set to true during the transaction creation.
+          default: false
+          example: true

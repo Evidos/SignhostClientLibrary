@@ -1,0 +1,80 @@
+{
+	"Id":"496bec4d-4ac7-428f-894a-b3e9bade725d",
+	"Status":20,
+	"File":{
+		"Id":"3149bf06-d01e-4f0d-9aa1-77e100e19772",
+		"Name":"contract.pdf"
+	},
+	"Seal":true,
+	"Signers":[
+		{
+			"Id":"4813e178-68a4-4105-b007-5ce9a3630867",
+			"Expires":null,
+			"Email":"user@example.com",
+			"Mobile":"+31612345678",
+			"Iban":null,
+			"BSN":null,
+			"RequireScribbleName":false,
+			"RequireScribble":true,
+			"RequireEmailVerification":true,
+			"RequireSmsVerification":true,
+			"RequireIdealVerification":false,
+			"RequireDigidVerification":false,
+			"RequireKennisnetVerification":false,
+			"RequireSurfnetVerification":false,
+			"SendSignRequest":true,
+			"SendSignConfirmation":null,
+			"SignRequestMessage":"Hello, could you please sign this document? Best regards, John Doe",
+			"DaysToRemind":15,
+			"Language":"en-US",
+			"ScribbleName":"John Doe",
+			"ScribbleNameFixed":false,
+			"Reference":"Client #123",
+			"ReturnUrl":"http://signhost.com",
+			"Activities":[
+				{
+					"Id":"866183ae-0a3c-4441-a589-6fe3e1a0f1a1",
+					"Code":103,
+					"Activity":"Opened",
+					"CreatedDateTime":"2016-03-31T21:11:42.0267461+02:00"
+				},
+				{
+					"Id":"9b7c4de9-6b8d-4d22-9b88-b7d2d0f084b9",
+					"Code":203,
+					"Activity":"Signed",
+					"CreatedDateTime":"2016-03-31T21:16:42.0267461+02:00"
+				}
+			],
+			"RejectReason":null,
+			"SignUrl":"http://ui.signhost.com/sign/2eeaa5b9-9d4d-4418-b79f-4a33810e7147",
+			"SignedDateTime":null,
+			"RejectDateTime":null,
+			"CreatedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+			"ModifiedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+			"Context":null
+		}
+	],
+	"Receivers":[
+		{
+			"Id":"af07aaec-b612-4f7c-bb1b-c32603c9c6a2",
+			"Name":"John Doe",
+			"Email":"user@example.com",
+			"Language":"en-US",
+			"Message":"Hello, please find enclosed the digital signed document. Best regards, John Doe",
+			"Reference":null,
+			"Activities":null,
+			"CreatedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+			"ModifiedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+			"Context":null
+		}
+	],
+	"Reference":"Contract #123",
+	"PostbackUrl":"http://example.com/postback.php",
+	"SignRequestMode":2,
+	"DaysToExpire":30,
+	"SendEmailNotifications":true,
+	"CreatedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+	"ModifiedDateTime":"2016-03-31T21:11:42.0267461+02:00",
+	"CanceledDateTime":null,
+	"Context":null
+}

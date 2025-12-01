@@ -1,35 +1,29 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
-namespace Signhost.APIClient.Rest.DataObjects
+namespace Signhost.APIClient.Rest.DataObjects;
+
+public class Receiver
 {
-	public class Receiver
-	{
-		public Receiver()
-		{
-		}
+	public string? Id { get; set; }
 
-		[JsonConstructor]
-		private Receiver(IReadOnlyList<Activity> activities)
-		{
-			Activities = activities;
-		}
+	public string? Name { get; set; }
 
-		public string Name { get; set; }
+	public string? Email { get; set; }
 
-		public string Email { get; set; }
+	public string? Language { get; set; }
 
-		public string Language { get; set; }
+	public string? Subject { get; set; }
 
-		public string Subject { get; set; }
+	public string? Message { get; set; }
 
-		public string Message { get; set; }
+	public string? Reference { get; set; }
 
-		public string Reference { get; set; }
+	public DateTimeOffset? CreatedDateTime { get; set; }
 
-		public IReadOnlyList<Activity> Activities { get; set; } =
-			new List<Activity>().AsReadOnly();
+	public DateTimeOffset? ModifiedDateTime { get; set; }
 
-		public dynamic Context { get; set; }
-	}
+	public IList<Activity>? Activities { get; set; }
+
+	public dynamic? Context { get; set; }
 }
