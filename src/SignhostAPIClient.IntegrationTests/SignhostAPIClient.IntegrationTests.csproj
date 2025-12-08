@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup Label="Build">
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<CodeAnalysisRuleSet>../signhost.ruleset</CodeAnalysisRuleSet>
+		<UserSecretsId>signhost-api-client-integration-tests</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup Label="Build">
+		<AdditionalFiles Include="../stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup Label="Package References">
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="FluentAssertions" Version="7.2.0" />
+		<PackageReference Include="xunit" Version="2.9.3" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+	</ItemGroup>
+
+	<ItemGroup Label="Project References">
+		<ProjectReference Include="../SignhostAPIClient/SignhostAPIClient.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="TestFiles/*.pdf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

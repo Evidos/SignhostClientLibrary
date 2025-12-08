@@ -6,5 +6,7 @@
 		public string Type => "DigiD";
 
 		public string Bsn { get; set; }
+
+		public bool? SecureDownload { get; set; }
 	}
 }
