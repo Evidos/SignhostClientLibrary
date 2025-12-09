@@ -16,9 +16,6 @@
 *.edmx text
 *.resx text
 
-*.ncrunchproject text
-*.ncrunchsolution text
-
 # Custom for Visual Studio
 *.sln text eol=crlf merge=union
 *.csproj text

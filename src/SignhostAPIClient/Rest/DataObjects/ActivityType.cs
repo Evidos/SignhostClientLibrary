@@ -1,140 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Signhost.APIClient.Rest.DataObjects;
 
-namespace Signhost.APIClient.Rest.DataObjects
+/// <summary>
+/// <see cref="Activity"/> type codes as defined in the Signhost API.
+/// </summary>
+public enum ActivityType
 {
 	/// <summary>
-	/// <see cref="Activity"/> type.
+	/// Invitation sent (code 101).
 	/// </summary>
-	// TO-DO: Remove unused activity types in v5.
-	public enum ActivityType
-	{
-		/// <summary>
-		/// The invitation mail was sent.
-		/// </summary>
-		InvitationSent = 101,
+	InvitationSent = 101,
 
-		/// <summary>
-		/// The invitation mail was received.
-		/// </summary>
-		InvitationReceived = 102,
+	/// <summary>
+	/// Sign URL was opened (code 103).
+	/// </summary>
+	Opened = 103,
 
-		/// <summary>
-		/// The sign url was opened.
-		/// </summary>
-		Opened = 103,
+	/// <summary>
+	/// Invitation reminder sent (code 104).
+	/// </summary>
+	InvitationReminderResent = 104,
 
-		/// <summary>
-		/// An invitation reminder mail was sent.
-		/// </summary>
-		InvitationReminderResent = 104,
+	/// <summary>
+	/// Document was opened.
+	/// The <see cref="Activity.Info"/> property contains the file ID of
+	/// the opened document (code 105).
+	/// </summary>
+	DocumentOpened = 105,
 
-		/// <summary>
-		/// The document was opened.
-		/// The <see cref="Activity.Info"/> contains the fileId of the opened
-		/// document.
-		/// </summary>
-		DocumentOpened = 105,
+	/// <summary>
+	/// The signer rejected the sign request (code 202).
+	/// </summary>
+	Rejected = 202,
 
-		/// <summary>
-		/// Consumer Signing identity approved.
-		/// </summary>
-		IdentityApproved = 110,
+	/// <summary>
+	/// The signer signed the documents (code 203).
+	/// </summary>
+	Signed = 203,
 
-		/// <summary>
-		/// Consumer Signing identity failed.
-		/// </summary>
-		IdentityFailed = 111,
+	/// <summary>
+	/// The signer delegated signing to a different signer (code 204).
+	/// </summary>
+	SignerDelegated = 204,
 
-		/// <summary>
-		/// Cancelled.
-		/// </summary>
-		Cancelled = 201,
+	/// <summary>
+	/// Signed document sent (code 301).
+	/// </summary>
+	SignedDocumentSent = 301,
 
-		/// <summary>
-		/// The signer rejected the sign request.
-		/// </summary>
-		Rejected = 202,
+	/// <summary>
+	/// Signed document opened (code 302).
+	/// </summary>
+	SignedDocumentOpened = 302,
 
-		/// <summary>
-		/// The signer signed the documents.
-		/// </summary>
-		Signed = 203,
+	/// <summary>
+	/// Signed document downloaded (code 303).
+	/// </summary>
+	SignedDocumentDownloaded = 303,
 
-		/// <summary>
-		/// The signer delegated signing to a different signer.
-		/// </summary>
-		SignerDelegated = 204,
+	/// <summary>
+	/// Receipt sent (code 401).
+	/// </summary>
+	ReceiptSent = 401,
 
-		/// <summary>
-		/// Signed document sent.
-		/// </summary>
-		SignedDocumentSent = 301,
+	/// <summary>
+	/// Receipt opened (code 402).
+	/// </summary>
+	ReceiptOpened = 402,
 
-		/// <summary>
-		/// Signed document opened.
-		/// </summary>
-		SignedDocumentOpened = 302,
+	/// <summary>
+	/// Receipt downloaded (code 403).
+	/// </summary>
+	ReceiptDownloaded = 403,
 
-		/// <summary>
-		/// Signed document downloaded.
-		/// </summary>
-		SignedDocumentDownloaded = 303,
-
-		/// <summary>
-		/// Receipt sent.
-		/// </summary>
-		ReceiptSent = 401,
-
-		/// <summary>
-		/// Receipt opened.
-		/// </summary>
-		ReceiptOpened = 402,
-
-		/// <summary>
-		/// Receipt downloaded.
-		/// </summary>
-		ReceiptDownloaded = 403,
-
-		/// <summary>
-		/// Finished.
-		/// </summary>
-		Finished = 500,
-
-		/// <summary>
-		/// Deleted.
-		/// </summary>
-		Deleted = 600,
-
-		/// <summary>
-		/// Expired.
-		/// </summary>
-		Expired = 700,
-
-		/// <summary>
-		/// Email bounce - hard.
-		/// </summary>
-		EmailBounceHard = 901,
-
-		/// <summary>
-		/// Email bounce - soft.
-		/// </summary>
-		EmailBounceSoft = 902,
-
-		/// <summary>
-		/// Email bounce - blocked.
-		/// </summary>
-		EmailBounceBlocked = 903,
-
-		/// <summary>
-		/// Email bounce - undetermined.
-		/// </summary>
-		EmailBounceUndetermined = 904,
-
-		/// <summary>
-		/// Operation failed.
-		/// </summary>
-		Failed = 999,
-	}
+	/// <summary>
+	/// Transaction failed due to this entity, e.g. email bounce (code 999).
+	/// </summary>
+	Failed = 999,
 }
