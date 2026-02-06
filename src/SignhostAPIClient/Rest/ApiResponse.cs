@@ -1,39 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Signhost.APIClient.Rest
+namespace Signhost.APIClient.Rest;
+
+public class ApiResponse<TValue>
 {
-	public class ApiResponse<TValue>
+	private readonly HttpResponseMessage httpResponse;
+
+	public ApiResponse(HttpResponseMessage httpResponse, TValue? value)
 	{
-		private readonly HttpResponseMessage httpResponse;
+		httpResponse.ThrowIfNullOrEmpty(nameof(httpResponse));
 
-		public ApiResponse(HttpResponseMessage httpResponse, TValue value)
-		{
-			this.httpResponse = httpResponse;
-			this.Value = value;
-		}
+		this.httpResponse = httpResponse;
+		Value = value;
+	}
 
-		public TValue Value { get; private set; }
+	public TValue? Value { get; private set; }
 
-		public HttpStatusCode HttpStatusCode => httpResponse.StatusCode;
+	public HttpStatusCode HttpStatusCode => httpResponse.StatusCode;
 
-		public void EnsureAvailableStatusCode()
-		{
-			if (HttpStatusCode == HttpStatusCode.Gone) {
-				throw new ErrorHandling.GoneException<TValue>(
-					httpResponse.ReasonPhrase,
-					Value)
-				{
-					// TO-DO: Make async in v5
-					ResponseBody = httpResponse.Content.ReadAsStringAsync()
-						.ConfigureAwait(false)
-						.GetAwaiter()
-						.GetResult(),
-				};
-			}
+	public async Task EnsureAvailableStatusCodeAsync(
+		CancellationToken cancellationToken = default)
+	{
+		if (HttpStatusCode == HttpStatusCode.Gone) {
+			throw new ErrorHandling.GoneException<TValue>(
+				httpResponse.ReasonPhrase ?? "No reason phrase provided",
+				Value) {
+				ResponseBody = await httpResponse.Content
+#if NETFRAMEWORK || NETSTANDARD2_0
+					.ReadAsStringAsync()
+#else
+					.ReadAsStringAsync(cancellationToken)
+#endif
+					.ConfigureAwait(false),
+			};
 		}
 	}
 }

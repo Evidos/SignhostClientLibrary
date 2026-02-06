@@ -1,57 +1,55 @@
 using System;
-using System.Reflection;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Signhost.APIClient.Rest.DataObjects;
 
-namespace Signhost.APIClient.Rest.JsonConverters
+namespace Signhost.APIClient.Rest.JsonConverters;
+
+/// <summary>
+/// JSON converter factory for converting the <see cref="Level"/> enum.
+/// Invalid values are mapped to <see cref="Level.Unknown"/>.
+/// </summary>
+internal class LevelEnumConverter
+	: JsonConverter<Level?>
 {
-	/// <summary>
-	/// JSON converter for converting the <see cref="Level"/> enum.
-	/// Invalid values are mapped to <see cref="Level.Unknown"/>.
-	/// </summary>
-	internal class LevelEnumConverter
-		: JsonConverter
+	public override Level? Read(
+		ref Utf8JsonReader reader,
+		Type typeToConvert,
+		JsonSerializerOptions options)
 	{
-		/// <inheritdoc/>
-		public override bool CanWrite => false;
-
-		/// <inheritdoc/>
-		public override bool CanConvert(Type objectType)
-			=> IsLevelEnum(GetUnderlyingType(objectType));
-
-		/// <inheritdoc/>
-		public override object ReadJson(
-			JsonReader reader,
-			Type objectType,
-			object existingValue,
-			JsonSerializer serializer)
-		{
-			var value = reader.Value as string;
-
-			if (value != null) {
-				if (Enum.TryParse(value, out Level level)) {
-					return level;
-				}
-
-				return Level.Unknown;
-			}
-
+		if (reader.TokenType == JsonTokenType.Null) {
 			return null;
 		}
 
-		/// <inheritdoc/>
-		public override void WriteJson(
-				JsonWriter writer,
-				object value,
-				JsonSerializer serializer)
-			=> throw new NotImplementedException();
+		if (reader.TokenType == JsonTokenType.String) {
+			string value = reader.GetString() ?? string.Empty;
+			if (Enum.TryParse<Level>(value, out var level)) {
+				return level;
+			}
 
-		private static Type GetUnderlyingType(Type type)
-			=> type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)
-				? Nullable.GetUnderlyingType(type)
-				: type;
+			return Level.Unknown;
+		}
 
-		private static bool IsLevelEnum(Type type)
-			=> type.GetTypeInfo().IsEnum && type == typeof(Level);
+		if (reader.TokenType == JsonTokenType.Number) {
+			int value = reader.GetInt32();
+			if (Enum.IsDefined(typeof(Level), value)) {
+				return (Level)value;
+			}
+		}
+
+		return Level.Unknown;
+	}
+
+	public override void Write(
+		Utf8JsonWriter writer,
+		Level? value,
+		JsonSerializerOptions options)
+	{
+		if (value is null) {
+			writer.WriteNullValue();
+		}
+		else {
+			writer.WriteStringValue(value.ToString());
+		}
 	}
 }

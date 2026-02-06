@@ -15,15 +15,15 @@ For full API documentation, please visit [evidos.github.io](https://evidos.githu
 ### Example code
 The following code is an example of how to create and start a sign transaction with two documents.
 ```c#
-var settings = new SignHostApiClientSettings(
+var settings = new SignhostApiClientSettings(
 	"AppName appkey",
-	"apikey or usertoken"));
+	"apikey or usertoken");
 
-var client = new SignHostApiClient(settings);
+var client = new SignhostApiClient(settings);
 
-var transaction = await client.CreateTransactionAsync(new Transaction {
-	Signers = new List<Signer> {
-		new Signer {
+var transaction = await client.CreateTransactionAsync(new CreateTransactionRequest {
+	Signers = new List<CreateSignerRequest> {
+		new CreateSignerRequest {
 			Email              = "john.doe@example.com",
 			SignRequestMessage = "Could you please sign this document?",
 			SendSignRequest    = true,

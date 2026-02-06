@@ -1,68 +1,49 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace Signhost.APIClient.Rest.DataObjects
+namespace Signhost.APIClient.Rest.DataObjects;
+
+public class Transaction
 {
-	public class Transaction
-	{
-		public Transaction()
-		{
-		}
+	public string Id { get; set; } = default!;
 
-		[JsonConstructor]
-		protected Transaction(
-			IReadOnlyDictionary<string, FileEntry> files,
-			DateTimeOffset? createdDateTime,
-			DateTimeOffset? canceledDateTime,
-			string cancelationReason)
-		{
-			Files = files ?? new Dictionary<string, FileEntry>();
-			CreatedDateTime = createdDateTime;
-			CancelledDateTime = canceledDateTime;
-			CancellationReason = cancelationReason;
-		}
+	/// <summary>
+	/// Gets the <see cref="DateTimeOffset"/> when the <see cref="Transaction"/> was created.
+	/// </summary>
+	public DateTimeOffset CreatedDateTime { get; set; }
 
-		public string Id { get; set; }
+	/// <summary>
+	/// Gets the <see cref="DateTimeOffset"/> when the <see cref="Transaction"/> was cancelled.
+	/// Returns null if the transaction was not cancelled.
+	/// </summary>
+	public DateTimeOffset? CanceledDateTime { get; set; }
 
-		/// <summary>
-		/// Gets the <see cref="DateTimeOffset"/> when the <see cref="Transaction"/> was created.
-		/// </summary>
-		public DateTimeOffset? CreatedDateTime { get; }
+	/// <summary>
+	/// Gets the cancellation reason when the <see cref="Transaction" /> was cancelled.
+	/// </summary>
+	public string? CancellationReason { get; set; }
 
-		/// <summary>
-		/// Gets the <see cref="DateTimeOffset"/> when the <see cref="Transaction"/> was cancelled.
-		/// Returns null if the transaction was not cancelled.
-		/// </summary>
-		public DateTimeOffset? CancelledDateTime { get; }
+	public IDictionary<string, FileEntry> Files { get; set; } = new Dictionary<string, FileEntry>();
 
-		/// <summary>
-		/// Gets the cancellation reason when the <see cref="Transaction" /> was cancelled.
-		/// </summary>
-		public string CancellationReason { get; }
+	public TransactionStatus Status { get; set; }
 
-		public IReadOnlyDictionary<string, FileEntry> Files { get; private set; }
+	public bool Seal { get; set; }
 
-		public TransactionStatus Status { get; set; }
+	public IList<Signer> Signers { get; set; } = new List<Signer>();
 
-		public bool Seal { get; set; }
+	public IList<Receiver> Receivers { get; set; } = new List<Receiver>();
 
-		public IList<Signer> Signers { get; set; } = new List<Signer>();
+	public string? Reference { get; set; }
 
-		public IList<Receiver> Receivers { get; set; } = new List<Receiver>();
+	public string? PostbackUrl { get; set; }
 
-		public string Reference { get; set; }
+	public int SignRequestMode { get; set; }
 
-		public string PostbackUrl { get; set; }
+	public int DaysToExpire { get; set; }
 
-		public int SignRequestMode { get; set; }
+	public string? Language { get; set; }
 
-		public int DaysToExpire { get; set; }
+	public bool SendEmailNotifications { get; set; }
 
-		public string Language { get; set; }
-
-		public bool SendEmailNotifications { get; set; }
-
-		public dynamic Context { get; set; }
-	}
+	public dynamic? Context { get; set; }
 }

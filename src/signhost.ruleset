@@ -6,8 +6,19 @@
  <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">  
  </Rules>
  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+   <Rule Id="SA0001" Action="None" /><!-- XML comment analysis disabled -->
+   <Rule Id="SA1001" Action="None" /><!-- Commas should not be preceded by whitespace. -->
+   <Rule Id="SA1009" Action="None" /><!-- Closing parenthesis must not be preceded by a space -->
+   <Rule Id="SA1011" Action="None" /><!-- Closing square brackets must not be preceded by a space -->
    <Rule Id="SA1027" Action="None" /><!-- Tabs must not be used -->
+   <Rule Id="SA1402" Action="None" /><!-- File may only contain a single type -->
+   <Rule Id="SA1600" Action="None" /><!-- Elements should be documented -->
+   <Rule Id="SA1602" Action="None" /><!-- Enumeration items should be documented -->
+   <Rule Id="SA1618" Action="None" /><!-- Generic type parameters should be documented -->
+   <Rule Id="SA1623" Action="None" /><!-- Property summary documentation must begin with standard text -->
+   <Rule Id="SA1629" Action="None" /><!-- Documentation must end with a period -->
    <Rule Id="SA1633" Action="None" /><!-- FileMustHaveHeader -->
+   <Rule Id="SA1642" Action="None" /><!-- Constructor summary documentation must begin with standard text -->
    <Rule Id="SA1652" Action="None" /><!-- Enable XML documentation output -->
    <Rule Id="SA1101" Action="None" /><!-- Prefix local calls with this -->
    <Rule Id="SA1500" Action="None" /><!-- Curly brackets for multiline statements must not share line -->

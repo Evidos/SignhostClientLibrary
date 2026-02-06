@@ -1,21 +1,20 @@
-﻿using System;
+namespace Signhost.APIClient.Rest;
 
-namespace Signhost.APIClient.Rest
+/// <summary>
+/// Registers the necessary settings for the <see cref="SignhostApiReceiver"/> class.
+/// </summary>
+public class SignhostApiReceiverSettings
 {
-	/// <summary>
-	/// Registers the necessary settings for the <see cref="SignhostApiReceiver"/> class.
-	/// </summary>
-	public class SignhostApiReceiverSettings
+	public SignhostApiReceiverSettings(string sharedsecret)
 	{
-		public SignhostApiReceiverSettings(string sharedsecret)
-		{
-			SharedSecret = sharedsecret;
-		}
+		sharedsecret.ThrowIfNullOrEmpty(nameof(sharedsecret));
 
-		/// <summary>
-		/// Gets the shared secret.
-		/// </summary>
-		/// <value>The shared secret key issued by Signhost.com.</value>
-		public string SharedSecret { get; private set; }
+		SharedSecret = sharedsecret;
 	}
+
+	/// <summary>
+	/// Gets the shared secret.
+	/// </summary>
+	/// <value>The shared secret key issued by Signhost.com.</value>
+	public string SharedSecret { get; private set; }
 }
