@@ -60,7 +60,7 @@ jobs:
         if: env.HAS_TAG == 'true' && github.ref == 'refs/heads/master'
 
       - name: Upload NuGet Package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Nuget
           path: '**/*.nupkg'
