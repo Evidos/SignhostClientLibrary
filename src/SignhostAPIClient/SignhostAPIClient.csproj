@@ -43,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Package References">
-		<PackageReference Include="System.Text.Json" Version="10.0.0" />
+		<PackageReference Include="System.Text.Json" Version="10.0.5" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
 	</ItemGroup>
 
