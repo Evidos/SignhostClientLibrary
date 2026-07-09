@@ -16,6 +16,13 @@ public static class HttpResponseMessageErrorHandlingExtensions
 	private const string OutOfCreditsApiProblemType =
 		"https://api.signhost.com/problem/subscription/out-of-credits";
 
+	private const string DefaultErrorMessage = "Unknown Signhost error";
+	private const string DefaultErrorType = "Unknown Signhost Error type";
+
+	private static readonly JsonSerializerOptions Options = new () {
+		PropertyNameCaseInsensitive = true,
+	};
+
 	/// <summary>
 	/// Throws an exception if the <see cref="HttpResponseMessage.StatusCode"/>
 	/// has an error code.
@@ -57,18 +64,20 @@ public static class HttpResponseMessageErrorHandlingExtensions
 			return response;
 		}
 
-		string errorType = string.Empty;
-		string errorMessage = "Unknown Signhost error";
+		string errorType = DefaultErrorType;
+		string errorMessage = DefaultErrorMessage;
 		string responseBody = string.Empty;
 
 		if (response.Content is not null) {
 			responseBody = await response.Content.ReadAsStringAsync()
 				.ConfigureAwait(false);
 
-			var error = JsonSerializer.Deserialize<ErrorResponse>(responseBody);
+			var error = JsonSerializer.Deserialize<ErrorResponse>(responseBody, Options);
 
-			errorType = error?.Type ?? string.Empty;
-			errorMessage = error?.Message ?? "Unknown Signhost error";
+			errorType = error?.Type ?? DefaultErrorType;
+			errorMessage = error?.Message
+				?? error?.Detail
+				?? DefaultErrorMessage;
 		}
 
 		SignhostRestApiClientException exception = response.StatusCode switch {
@@ -93,10 +102,26 @@ public static class HttpResponseMessageErrorHandlingExtensions
 
 	private class ErrorResponse
 	{
+		/// <summary>
+		/// The problem type URI (RFC 7807). Used to identify specific error
+		/// categories such as out-of-credits.
+		/// </summary>
 		[JsonPropertyName("type")]
-		public string Type { get; set; } = string.Empty;
+		public string? Type { get; set; }
 
+		/// <summary>
+		/// Human-readable error message returned by the Signhost API
+		/// in its legacy error format, e.g. <c>{"Message":"..."}</c>.
+		/// </summary>
 		[JsonPropertyName("message")]
-		public string Message { get; set; } = string.Empty;
+		public string? Message { get; set; }
+
+		/// <summary>
+		/// Human-readable explanation of the problem as defined by RFC 7807
+		/// problem details, e.g. <c>{"detail":"..."}</c>. Used as a fallback
+		/// when <see cref="Message"/> is absent.
+		/// </summary>
+		[JsonPropertyName("detail")]
+		public string? Detail { get; set; }
 	}
 }

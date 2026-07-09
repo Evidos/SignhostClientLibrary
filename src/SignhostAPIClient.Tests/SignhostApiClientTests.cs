@@ -661,4 +661,80 @@ public class SignhostApiClientTests
 		result.Receivers.Should().BeEmpty();
 		result.Files.Should().BeEmpty();
 	}
+
+	[Fact]
+	public async Task When_error_response_has_uppercase_Message_Then_exception_message_is_parsed_correctly()
+	{
+		MockHttpMessageHandler mockHttp = new();
+		const string responseBody = """{"Message":"The signer id is already used by another signer."}""";
+		mockHttp
+			.Expect(HttpMethod.Get, "http://localhost/api/transaction/transactionId")
+			.Respond(HttpStatusCode.BadRequest, new StringContent(responseBody));
+
+		using var httpClient = mockHttp.ToHttpClient();
+		SignhostApiClient signhostApiClient = new(settings, httpClient);
+
+		Func<Task> act = () => signhostApiClient.GetTransactionAsync("transactionId");
+		var exception = await act.Should().ThrowAsync<BadRequestException>();
+		exception.Which.Message.Should().Be("The signer id is already used by another signer.");
+
+		mockHttp.VerifyNoOutstandingExpectation();
+	}
+
+	[Fact]
+	public async Task When_error_response_has_lowercase_message_Then_exception_message_is_parsed_correctly()
+	{
+		MockHttpMessageHandler mockHttp = new();
+		const string responseBody = """{"message":"Bad Request"}""";
+		mockHttp
+			.Expect(HttpMethod.Get, "http://localhost/api/transaction/transactionId")
+			.Respond(HttpStatusCode.BadRequest, new StringContent(responseBody));
+
+		using var httpClient = mockHttp.ToHttpClient();
+		SignhostApiClient signhostApiClient = new(settings, httpClient);
+
+		Func<Task> act = () => signhostApiClient.GetTransactionAsync("transactionId");
+		var exception = await act.Should().ThrowAsync<BadRequestException>();
+		exception.Which.Message.Should().Be("Bad Request");
+
+		mockHttp.VerifyNoOutstandingExpectation();
+	}
+
+	[Fact]
+	public async Task When_error_response_has_detail_but_no_message_Then_exception_message_uses_detail()
+	{
+		MockHttpMessageHandler mockHttp = new();
+		const string responseBody = """{"type":"https://example.com/problem","detail":"Something went wrong."}""";
+		mockHttp
+			.Expect(HttpMethod.Get, "http://localhost/api/transaction/transactionId")
+			.Respond(HttpStatusCode.BadRequest, new StringContent(responseBody));
+
+		using var httpClient = mockHttp.ToHttpClient();
+		SignhostApiClient signhostApiClient = new(settings, httpClient);
+
+		Func<Task> act = () => signhostApiClient.GetTransactionAsync("transactionId");
+		var exception = await act.Should().ThrowAsync<BadRequestException>();
+		exception.Which.Message.Should().Be("Something went wrong.");
+
+		mockHttp.VerifyNoOutstandingExpectation();
+	}
+
+	[Fact]
+	public async Task When_error_response_has_uppercase_Detail_but_no_message_Then_exception_message_uses_detail()
+	{
+		MockHttpMessageHandler mockHttp = new();
+		const string responseBody = """{"Type":"https://example.com/problem","Detail":"A detailed error."}""";
+		mockHttp
+			.Expect(HttpMethod.Get, "http://localhost/api/transaction/transactionId")
+			.Respond(HttpStatusCode.BadRequest, new StringContent(responseBody));
+
+		using var httpClient = mockHttp.ToHttpClient();
+		SignhostApiClient signhostApiClient = new(settings, httpClient);
+
+		Func<Task> act = () => signhostApiClient.GetTransactionAsync("transactionId");
+		var exception = await act.Should().ThrowAsync<BadRequestException>();
+		exception.Which.Message.Should().Be("A detailed error.");
+
+		mockHttp.VerifyNoOutstandingExpectation();
+	}
 }
