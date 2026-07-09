@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Signhost.APIClient.Rest.DataObjects;
@@ -10,25 +9,8 @@ using Xunit;
 namespace Signhost.APIClient.Rest.IntegrationTests;
 
 public class TransactionTests
-	: IDisposable
+	: IntegrationTestBase
 {
-	private readonly SignhostApiClient client;
-	private readonly TestConfiguration config;
-
-	public TransactionTests()
-	{
-		config = TestConfiguration.Instance;
-
-		if (!config.IsConfigured) {
-			throw new InvalidOperationException("Integration tests are not configured.");
-		}
-
-		SignhostApiClientSettings settings = new(config.AppKey, config.UserToken) {
-			Endpoint = config.ApiBaseUrl,
-		};
-
-		client = new(settings);
-	}
 
 	[Fact]
 	public async Task Given_complex_transaction_When_created_and_started_Then_all_properties_are_correctly_persisted()
@@ -109,7 +91,7 @@ public class TransactionTests
 		}
 
 		// Act - Create transaction
-		var createdTransaction = await client.CreateTransactionAsync(transaction);
+		var createdTransaction = await Client.CreateTransactionAsync(transaction);
 
 		// Assert - Creation properties
 		createdTransaction.Should().NotBeNull();
@@ -200,17 +182,20 @@ public class TransactionTests
 
 		// Act - Upload file
 		await using var fileStream = File.OpenRead(pdfPath);
-		await client.AddOrReplaceFileToTransactionAsync(
+		await Client.AddOrReplaceFileToTransactionAsync(
 			fileStream,
 			createdTransaction.Id,
 			"test-document.pdf",
 			new FileUploadOptions());
 
 		// Act - Start transaction
-		await client.StartTransactionAsync(createdTransaction.Id);
+		await Client.StartTransactionAsync(createdTransaction.Id);
+
+		// No postbacks, so we need to wait a bit for the transaction to be processed.
+		await Task.Delay(TimeSpan.FromSeconds(5));
 
 		// Act - Retrieve final state
-		var finalTransaction = await client.GetTransactionAsync(createdTransaction.Id);
+		var finalTransaction = await Client.GetTransactionAsync(createdTransaction.Id);
 
 		// Assert - Final transaction state
 		finalTransaction.Should().NotBeNull();
@@ -279,7 +264,7 @@ public class TransactionTests
 			]
 		};
 
-		var createdTransaction = await client.CreateTransactionAsync(transaction);
+		var createdTransaction = await Client.CreateTransactionAsync(transaction);
 		createdTransaction.Should().NotBeNull();
 
 		// Arrange - Create a very complex FileMeta
@@ -433,18 +418,12 @@ public class TransactionTests
 		};
 
 		// Act
-		Func<Task> act = () => client.AddOrReplaceFileMetaToTransactionAsync(
+		Func<Task> act = () => Client.AddOrReplaceFileMetaToTransactionAsync(
 			fileMeta,
 			createdTransaction.Id,
 			"test-document.pdf");
 
 		// Assert
 		await act.Should().NotThrowAsync();
-	}
-
-	public void Dispose()
-	{
-		client?.Dispose();
-		GC.SuppressFinalize(this);
 	}
 }
